@@ -670,46 +670,49 @@ const answerGroup = ref([...manyAnswer.value]);
 const resultPair = ref("");
 
 // for pairing mobile
-const chooseBlock = (i) => {
-  dropItem.value.forEach((e, index) => {
-    if (i == index) {
-      dropItem.value[index] = "choose answer";
-    } else {
-      if (dropItem.value[index] === "choose answer") {
-        dropItem.value[index] = "click here";
-      }
-    }
-  });
-};
-const chooseItem = (item) => {
-  dropItem.value.forEach((e, index) => {
-    if (e === "choose answer") {
-      dropItem.value[index] = item;
-      if (manyAnswer.value[index] == item) {
-        matchedItem.value[index] = true;
+if (dropItem.value) {
+  const chooseBlock = (i) => {
+    dropItem.value.forEach((e, index) => {
+      if (i == index) {
+        dropItem.value[index] = "choose answer";
       } else {
-        matchedItem.value[index] = false;
+        if (dropItem.value[index] === "choose answer") {
+          dropItem.value[index] = "click here";
+        }
       }
+    });
+  };
+
+  const chooseItem = (item) => {
+    dropItem.value.forEach((e, index) => {
+      if (e === "choose answer") {
+        dropItem.value[index] = item;
+        if (manyAnswer.value[index] == item) {
+          matchedItem.value[index] = true;
+        } else {
+          matchedItem.value[index] = false;
+        }
+      }
+    });
+
+    if (dropItem.value.filter((e) => e === "click here").length === 0) {
+      userAnswer.value = true;
+    } else {
+      userAnswer.value = false;
     }
-  });
 
-  if (dropItem.value.filter((e) => e === "click here").length === 0) {
-    userAnswer.value = true;
-  } else {
-    userAnswer.value = false;
-  }
-
-  if (matchedItem.value.filter((e) => e === false).length === 0) {
-    resultPair.value = true;
-  } else if (
-    matchedItem.value.filter((e) => e === false).length > 0 &&
-    matchedItem.value.filter((e) => e === true).length > 0
-  ) {
-    resultPair.value = "partly true";
-  } else {
-    resultPair.value = false;
-  }
-};
+    if (matchedItem.value.filter((e) => e === false).length === 0) {
+      resultPair.value = true;
+    } else if (
+      matchedItem.value.filter((e) => e === false).length > 0 &&
+      matchedItem.value.filter((e) => e === true).length > 0
+    ) {
+      resultPair.value = "partly true";
+    } else {
+      resultPair.value = false;
+    }
+  };
+}
 
 const pairingStyle = (item) => {
   if (item === "click here") {
@@ -722,14 +725,16 @@ const pairingStyle = (item) => {
 };
 
 // for pairing desktop
-questionArr.value.forEach((e) => {
-  if (isMobile.value) {
-    dropItem.value.push("click here");
-  } else {
-    dropItem.value.push("drop here");
-  }
-  matchedItem.value.push(false);
-});
+if (questionArr.value) {
+  questionArr.value.forEach((e) => {
+    if (isMobile.value) {
+      dropItem.value.push("click here");
+    } else {
+      dropItem.value.push("drop here");
+    }
+    matchedItem.value.push(false);
+  });
+}
 
 watch(windowWidth, (newWidth) => {
   if (newWidth <= 768) {
@@ -737,13 +742,15 @@ watch(windowWidth, (newWidth) => {
   } else {
     isMobile.value = false;
   }
-  questionArr.value.forEach((e, i) => {
-    if (isMobile.value) {
-      dropItem.value[i] = "click here";
-    } else {
-      dropItem.value[i] = "drop here";
-    }
-  });
+  if (questionArr.value) {
+    questionArr.value.forEach((e, i) => {
+      if (isMobile.value) {
+        dropItem.value[i] = "click here";
+      } else {
+        dropItem.value[i] = "drop here";
+      }
+    });
+  }
 });
 
 const dragStart = (item) => {

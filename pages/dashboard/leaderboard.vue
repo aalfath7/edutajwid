@@ -68,15 +68,18 @@ definePageMeta({
 const data = ref();
 
 const { results } = await $fetch("/api/users/leaderboard");
-console.log(results);
 // const users = await $fetch(
 //   "https://edu.racikalcendekia.sch.id/users/leaderboard"
 // );
 
-const leaderboard = await Promise.all(
-  results.map(async (user) => {
-    const lesson = await $fetch("/api/lessons/" + user.last_lesson);
-    return { ...user, last_lesson: lesson.results[0].id_lesson };
-  })
-);
+const leaderboard = ref();
+
+if (results) {
+  leaderboard.value = await Promise.all(
+    results.map(async (user) => {
+      const lesson = await $fetch("/api/lessons/" + user.last_lesson);
+      return { ...user, last_lesson: lesson.results[0].id_lesson };
+    })
+  );
+}
 </script>

@@ -112,19 +112,21 @@ const filter = ref([
   },
 ]);
 
-results.forEach((e, i) => {
-  filter.value.forEach((item) => {
-    if (e.bab === item.title) {
-      if (i > 0) {
-        if (e.subbab !== results[i - 1].subbab) {
+if (results) {
+  results.forEach((e, i) => {
+    filter.value.forEach((item) => {
+      if (e.bab === item.title) {
+        if (i > 0) {
+          if (e.subbab !== results[i - 1].subbab) {
+            item.lesson.push(e);
+          }
+        } else {
           item.lesson.push(e);
         }
-      } else {
-        item.lesson.push(e);
       }
-    }
+    });
   });
-});
+}
 
 const last_lesson = ref();
 

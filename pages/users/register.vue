@@ -6,7 +6,11 @@
       text="Email sudah terdaftar"
       type="not success"
     />
-    <Notif :is-active="notifNotSuccess" text="Buat Akun Gagal" />
+    <Notif
+      :is-active="notifNotSuccess"
+      text="Buat Akun Gagal"
+      type="not success"
+    />
     <div
       class="flex flex-col justify-center items-center px-2 h-screen lg:h-screen bg-cover bg-orange-300 bg-[url('/src/bg_login.jpg')]"
     >

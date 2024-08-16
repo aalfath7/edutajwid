@@ -148,7 +148,7 @@ export const useAuthStore = defineStore("auth", {
         });
         // this.loading = pending;
 
-        if (results[0]) {
+        if (results) {
           const payload = {
             id_user: results[0].id_user,
             name: results[0].name,
