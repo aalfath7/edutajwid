@@ -11,8 +11,8 @@
           <h5>Leaderboard</h5>
         </div>
         <div class="text-sm lg:text-lg font-medium text-black">
-          <span class="mr-10 sm:mr-20"> Lesson </span>
-          <span> Points </span>
+          <span class="mr-5 sm:mr-16"> Lesson </span>
+          <span> XP </span>
         </div>
       </div>
       <div class="flow-root">
@@ -40,9 +40,6 @@
                 >
                   {{ item.name }}
                 </p>
-                <!-- <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                  {{ item.role }}
-                </p> -->
               </div>
               <div
                 class="mr-6 sm:mr-16 md:mr-20 inline-flex items-center text-sm sm:text-base text-gray-900 dark:text-white"
@@ -52,7 +49,7 @@
               <div
                 class="w-10 text-center inline-flex justify-end items-center text-sm sm:text-base text-gray-900 dark:text-white"
               >
-                {{ item.points }}
+                {{ item.xp }}
               </div>
             </div>
           </li>
@@ -71,6 +68,10 @@ definePageMeta({
 const data = ref();
 
 const { results } = await $fetch("/api/users/leaderboard");
+console.log(results);
+// const users = await $fetch(
+//   "https://edu.racikalcendekia.sch.id/users/leaderboard"
+// );
 
 const leaderboard = await Promise.all(
   results.map(async (user) => {

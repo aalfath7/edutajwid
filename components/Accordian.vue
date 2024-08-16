@@ -7,7 +7,7 @@
           type="button"
           class="rounded-lg shadow-sm flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3 capitalize"
           :data-accordion-target="'#accordion-collapse-body-' + no"
-          :aria-expanded="!isOpen"
+          :aria-expanded="$props.actived"
           :aria-controls="'accordion-collapse-body-' + no"
         >
           <span>{{ title }}</span>
@@ -49,7 +49,7 @@ const props = defineProps({
   actived: Boolean,
 });
 
-const isOpen = ref();
+const isOpen = ref(false);
 
 watch(
   () => props.actived,

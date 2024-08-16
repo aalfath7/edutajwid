@@ -7,7 +7,7 @@ export type UsersModel = {
   password: string;
   image: string;
   last_lesson: string;
-  points: number;
+  xp: number;
   role: string;
 };
 
@@ -21,7 +21,7 @@ export const read = async () => {
 
 export const getLeaderboard = async () => {
   const result = await sql({
-    query: "SELECT * FROM users ORDER BY points DESC LIMIT 10",
+    query: "SELECT * FROM users ORDER BY xp DESC LIMIT 10",
   });
 
   return result;
@@ -56,7 +56,7 @@ export const create = async (
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO users (id_user, name, email, password, image, last_lesson, points, role) VALUES (?, ?, ?, ?, 'user.png', 'pendahuluan-tentang-alquran-alkarim', 0, ?)",
+      "INSERT INTO users (id_user, name, email, password, image, last_lesson, xp, role) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', 0, ?)",
     values: [data.id, data.name, data.email, data.password, data.role],
   });
   return result;
@@ -74,11 +74,11 @@ export const update = async (
 
 export const updateLesson = async (
   id: string,
-  data: Pick<UsersModel, "last_lesson" | "points">
+  data: Pick<UsersModel, "last_lesson" | "xp">
 ) => {
   await sql({
-    query: "UPDATE users SET last_lesson = ?, points = ? WHERE id_user = ?",
-    values: [data.last_lesson, data.points, id],
+    query: "UPDATE users SET last_lesson = ?, xp = ? WHERE id_user = ?",
+    values: [data.last_lesson, data.xp, id],
   });
 };
 

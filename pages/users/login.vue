@@ -14,7 +14,7 @@
     />
 
     <div
-      class="flex flex-col justify-center items-center h-screen lg:h-screen bg-cover bg-orange-300 bg-[url('/src/bg_login.jpg')]"
+      class="px-2 flex flex-col justify-center items-center h-screen lg:h-screen bg-cover bg-orange-300 bg-[url('/src/bg_login.jpg')]"
     >
       <div
         class="bg-gradient-to-r from-orange-300 to-green-300 opacity-80 w-full h-full absolute z-10"
@@ -26,13 +26,13 @@
       />
 
       <div
-        class="glass z-50 flex flex-col justify-center items-center bg-white px-5 rounded-lg shadow-lg max-w-md py-5"
+        class="glass z-50 flex flex-col justify-center items-center bg-white px-5 rounded-lg shadow-lg w-full sm:max-w-md py-5"
       >
         <div class="flex justify-start w-full">
           <NuxtLink to="/"> <BootstrapIcon name="arrow-left" />home</NuxtLink>
         </div>
         <h1 class="text-3xl mb-10 text-green-700 font-bold">Login</h1>
-        <form class="w-96" @submit.prevent="login">
+        <form class="w-full md:w-96" @submit.prevent="login">
           <div class="relative z-0 w-full mb-10 group">
             <input
               v-model="user.email"

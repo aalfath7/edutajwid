@@ -56,7 +56,7 @@ export const updateLesson = async (evt: H3Event) => {
   const body = await readBody(evt);
   await usersModel.updateLesson(evt.context.params?.id as string, {
     last_lesson: body.last_lesson,
-    points: body.points,
+    xp: body.xp,
   });
 };
 

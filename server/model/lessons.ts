@@ -21,7 +21,7 @@ export const read = async () => {
 
 export const getBasicLevel = async () => {
   const result = await sql({
-    query: "SELECT * FROM lessons WHERE id_lesson <= 35",
+    query: "SELECT * FROM lessons WHERE id_lesson <= 29",
   });
 
   return result;
@@ -29,7 +29,7 @@ export const getBasicLevel = async () => {
 
 export const getMediumLevel = async () => {
   const result = await sql({
-    query: "SELECT * FROM lessons WHERE id_lesson BETWEEN 36 AND 85",
+    query: "SELECT * FROM lessons WHERE id_lesson BETWEEN 30 AND 75",
   });
 
   return result;
@@ -37,7 +37,7 @@ export const getMediumLevel = async () => {
 
 export const getAdvancedLevel = async () => {
   const result = await sql({
-    query: "SELECT * FROM lessons WHERE id_lesson BETWEEN 86 AND 108",
+    query: "SELECT * FROM lessons WHERE id_lesson BETWEEN 76 AND 95",
   });
 
   return result;

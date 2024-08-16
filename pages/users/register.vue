@@ -8,7 +8,7 @@
     />
     <Notif :is-active="notifNotSuccess" text="Buat Akun Gagal" />
     <div
-      class="flex flex-col justify-center items-center h-screen lg:h-screen bg-cover bg-orange-300 bg-[url('/src/bg_login.jpg')]"
+      class="flex flex-col justify-center items-center px-2 h-screen lg:h-screen bg-cover bg-orange-300 bg-[url('/src/bg_login.jpg')]"
     >
       <div
         class="bg-gradient-to-r from-orange-300 to-green-300 opacity-80 w-full h-full absolute z-10"
@@ -19,14 +19,14 @@
         class="w-96 h-96 opacity-90 fixed -right-32 -bottom-20 -rotate-12 saturate-100"
       />
       <div
-        class="glass z-50 flex flex-col justify-center items-center bg-white rounded-lg shadow-lg max-w-md py-5 px-5"
+        class="glass z-50 flex flex-col justify-center items-center bg-white rounded-lg shadow-lg w-full sm:max-w-md py-5 px-5"
       >
         <div class="flex justify-start w-full">
           <NuxtLink to="/"> <BootstrapIcon name="arrow-left" />home</NuxtLink>
         </div>
         <h1 class="text-3xl mb-10 font-bold text-green-700">Sign Up</h1>
 
-        <form class="w-96" @submit.prevent="addData">
+        <form class="w-full sm:w-96" @submit.prevent="addData">
           <div class="relative z-0 w-full mb-5 group">
             <input
               v-model="form.name"

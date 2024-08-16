@@ -37,7 +37,7 @@
         <img
           v-if="results[0].image"
           class="w-32 my-2"
-          :src="'/src/' + results[0].image"
+          :src="results[0].image"
           alt=""
         />
         <div
@@ -282,7 +282,7 @@
           "
           class="flex justify-center py-10 border-t-2"
         >
-          <div class="grid grid-cols-3 gap-4 pb-20">
+          <div class="grid grid-cols-3 gap-4 pb-20 overflow-hidden">
             <button
               v-for="answer in answerChoices"
               type="button"
@@ -294,7 +294,7 @@
               @click="getAnswer(answer)"
             >
               <div
-                class="w-full sm:w-44 text-sm sm:text-base capitalize"
+                class="w-44 text-sm sm:text-base capitalize"
                 :class="arabic ? 'text-3xl' : 'text-base'"
               >
                 {{ answer }}
@@ -446,13 +446,6 @@
       >
         <div class="flex">
           <button
-            type="button"
-            class="text-sm flex items-center py-2.5 px-5 mb-2 font-medium text-yellow-400 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
-            Bantuan
-            <BootstrapIcon class="ml-4 text-2xl" name="lightning-charge-fill" />
-          </button>
-          <button
             @click="updateLesson"
             type="button"
             class="ml-2 flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -546,7 +539,7 @@ const updateLesson = async () => {
           method: "PUT",
           body: {
             last_lesson: nextLesson.results[0].slug,
-            points: dataUser.value.points + 200,
+            xp: dataUser.value.xp + 200,
           },
         });
       }
@@ -787,7 +780,7 @@ const dragLeave = (index) => {
   dropItem.value[index] = "drop here";
 };
 
-onMounted(() => {
+onMounted(async () => {
   initFlowbite();
   loadTokenFromLocalStorage();
 

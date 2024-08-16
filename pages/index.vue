@@ -6,17 +6,17 @@
           class="flex flex-col sm:flex-row justify-between slit-in bg-gray-50 bg-opacity-80 dark:bg-gray-800 border border-gray-200 rounded-lg p-8 md:p-12 mb-8"
         >
           <div class="mb-10 sm:mb-0">
-            <h1 class="text-3xl font-bold text-black mb-6">
+            <h1 class="text-xl sm:text-3xl font-bold text-black mb-6">
               Cara Seru dan Mudah Belajar Tajwid
             </h1>
-            <p class="font-normal text-xl mb-6">
+            <p class="font-normal text-sm sm:text-xl mb-6">
               Jadilah salah satu Keluarga Allah SWT dengan mempelajari Ilmu
               Tajwid Al-Quran.
             </p>
             <button class="btn-3d">
               <NuxtLink
                 to="/dashboard"
-                class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
+                class="inline-flex justify-center items-center py-2.5 px-5 text-sm sm:text-base font-medium text-center text-white rounded-lg bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
               >
                 Mulai Belajar
                 <svg
@@ -46,7 +46,7 @@
           <h5 class="mb-2 text-xl md:text-2xl font-bold">
             خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ
           </h5>
-          <p>
+          <p class="text-sm sm:text-xl">
             “Sebaik-baik kalian adalah orang yang belajar Al-Qur`an dan
             mengajarkannya.” (H.R. At-Tirmidzi)
           </p>

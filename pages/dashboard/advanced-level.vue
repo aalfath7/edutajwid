@@ -180,7 +180,6 @@ const scrollIntoSection = (section) => {
 onMounted(() => {
   initFlowbite();
   setTimeout(() => {
-    console.log(last_bab.value);
     scrollIntoSection(last_bab.value);
   }, 500);
 });
