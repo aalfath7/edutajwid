@@ -48,6 +48,7 @@ async function generateHMAC(message: any, secretKey: any) {
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
+    BASEAPIURL: "https://api.qti.biz.id",
     authenticated: false,
     loading: false,
     token: "",

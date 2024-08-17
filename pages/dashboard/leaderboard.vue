@@ -65,18 +65,20 @@ definePageMeta({
   middleware: "auth",
 });
 
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+const { BASEAPIURL } = storeToRefs(useAuthStore());
+
 const data = ref();
 
-const { results } = await $fetch("/api/users/leaderboard");
-// const users = await $fetch(
-//   "https://edu.racikalcendekia.sch.id/users/leaderboard"
-// );
+// const { results } = await $fetch("/api/users/leaderboard");
+const users = await $fetch(BASEAPIURL.value + "/users/leaderboard");
 
 const leaderboard = ref();
 
-if (results) {
+if (users) {
   leaderboard.value = await Promise.all(
-    results.map(async (user) => {
+    users.map(async (user) => {
       const lesson = await $fetch("/api/lessons/" + user.last_lesson);
       return { ...user, last_lesson: lesson.results[0].id_lesson };
     })

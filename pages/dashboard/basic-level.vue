@@ -85,9 +85,10 @@ definePageMeta({
 import { initFlowbite } from "flowbite";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 
-const { results } = await $fetch("/api/lessons/basic-level");
+// const { results } = await $fetch("/api/lessons/basic-level");
+const results = await $fetch(BASEAPIURL.value + "/lessons/basic-level");
 
 const filter = ref([
   {

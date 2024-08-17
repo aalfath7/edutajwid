@@ -581,17 +581,21 @@ watch(
 
       dataUser.value = results[0];
 
-      setInterval(() => {
-        if (XP.value < dataUser.value.xp) {
-          if (dataUser.value.xp - XP.value > 100) {
-            XP.value = XP.value + 100;
-          } else if (dataUser.value.xp - XP.value > 50) {
-            XP.value = XP.value + 10;
-          } else {
-            XP.value++;
+      console.log(XP.value, dataUser.value.xp);
+
+      if (XP.value < dataUser.value.xp) {
+        setInterval(() => {
+          if (XP.value < dataUser.value.xp) {
+            if (dataUser.value.xp - XP.value > 100) {
+              XP.value = XP.value + 100;
+            } else if (dataUser.value.xp - XP.value > 50) {
+              XP.value = XP.value + 10;
+            } else {
+              XP.value++;
+            }
           }
-        }
-      }, 0.1);
+        }, 0.1);
+      }
 
       const lesson = await $fetch("/api/lessons/" + results[0].last_lesson);
 
