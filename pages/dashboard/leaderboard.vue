@@ -77,9 +77,11 @@ const leaderboard = ref();
 if (users) {
   leaderboard.value = await Promise.all(
     users.map(async (user) => {
-      const lesson = await $fetch("/api/lessons/" + user.last_lesson);
-      if (lesson.results[0]) {
-        return { ...user, last_lesson: lesson.results[0].id_lesson };
+      const lesson = await $fetch(
+        BASEAPIURL.value + "/lessons/" + user.last_lesson
+      );
+      if (lesson[0]) {
+        return { ...user, last_lesson: lesson[0].id_lesson };
       }
     })
   );
