@@ -70,13 +70,18 @@ import { useAuthStore } from "~/store/index";
 const { BASEAPIURL } = storeToRefs(useAuthStore());
 
 // const { results } = await $fetch("/api/users/leaderboard");
-const users = await $fetch(BASEAPIURL.value + "/leaderboard");
+const users = ref();
+try {
+  users.value = await $fetch(BASEAPIURL.value + "/leaderboard");
+} catch (error) {
+  console.log(error);
+}
 
 const leaderboard = ref();
 
-if (users) {
+if (users.value) {
   leaderboard.value = await Promise.all(
-    users.map(async (user) => {
+    users.value.map(async (user) => {
       const lesson = await $fetch(
         BASEAPIURL.value + "/lessons/" + user.last_lesson
       );

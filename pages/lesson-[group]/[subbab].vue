@@ -581,8 +581,6 @@ watch(
 
       dataUser.value = results[0];
 
-      console.log(XP.value, dataUser.value.xp);
-
       if (XP.value < dataUser.value.xp) {
         setInterval(() => {
           if (XP.value < dataUser.value.xp) {
@@ -656,18 +654,19 @@ const next = async () => {
           router.push(results[0].nextLink);
         }
 
-        if (results[0].id_lesson > last_lesson.value) {
-          if (
-            results[0].nextLink === "/dashboard/basic-level" ||
-            results[0].nextLink === "/dashboard/medium-level" ||
-            results[0].nextLink === "/dashboard/advanced-level"
-          ) {
-            startAnimation();
-            finishedBab.value = true;
-          } else {
-            router.push(results[0].nextLink);
-          }
+        if (
+          results[0].nextLink === "/dashboard/basic-level" ||
+          results[0].nextLink === "/dashboard/medium-level" ||
+          results[0].nextLink === "/dashboard/advanced-level"
+        ) {
+          totalGetXP.value = totalGetXP.value + resultGenXP.value;
+          startAnimation();
+          finishedBab.value = true;
+        } else {
+          router.push(results[0].nextLink);
         }
+        // if (results[0].id_lesson > last_lesson.value) {
+        // }
       }
     }
   }
@@ -954,7 +953,13 @@ let interval;
 const startAnimation = () => {
   interval = setInterval(() => {
     if (xp.value < totalGetXP.value) {
-      xp.value++;
+      if (totalGetXP.value - xp.value > 100) {
+        xp.value = xp.value + 100;
+      } else if (totalGetXP.value - xp.value > 50) {
+        xp.value = xp.value + 10;
+      } else {
+        xp.value++;
+      }
     }
   }, 10);
 };

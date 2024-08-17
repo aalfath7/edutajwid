@@ -1,6 +1,25 @@
 <template>
   <div class="slit-in grid lg:grid-cols-3 gap-5">
-    <div class="lg:col-span-2 ml-3 -mt-5">
+    <div v-if="title_last_lesson" class="lg:order-last lg:block">
+      <div class="sticky top-20">
+        <NuxtLink
+          :to="slug"
+          class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        >
+          <h5
+            class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            Lanjut Belajar
+          </h5>
+          <p
+            class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
+          >
+            {{ title_last_lesson }}
+          </p>
+        </NuxtLink>
+      </div>
+    </div>
+    <div class="lg:col-span-2 lg:ml-3 -mt-5">
       <ol class="mt-5 items-start xl:flex">
         <li v-for="item in data" class="relative mb-6 xl:mb-0">
           <div class="flex items-center">
@@ -61,42 +80,10 @@
         </li>
       </ol>
     </div>
-    <div class="hidden lg:block">
-      <div class="sticky top-20">
-        <a
-          href="#"
-          class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-        >
-          <h5
-            class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
-          >
-            Misi Harian
-          </h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400">
-            Selesaikan misi harian untuk mendapatkan exp tambahan
-          </p>
-
-          <div class="flex justify-between mt-5 mb-1">
-            <span class="text-base font-medium text-blue-700 dark:text-white"
-              >Progress</span
-            >
-            <span class="text-sm font-medium text-blue-700 dark:text-white"
-              >45%</span
-            >
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div
-              class="bg-blue-600 h-2.5 rounded-full"
-              style="width: 45%"
-            ></div>
-          </div>
-        </a>
-      </div>
-    </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 useHead({
   title: "EduTajwid - Belajar Tajwid Dengan Mudah",
 });
@@ -109,6 +96,10 @@ import { initFlowbite } from "flowbite";
 onMounted(() => {
   initFlowbite();
 });
+
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 
 const data = [
   {
@@ -136,4 +127,28 @@ const data = [
     visible: true,
   },
 ];
+
+const title_last_lesson = ref();
+const slug = ref();
+
+watch(
+  () => user.value.id_user,
+  async (newId) => {
+    if (newId) {
+      const { data } = await useFetch("/api/users/person/" + newId);
+
+      const lesson = await $fetch(
+        "/api/lessons/" + data.value.results[0].last_lesson
+      );
+
+      if (lesson.results[0].id_lesson !== 1) {
+        title_last_lesson.value =
+          lesson.results[0].subbab + " - " + lesson.results[0].bab;
+        slug.value =
+          "/lesson-" + lesson.results[0].lesson + "/" + lesson.results[0].slug;
+      }
+    }
+  },
+  { immediate: true }
+);
 </script>

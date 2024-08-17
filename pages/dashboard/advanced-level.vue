@@ -1,9 +1,28 @@
 <template>
   <div class="grid lg:grid-cols-3 gap-5">
-    <div class="lg:col-span-2 ml-5 -mt-5">
-      <Level title="Ta' - Advanced Level" />
+    <div v-if="title_last_lesson" class="lg:order-last lg:block">
+      <div class="sticky top-20">
+        <NuxtLink
+          :to="slug"
+          class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        >
+          <h5
+            class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            Lanjut Belajar
+          </h5>
+          <p
+            class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
+          >
+            {{ title_last_lesson }}
+          </p>
+        </NuxtLink>
+      </div>
+    </div>
+    <div class="lg:col-span-2 -mt-5">
+      <Level class="lg:ml-10" title="Ta' - Advanced Level" />
       <ol
-        class="lg:col-span-2 relative border-s border-gray-200 dark:border-gray-700"
+        class="lg:col-span-2 relative border-s border-gray-200 dark:border-gray-700 ml-4"
       >
         <li :id="bab.title" v-for="(bab, i) in filter" :key="i" class="ms-6">
           <span
@@ -33,42 +52,13 @@
             type="button"
             class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
           >
-            <BootstrapIcon class="mr-4 text-2xl" name="arrow-left-circle" />
+            <BootstrapIcon
+              class="hidden sm:inline mr-4 text-2xl"
+              name="arrow-left-circle"
+            />
             Medium Level
           </button>
         </NuxtLink>
-      </div>
-    </div>
-    <div class="hidden lg:block">
-      <div class="sticky top-20">
-        <a
-          href="#"
-          class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-        >
-          <h5
-            class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
-          >
-            Misi Harian
-          </h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400">
-            Selesaikan misi harian untuk mendapatkan exp tambahan
-          </p>
-
-          <div class="flex justify-between mt-5 mb-1">
-            <span class="text-base font-medium text-blue-700 dark:text-white"
-              >Progress</span
-            >
-            <span class="text-sm font-medium text-blue-700 dark:text-white"
-              >45%</span
-            >
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div
-              class="bg-blue-600 h-2.5 rounded-full"
-              style="width: 45%"
-            ></div>
-          </div>
-        </a>
       </div>
     </div>
   </div>
@@ -132,6 +122,8 @@ if (results.value) {
 }
 
 const last_lesson = ref();
+const title_last_lesson = ref();
+const slug = ref();
 
 const status = (id_lesson) => {
   if (id_lesson < last_lesson.value) {
@@ -157,6 +149,12 @@ watch(
 
       last_lesson.value = lesson.results[0].id_lesson;
       last_bab.value = lesson.results[0].bab;
+      if (lesson.results[0].id_lesson !== 1) {
+        title_last_lesson.value =
+          lesson.results[0].subbab + " - " + lesson.results[0].bab;
+        slug.value =
+          "/lesson-" + lesson.results[0].lesson + "/" + lesson.results[0].slug;
+      }
 
       filter.value.forEach((e) => {
         e.lesson.forEach((item, i) => {
