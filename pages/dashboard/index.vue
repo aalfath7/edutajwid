@@ -34,7 +34,7 @@
                   {{ item.title }}
                 </h3>
                 <p
-                  class="text-base font-normal text-gray-500 dark:text-gray-400"
+                  class="text-sm sm:text-base font-normal text-gray-500 dark:text-gray-400"
                 >
                   {{ item.desc }}
                 </p>

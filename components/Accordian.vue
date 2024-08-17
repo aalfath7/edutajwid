@@ -10,7 +10,7 @@
           :aria-expanded="$props.actived"
           :aria-controls="'accordion-collapse-body-' + no"
         >
-          <span>{{ title }}</span>
+          <span class="text-start text-sm sm:text-base">{{ title }}</span>
           <svg
             data-accordion-icon
             class="w-3 h-3 shrink-0"

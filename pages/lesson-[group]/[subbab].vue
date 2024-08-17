@@ -1,5 +1,82 @@
 <template>
   <div class="lg:h-screen">
+    <!-- confetti -->
+    <Confetti :actived="finishedBab" />
+    <!-- modal -->
+    <div
+      :class="finishedBab ? 'zoom' : 'hidden'"
+      class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
+    >
+      <div
+        @click=""
+        class="absolute opacity-70 w-full h-full bg-gradient-to-b from-green-500 to-transparent"
+      ></div>
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+              Congratulation!
+            </h3>
+            <button
+              @click=""
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              <svg
+                class="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+
+          <div class="p-4 md:p-5 text-center">
+            <div class="py-2">
+              <BootstrapIcon class="text-8xl text-yellow-300" name="award" />
+              <h2 class="mt-5 text-sm sm:text-base">
+                Selamat Kamu telah menyelesaikan bab {{ results[0].bab }}
+              </h2>
+              <div class="border-t pt-2 mt-2">
+                <p class="text-sm sm:text-base">Kamu mendapatkan {{ xp }} XP</p>
+              </div>
+            </div>
+            <div class="mt-5 flex">
+              <NuxtLink
+                :to="results[0].nextLink"
+                class="text-center flex items-center justify-center w-full text-black bg-white hover:bg-gray-100 focus:ring-4 border border-gray-200 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-2"
+              >
+                Kembali
+              </NuxtLink>
+              <NuxtLink
+                :to="
+                  '/lesson-' +
+                  nextLesson.results[0].lesson +
+                  '/' +
+                  nextLesson.results[0].slug
+                "
+                class="text-center flex items-center justify-center w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              >
+                Lanjut Belajar
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- nav -->
     <div
       class="bg-white w-full fixed flex items-center justify-between p-4 md:px-20 border-b-2 border-gray-300 z-50"
@@ -10,7 +87,9 @@
           name="house-door-fill"
         />
       </NuxtLink>
-      <h1 class="capitalize text-sm sm:text-xl">{{ results[0].subbab }}</h1>
+      <h1 class="capitalize text-sm sm:text-xl text-center">
+        {{ results[0].subbab }}
+      </h1>
       <div>
         <button>
           <BootstrapIcon
@@ -25,14 +104,14 @@
     <!-- text and image -->
     <div
       v-if="results[0].type === 'text image'"
-      class="relative flex flex-col justify-center items-center pt-20 pb-40 px-10"
+      class="relative flex flex-col justify-center items-center pt-20 pb-40 px-2"
     >
-      <div class="flex w-full lg:w-2/3 mb-2 items-center text-blue-500">
+      <div class="flex w-full sm:w-2/3 mb-2 items-center text-blue-500">
         <BootstrapIcon name="clouds" class="text-2xl mr-2" />
         <span class="text-sm">Pelajari</span>
       </div>
       <div
-        class="w-full lg:w-2/3 flex justify-center items-center flex-col rounded-lg border-2 border-green-500 shadow-lg p-5"
+        class="w-full sm:w-2/3 flex justify-center items-center flex-col rounded-lg border-2 border-green-500 shadow-lg p-5"
       >
         <img
           v-if="results[0].image"
@@ -528,13 +607,15 @@ watch(
   { immediate: true }
 );
 
+const finishedBab = ref(false);
+const nextLesson = await $fetch(
+  "/api/lessons/get-data/" + (results[0].id_lesson + 1)
+);
+
 const updateLesson = async () => {
   if (id_user.value) {
     if (results[0].id_lesson !== 108) {
       if (results[0].id_lesson === last_lesson.value) {
-        const nextLesson = await $fetch(
-          "/api/lessons/get-data/" + (results[0].id_lesson + 1)
-        );
         await $fetch("/api/users/update-lesson/" + id_user.value, {
           method: "PUT",
           body: {
@@ -545,7 +626,16 @@ const updateLesson = async () => {
       }
     }
 
-    router.push(results[0].nextLink);
+    if (
+      results[0].nextLink === "/dashboard/basic-level" ||
+      results[0].nextLink === "/dashboard/medium-level" ||
+      results[0].nextLink === "/dashboard/advanced-level"
+    ) {
+      startAnimation();
+      finishedBab.value = true;
+    } else {
+      router.push(results[0].nextLink);
+    }
   }
 };
 
@@ -805,6 +895,45 @@ onUnmounted(() => {
     window.removeEventListener("resize", handleResize);
   }
 });
+
+// xp
+const xp = ref(1);
+let interval;
+
+const startAnimation = () => {
+  interval = setInterval(() => {
+    if (xp.value < 200) {
+      xp.value++;
+    }
+  }, 10); // Mengubah angka setiap 1 detik
+};
+
+onUnmounted(() => {
+  clearInterval(interval);
+});
 </script>
 
-<style setup></style>
+<style setup>
+.zoom {
+  animation: bounce 2s;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.5);
+  }
+  20% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.1);
+  }
+  40%,
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

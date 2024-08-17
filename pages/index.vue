@@ -53,18 +53,9 @@
         </div>
       </div>
     </section>
-    <div class="area">
+    <div class="area bg-orange-400">
       <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li v-for="i in 10"></li>
       </ul>
     </div>
   </div>
@@ -90,11 +81,6 @@ const logout = () => {
 </script>
 
 <style scoped>
-body {
-  background-image: url("/src/bg.png");
-  background-size: cover;
-}
-
 .btn-3d {
   transform: perspective(800px) rotateY(10deg) scale(0.94) rotateX(10deg);
   filter: blur(0.01px);
@@ -127,7 +113,6 @@ body {
 }
 
 .area {
-  background: #f69f3c;
   background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
   position: absolute;
   top: 0;
