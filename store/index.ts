@@ -61,6 +61,7 @@ export const useAuthStore = defineStore("auth", {
       last_lesson: number;
       xp: number;
     },
+    XP: 0,
   }),
   actions: {
     async generateToken(payload: any, secretKey: any, expiresInSeconds: any) {
@@ -194,12 +195,12 @@ export const useAuthStore = defineStore("auth", {
             xp: result.xp,
           };
 
+          this.XP = result.xp;
           this.user = user;
           this.authenticated = true;
         }
       }
     },
-
     logUserOut() {
       this.authenticated = false;
       this.token = "";
@@ -211,6 +212,7 @@ export const useAuthStore = defineStore("auth", {
       this.user.role = "";
       this.user.last_lesson = 0;
       this.user.xp = 0;
+      this.XP = 0;
       localStorage.removeItem("authToken");
     },
   },

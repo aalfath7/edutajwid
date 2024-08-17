@@ -14,33 +14,11 @@
       <div class="relative p-4 w-full max-w-md max-h-full">
         <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
           <div
-            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+            class="text-center p-4 md:p-5 border-b rounded-t dark:border-gray-600"
           >
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
               Congratulation!
             </h3>
-            <button
-              @click=""
-              type="button"
-              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              <svg
-                class="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-              <span class="sr-only">Close modal</span>
-            </button>
           </div>
 
           <div class="p-4 md:p-5 text-center">
@@ -50,7 +28,9 @@
                 Selamat Kamu telah menyelesaikan bab {{ results[0].bab }}
               </h2>
               <div class="border-t pt-2 mt-2">
-                <p class="text-sm sm:text-base">Kamu mendapatkan {{ xp }} XP</p>
+                <p class="text-sm sm:text-base">
+                  Kamu mendapatkan total {{ xp }} XP tambahan
+                </p>
               </div>
             </div>
             <div class="mt-5 flex">
@@ -61,6 +41,7 @@
                 Kembali
               </NuxtLink>
               <NuxtLink
+                v-if="nextLesson.results[0]"
                 :to="
                   '/lesson-' +
                   nextLesson.results[0].lesson +
@@ -79,25 +60,34 @@
 
     <!-- nav -->
     <div
-      class="bg-white w-full fixed flex items-center justify-between p-4 md:px-20 border-b-2 border-gray-300 z-50"
+      class="bg-white w-full fixed grid grid-cols-3 p-4 md:px-20 border-b-2 border-gray-300 z-50"
     >
-      <NuxtLink to="/dashboard">
+      <NuxtLink to="/dashboard" class="w-full">
         <BootstrapIcon
           class="text-2xl text-gray-700 hover:text-gray-600"
           name="house-door-fill"
         />
       </NuxtLink>
-      <h1 class="capitalize text-sm sm:text-xl text-center">
+      <h1
+        class="capitalize text-sm sm:text-xl text-center flex items-center justify-center"
+      >
         {{ results[0].subbab }}
       </h1>
-      <div>
-        <button>
+      <div class="w-full flex justify-end">
+        <div v-if="dataUser" class="text-sm flex items-center">
+          <span class="hidden sm:inline">Lesson : {{ results[0].lesson }}</span>
+          <span
+            class="ml-5 bg-green-500 text-white shadow rounded-full text-sm mx-1 w-5 h-5 flex justify-center items-center"
+            >xp</span
+          >
+          :
+          {{ XP }}
           <BootstrapIcon
-            class="text-sm sm:text-2xl text-yellow-400"
-            name="lightning-charge-fill"
+            v-if="XP < dataUser.xp"
+            name="arrow-up-short"
+            class="text-green-500 text-xl"
           />
-          <span>15</span>
-        </button>
+        </div>
       </div>
     </div>
 
@@ -129,7 +119,7 @@
         class="bg-white fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-end px-4 border-y-2 border-gray-300"
       >
         <button
-          @click="updateLesson"
+          @click="next"
           type="button"
           class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         >
@@ -153,7 +143,7 @@
         class="fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-end px-4 border-y-2 border-gray-300"
       >
         <button
-          @click="updateLesson"
+          @click="next"
           type="button"
           class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         >
@@ -361,7 +351,7 @@
           "
           class="flex justify-center py-10 border-t-2"
         >
-          <div class="grid grid-cols-3 gap-4 pb-20 overflow-hidden">
+          <div class="grid grid-cols-3 gap-4 pb-20 p-2 overflow-hidden">
             <button
               v-for="answer in answerChoices"
               type="button"
@@ -511,7 +501,7 @@
           </div>
         </div>
         <button
-          @click="updateLesson"
+          @click="next"
           type="button"
           class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         >
@@ -521,17 +511,17 @@
       </div>
       <div
         v-else
-        class="fixed w-full bottom-0 py-5 md:px-20 bg-white flex items-center justify-between px-4 border-y-2 border-gray-300"
+        class="fixed w-full bottom-0 py-5 md:px-20 bg-white flex items-center justify-end px-4 border-y-2 border-gray-300"
       >
-        <div class="flex">
+        <!-- <div class="flex">
           <button
-            @click="updateLesson"
+            @click=""
             type="button"
             class="ml-2 flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
           >
             Skip
           </button>
-        </div>
+        </div> -->
         <button
           type="button"
           :class="{
@@ -561,7 +551,7 @@ definePageMeta({
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, XP } = storeToRefs(useAuthStore());
 const { loadTokenFromLocalStorage } = useAuthStore();
 
 const route = useRoute();
@@ -580,6 +570,7 @@ const { results } = await $fetch("/api/lessons/" + route.params.subbab);
 const id_user = ref();
 const dataUser = ref();
 const last_lesson = ref();
+const totalGetXP = ref(0);
 
 watch(
   () => user.value.id_user,
@@ -590,7 +581,17 @@ watch(
 
       dataUser.value = results[0];
 
-      // console.log(results[0].last_lesson);
+      setInterval(() => {
+        if (XP.value < dataUser.value.xp) {
+          if (dataUser.value.xp - XP.value > 100) {
+            XP.value = XP.value + 100;
+          } else if (dataUser.value.xp - XP.value > 50) {
+            XP.value = XP.value + 10;
+          } else {
+            XP.value++;
+          }
+        }
+      }, 0.1);
 
       const lesson = await $fetch("/api/lessons/" + results[0].last_lesson);
 
@@ -602,6 +603,8 @@ watch(
       if (lesson.results[0].id_lesson < thisLesson.results[0].id_lesson) {
         router.push("/dashboard");
       }
+
+      totalGetXP.value = dataUser.value.xp - user.value.xp;
     }
   },
   { immediate: true }
@@ -612,29 +615,56 @@ const nextLesson = await $fetch(
   "/api/lessons/get-data/" + (results[0].id_lesson + 1)
 );
 
-const updateLesson = async () => {
-  if (id_user.value) {
-    if (results[0].id_lesson !== 108) {
-      if (results[0].id_lesson === last_lesson.value) {
-        await $fetch("/api/users/update-lesson/" + id_user.value, {
-          method: "PUT",
-          body: {
-            last_lesson: nextLesson.results[0].slug,
-            xp: dataUser.value.xp + 200,
-          },
-        });
-      }
-    }
+// generate xp
+const startTime = ref(0);
+const resultGenXP = ref(0);
 
-    if (
-      results[0].nextLink === "/dashboard/basic-level" ||
-      results[0].nextLink === "/dashboard/medium-level" ||
-      results[0].nextLink === "/dashboard/advanced-level"
-    ) {
-      startAnimation();
-      finishedBab.value = true;
-    } else {
-      router.push(results[0].nextLink);
+onMounted(() => {
+  startTime.value = Date.now();
+});
+
+const generateXP = () => {
+  const currentTime = Date.now();
+  const timeElapsed = (currentTime - startTime.value) / 1000;
+
+  const baseXP = 100;
+  const multiplier = Math.max(0.5, (10 - timeElapsed) / 5);
+
+  resultGenXP.value = Math.floor(baseXP * multiplier);
+};
+
+const next = async () => {
+  if ((results[0].type = "text image")) {
+    if (id_user.value) {
+      if (results[0].id_lesson !== 95) {
+        if (results[0].id_lesson === last_lesson.value) {
+          generateXP();
+          await $fetch("/api/users/update-lesson/" + id_user.value, {
+            method: "PUT",
+            body: {
+              last_lesson: nextLesson.results[0].slug,
+              xp: dataUser.value.xp + resultGenXP.value,
+            },
+          });
+        }
+
+        if (results[0].id_lesson < last_lesson.value) {
+          router.push(results[0].nextLink);
+        }
+
+        if (results[0].id_lesson > last_lesson.value) {
+          if (
+            results[0].nextLink === "/dashboard/basic-level" ||
+            results[0].nextLink === "/dashboard/medium-level" ||
+            results[0].nextLink === "/dashboard/advanced-level"
+          ) {
+            startAnimation();
+            finishedBab.value = true;
+          } else {
+            router.push(results[0].nextLink);
+          }
+        }
+      }
     }
   }
 };
@@ -657,7 +687,7 @@ questionArr.value = JSON.parse(results[0].questionArr);
 const getAnswer = (res) => {
   userAnswer.value = res;
 };
-const submit = () => {
+const submit = async () => {
   answerSubmit.value = true;
   if (userAnswer.value === answer.value || resultPair.value == true) {
     new Audio("/sound/correct.mp3").play();
@@ -668,6 +698,26 @@ const submit = () => {
   } else {
     new Audio("/sound/wrong.mp3").play();
     result.value = false;
+  }
+
+  if (id_user.value) {
+    if (results[0].id_lesson !== 95) {
+      if (results[0].id_lesson === last_lesson.value) {
+        generateXP();
+        await $fetch("/api/users/update-lesson/" + id_user.value, {
+          method: "PUT",
+          body: {
+            last_lesson: nextLesson.results[0].slug,
+            xp: dataUser.value.xp + resultGenXP.value,
+          },
+        });
+
+        XP.value = dataUser.value.xp;
+      }
+    } else {
+      startAnimation();
+      finishedBab.value = true;
+    }
   }
 };
 const playSound = (sound) => {
@@ -760,49 +810,47 @@ const answerGroup = ref([...manyAnswer.value]);
 const resultPair = ref("");
 
 // for pairing mobile
-if (dropItem.value) {
-  const chooseBlock = (i) => {
-    dropItem.value.forEach((e, index) => {
-      if (i == index) {
-        dropItem.value[index] = "choose answer";
+const chooseBlock = (i) => {
+  dropItem.value.forEach((e, index) => {
+    if (i == index) {
+      dropItem.value[index] = "choose answer";
+    } else {
+      if (dropItem.value[index] === "choose answer") {
+        dropItem.value[index] = "click here";
+      }
+    }
+  });
+};
+
+const chooseItem = (item) => {
+  dropItem.value.forEach((e, index) => {
+    if (e === "choose answer") {
+      dropItem.value[index] = item;
+      if (manyAnswer.value[index] == item) {
+        matchedItem.value[index] = true;
       } else {
-        if (dropItem.value[index] === "choose answer") {
-          dropItem.value[index] = "click here";
-        }
+        matchedItem.value[index] = false;
       }
-    });
-  };
-
-  const chooseItem = (item) => {
-    dropItem.value.forEach((e, index) => {
-      if (e === "choose answer") {
-        dropItem.value[index] = item;
-        if (manyAnswer.value[index] == item) {
-          matchedItem.value[index] = true;
-        } else {
-          matchedItem.value[index] = false;
-        }
-      }
-    });
-
-    if (dropItem.value.filter((e) => e === "click here").length === 0) {
-      userAnswer.value = true;
-    } else {
-      userAnswer.value = false;
     }
+  });
 
-    if (matchedItem.value.filter((e) => e === false).length === 0) {
-      resultPair.value = true;
-    } else if (
-      matchedItem.value.filter((e) => e === false).length > 0 &&
-      matchedItem.value.filter((e) => e === true).length > 0
-    ) {
-      resultPair.value = "partly true";
-    } else {
-      resultPair.value = false;
-    }
-  };
-}
+  if (dropItem.value.filter((e) => e === "click here").length === 0) {
+    userAnswer.value = true;
+  } else {
+    userAnswer.value = false;
+  }
+
+  if (matchedItem.value.filter((e) => e === false).length === 0) {
+    resultPair.value = true;
+  } else if (
+    matchedItem.value.filter((e) => e === false).length > 0 &&
+    matchedItem.value.filter((e) => e === true).length > 0
+  ) {
+    resultPair.value = "partly true";
+  } else {
+    resultPair.value = false;
+  }
+};
 
 const pairingStyle = (item) => {
   if (item === "click here") {
@@ -896,16 +944,15 @@ onUnmounted(() => {
   }
 });
 
-// xp
-const xp = ref(1);
+const xp = ref(0);
 let interval;
 
 const startAnimation = () => {
   interval = setInterval(() => {
-    if (xp.value < 200) {
+    if (xp.value < totalGetXP.value) {
       xp.value++;
     }
-  }, 10); // Mengubah angka setiap 1 detik
+  }, 10);
 };
 
 onUnmounted(() => {
