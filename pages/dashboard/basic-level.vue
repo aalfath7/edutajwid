@@ -118,12 +118,12 @@ const filter = ref([
   },
 ]);
 
-if (results) {
-  results.forEach((e, i) => {
+if (results.value) {
+  results.value.forEach((e, i) => {
     filter.value.forEach((item) => {
       if (e.bab === item.title) {
         if (i > 0) {
-          if (e.subbab !== results[i - 1].subbab) {
+          if (e.subbab !== results.value[i - 1].subbab) {
             item.lesson.push(e);
           }
         } else {
