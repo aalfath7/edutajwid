@@ -21,8 +21,6 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "buffer": "^6.0.3",
-    "fast-jwt": "^4.0.2",
     "flowbite": "^2.1.1",
     "mysql2": "^3.6.3",
     "pinia": "^2.1.7"

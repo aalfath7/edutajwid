@@ -157,7 +157,7 @@
         </div>
       </aside>
 
-      <div class="p-4 sm:pl-64 pt-20">
+      <div class="p-4 sm:pl-72 lg:pl-64 pt-20">
         <slot />
       </div>
     </div>

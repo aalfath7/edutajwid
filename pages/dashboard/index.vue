@@ -1,84 +1,91 @@
 <template>
-  <div class="slit-in grid lg:grid-cols-3 gap-5">
-    <div v-if="title_last_lesson" class="lg:order-last lg:block">
-      <div class="sticky top-20">
-        <NuxtLink
-          :to="slug"
-          class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-        >
-          <h5
-            class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+  <div>
+    <div v-if="data" class="slit-in grid lg:grid-cols-3 gap-5">
+      <div v-if="title_last_lesson" class="lg:order-last lg:block">
+        <div class="sticky top-20">
+          <NuxtLink
+            :to="slug"
+            class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
-            Lanjut Belajar
-          </h5>
-          <p
-            class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
-          >
-            {{ title_last_lesson }}
-          </p>
-        </NuxtLink>
+            <h5
+              class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+              Lanjut Belajar
+            </h5>
+            <p
+              class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
+            >
+              {{ title_last_lesson }}
+            </p>
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="lg:col-span-2 lg:ml-3 -mt-5">
+        <ol class="mt-5 items-start xl:flex">
+          <li v-for="item in data" class="relative mb-6 xl:mb-0">
+            <div class="flex items-center">
+              <div
+                :class="item.style"
+                class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"
+              >
+                {{ item.symbol }}
+              </div>
+              <div
+                class="hidden xl:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"
+              ></div>
+            </div>
+            <div
+              :class="{ 'cursor-not-allowed': item.visible === false }"
+              class="mt-3 sm:pe-8 p-1"
+            >
+              <div
+                :class="item.style"
+                class="block md:max-w-sm p-6 border rounded-lg shadow dark:bg-blue-800 dark:border-blue-700 dark:hover:bg-blue-700 overflow-hidden"
+              >
+                <NuxtLink
+                  :to="item.link"
+                  :class="{
+                    'pointer-events-none cursor-not-allowed':
+                      item.visible === false,
+                  }"
+                  class="select-none relative"
+                >
+                  <h3
+                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                  >
+                    {{ item.title }}
+                  </h3>
+                  <p
+                    class="text-sm sm:text-base font-normal text-gray-500 dark:text-gray-400"
+                  >
+                    {{ item.desc }}
+                  </p>
+                  <div class="flex justify-end">
+                    <BootstrapIcon
+                      v-if="item.visible === true"
+                      class="ml-4 text-2xl text-gray-400"
+                      name="arrow-right-circle"
+                    />
+                    <BootstrapIcon
+                      v-else
+                      class="ml-4 text-2xl text-gray-400"
+                      name="lock-fill"
+                    />
+                  </div>
+                  <img
+                    src="/src/icon.png"
+                    alt=""
+                    class="w-44 h-44 opacity-5 absolute -right-20 -bottom-16 -rotate-12 saturate-100"
+                  />
+                </NuxtLink>
+              </div>
+            </div>
+          </li>
+        </ol>
       </div>
     </div>
-    <div class="lg:col-span-2 lg:ml-3 -mt-5">
-      <ol class="mt-5 items-start xl:flex">
-        <li v-for="item in data" class="relative mb-6 xl:mb-0">
-          <div class="flex items-center">
-            <div
-              :class="item.style"
-              class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"
-            >
-              {{ item.symbol }}
-            </div>
-            <div
-              class="hidden xl:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"
-            ></div>
-          </div>
-          <div
-            :class="{ 'cursor-not-allowed': item.visible === false }"
-            class="mt-3 sm:pe-8 p-1"
-          >
-            <div
-              :class="item.style"
-              class="block md:max-w-sm p-6 border rounded-lg shadow dark:bg-blue-800 dark:border-blue-700 dark:hover:bg-blue-700 overflow-hidden"
-            >
-              <NuxtLink
-                :to="item.link"
-                :class="{
-                  'pointer-events-none cursor-not-allowed':
-                    item.visible === false,
-                }"
-                class="select-none relative"
-              >
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  {{ item.title }}
-                </h3>
-                <p
-                  class="text-sm sm:text-base font-normal text-gray-500 dark:text-gray-400"
-                >
-                  {{ item.desc }}
-                </p>
-                <div class="flex justify-end">
-                  <BootstrapIcon
-                    v-if="item.visible === true"
-                    class="ml-4 text-2xl text-gray-400"
-                    name="arrow-right-circle"
-                  />
-                  <BootstrapIcon
-                    v-else
-                    class="ml-4 text-2xl text-gray-400"
-                    name="lock-fill"
-                  />
-                </div>
-                <img
-                  src="/src/icon.png"
-                  alt=""
-                  class="w-44 h-44 opacity-5 absolute -right-20 -bottom-16 -rotate-12 saturate-100"
-                />
-              </NuxtLink>
-            </div>
-          </div>
-        </li>
-      </ol>
+    <div v-else>
+      <Loading :is-loading="true" />
     </div>
   </div>
 </template>

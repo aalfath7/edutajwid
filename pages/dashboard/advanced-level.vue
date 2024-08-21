@@ -1,5 +1,5 @@
 <template>
-  <div class="grid lg:grid-cols-3 gap-5">
+  <div v-if="results" class="grid lg:grid-cols-3 gap-5">
     <div v-if="title_last_lesson" class="lg:order-last lg:block">
       <div class="sticky top-20">
         <NuxtLink
@@ -62,6 +62,9 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <Loading :is-loading="true" />
+  </div>
 </template>
 
 <script setup>
@@ -84,7 +87,7 @@ const results = ref();
 try {
   results.value = await $fetch(BASEAPIURL.value + "/lessons/advanced-level");
 } catch (error) {
-  console.log(error);
+  // console.log(error);
 }
 
 const filter = ref([
