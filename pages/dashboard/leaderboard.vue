@@ -64,6 +64,9 @@
 </template>
 
 <script setup>
+useHead({
+  title: "EduTajwid - Belajar Tajwid Dengan Mudah",
+});
 definePageMeta({
   layout: "dashboard",
   middleware: "auth",

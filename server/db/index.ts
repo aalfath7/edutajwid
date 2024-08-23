@@ -9,7 +9,7 @@ interface Options {
 const con = createPool({
   host: "localhost",
   user: "root",
-  database: "edutajwid_db",
+  database: "edutajwid",
   password: "",
 });
 
