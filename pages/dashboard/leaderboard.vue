@@ -1,6 +1,12 @@
 <template>
   <div class="sm:pl-4 pt-2">
     <div
+      v-show="!leaderboard"
+      class="fixed top-0 left-0 right-0 bottom-0 z-50 w-full h-screen bg-white flex justify-center items-center"
+    >
+      <div class="loader"></div>
+    </div>
+    <div
       v-if="leaderboard"
       class="slit-in w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:px-8 dark:bg-gray-800 dark:border-gray-700"
     >
@@ -57,9 +63,6 @@
         </ul>
       </div>
     </div>
-    <div v-else>
-      <Loading :is-loading="true" />
-    </div>
   </div>
 </template>
 
@@ -99,3 +102,46 @@ if (users.value) {
   );
 }
 </script>
+
+<style>
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 100px;
+  aspect-ratio: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  display: grid;
+  background: #fff;
+  filter: blur(5px) contrast(10) hue-rotate(300deg);
+  mix-blend-mode: darken;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  grid-area: 1/1;
+  width: 40px;
+  height: 40px;
+  background: #ffff00;
+  animation: l7 2s infinite;
+}
+.loader:after {
+  animation-delay: -1s;
+}
+@keyframes l7 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(100%, 0);
+  }
+  50% {
+    transform: translate(100%, 100%);
+  }
+  75% {
+    transform: translate(0, 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+</style>

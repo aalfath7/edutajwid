@@ -571,6 +571,8 @@ const id_user = ref();
 const dataUser = ref();
 const last_lesson = ref();
 const totalGetXP = ref(0);
+const allLessonPassed = ref();
+const ifLessonNotPassed = ref(false);
 
 watch(
   () => user.value.id_user,
@@ -580,6 +582,7 @@ watch(
       const { results } = await $fetch("/api/users/person/" + newValue);
 
       dataUser.value = results[0];
+      allLessonPassed.value = JSON.parse(dataUser.value.lesson_passed);
 
       if (XP.value < dataUser.value.xp) {
         setInterval(() => {
@@ -640,12 +643,22 @@ const next = async () => {
     if (id_user.value) {
       if (results[0].id_lesson !== 95) {
         if (results[0].id_lesson === last_lesson.value) {
+          if (allLessonPassed.value.length + 1 === last_lesson.value) {
+            allLessonPassed.value.push(true);
+          }
           generateXP();
           await $fetch("/api/users/update-lesson/" + id_user.value, {
             method: "PUT",
             body: {
               last_lesson: nextLesson.results[0].slug,
               xp: dataUser.value.xp + resultGenXP.value,
+            },
+          });
+
+          await $fetch("/api/users/update-lesson-passed/" + id_user.value, {
+            method: "PUT",
+            body: {
+              lesson_passed: "[" + allLessonPassed.value.toString() + "]",
             },
           });
         }
@@ -665,8 +678,6 @@ const next = async () => {
         } else {
           router.push(results[0].nextLink);
         }
-        // if (results[0].id_lesson > last_lesson.value) {
-        // }
       }
     }
   }
@@ -692,35 +703,28 @@ const getAnswer = (res) => {
 };
 const submit = async () => {
   answerSubmit.value = true;
+  ifLessonNotPassed.value = allLessonPassed.value[results[0].id_lesson - 1];
   if (userAnswer.value === answer.value || resultPair.value == true) {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
+    allLessonPassed.value[results[0].id_lesson - 1] = true;
   } else if (resultPair.value == "partly true") {
     new Audio("/sound/correct.mp3").play();
     result.value = "partly true";
+    allLessonPassed.value[results[0].id_lesson - 1] = true;
   } else {
     new Audio("/sound/wrong.mp3").play();
     result.value = false;
+    allLessonPassed.value[results[0].id_lesson - 1] = false;
   }
 
-  if (id_user.value) {
-    if (results[0].id_lesson !== 95) {
-      if (results[0].id_lesson === last_lesson.value) {
-        generateXP();
-        await $fetch("/api/users/update-lesson/" + id_user.value, {
-          method: "PUT",
-          body: {
-            last_lesson: nextLesson.results[0].slug,
-            xp: dataUser.value.xp + resultGenXP.value,
-          },
-        });
-
-        XP.value = dataUser.value.xp;
-      }
-    } else {
-      startAnimation();
-      finishedBab.value = true;
-    }
+  if (ifLessonNotPassed) {
+    await $fetch("/api/users/update-lesson-passed/" + id_user.value, {
+      method: "PUT",
+      body: {
+        lesson_passed: "[" + allLessonPassed.value.toString() + "]",
+      },
+    });
   }
 };
 const playSound = (sound) => {

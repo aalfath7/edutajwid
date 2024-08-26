@@ -6,6 +6,7 @@ export type UsersModel = {
   email: string;
   password: string;
   image: string;
+  lesson_passed: string;
   last_lesson: string;
   xp: number;
   role: string;
@@ -56,7 +57,7 @@ export const create = async (
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO users (id_user, name, email, password, image, last_lesson, xp, role) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', 0, ?)",
+      "INSERT INTO users (id_user, name, email, password, image, last_lesson, lesson_passed, xp, role) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', '', 0, ?)",
     values: [data.id, data.name, data.email, data.password, data.role],
   });
   return result;
@@ -67,8 +68,19 @@ export const update = async (
   data: Pick<UsersModel, "id" | "name" | "email" | "password">
 ) => {
   await sql({
-    query: "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?",
+    query:
+      "UPDATE users SET name = ?, email = ?, password = ? WHERE id_user = ?",
     values: [data.name, data.email, data.password, id],
+  });
+};
+
+export const updateLessonPassed = async (
+  id: string,
+  data: Pick<UsersModel, "lesson_passed">
+) => {
+  await sql({
+    query: "UPDATE users SET lesson_passed = ? WHERE id_user = ?",
+    values: [data.lesson_passed, id],
   });
 };
 

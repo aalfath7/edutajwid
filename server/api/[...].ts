@@ -25,6 +25,10 @@ router.put(
   "/users/update-lesson/:id",
   defineEventHandler(usersController.updateLesson)
 );
+router.put(
+  "/users/update-lesson-passed/:id",
+  defineEventHandler(usersController.updateLessonPassed)
+);
 router.delete("/users/:id", defineEventHandler(usersController.remove));
 
 // class
@@ -42,6 +46,10 @@ router.delete("/class/:code", defineEventHandler(classController.remove));
 // join class
 router.get("/joinclass", defineEventHandler(joinClassController.read));
 router.get("/joinclass/:id", defineEventHandler(joinClassController.detail));
+router.get(
+  "/joinclass/students-progress/:id",
+  defineEventHandler(joinClassController.studentProgress)
+);
 router.post("/joinclass", defineEventHandler(joinClassController.create));
 router.put("/joinclass/:id", defineEventHandler(joinClassController.update));
 router.delete("/joinclass/:id", defineEventHandler(joinClassController.remove));

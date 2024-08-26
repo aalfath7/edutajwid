@@ -1,14 +1,14 @@
 <template>
   <div>
-    <!-- notif tambah siswa-->
+    <!-- notif tambah pelajar-->
     <Notif
       :is-active="successAddNotif"
-      text="Siswa Berhasil ditambah"
+      text="Pelajar Berhasil ditambah"
       type="success"
     />
     <Notif
       :is-active="registeredStudentNotif"
-      text="Siswa sudah terdaftar"
+      text="Pelajar sudah terdaftar"
       type="failed"
     />
     <Notif
@@ -28,7 +28,7 @@
             Kembali
           </NuxtLink>
         </div>
-        <h1 class="font-bold mb-5">Cari Siswa</h1>
+        <h1 class="font-bold mb-5">Cari Pelajar</h1>
         <form
           @submit.prevent="getUser"
           class="flex w-full mb-10 max-w-md max-h-full"
@@ -60,7 +60,7 @@
             type="button"
             class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
-            Tambah Siswa
+            Tambah pelajar
           </button>
         </div>
         <div v-else-if="user === undefined" class="text-sm italic my-4">

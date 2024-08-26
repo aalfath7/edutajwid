@@ -23,15 +23,15 @@
         text="Kelas Gagal diubah"
         type="failed"
       />
-      <!-- notif hapus siswa-->
+      <!-- notif hapus pelajar-->
       <Notif
         :is-active="successRemoveNotif"
-        text="Siswa Berhasil dihapus"
+        text="pelajar Berhasil dihapus"
         type="success"
       />
       <Notif
         :is-active="failedRemoveNotif"
-        text="Siswa gagal dihapus"
+        text="pelajar gagal dihapus"
         type="failed"
       />
     </div>
@@ -187,7 +187,7 @@
         </div>
       </div>
     </div>
-    <!-- modal delete siswa-->
+    <!-- modal delete pelajar-->
     <div
       :class="removeStudentModal ? '' : 'hidden'"
       class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
@@ -204,7 +204,7 @@
             class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
           >
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-              Apakah kamu yakin ingin menghapus siswa?
+              Apakah kamu yakin ingin menghapus pelajar?
             </h3>
             <button
               @click="toggleRemoveStudentModal"
@@ -243,7 +243,7 @@
               type="button"
               class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             >
-              Hapus Siswa
+              Hapus pelajar
             </button>
           </div>
         </div>
@@ -300,20 +300,22 @@
           v-if="allStudents.results.length > 0"
           class="my-10 text-lg border-t"
         >
-          <div class="my-5 flex justify-between items-center">
-            <p class="flex items-center">Siswa</p>
-            <div>
-              <button
-                type="button"
+          <div
+            class="my-5 flex flex-col sm:flex-row justify-between sm:items-center"
+          >
+            <p class="flex items-center mb-2">pelajar</p>
+            <div class="flex justify-between">
+              <NuxtLink
+                :to="'/dashboard/class/students-progress-' + route.params.code"
                 class="mr-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
               >
                 Lihat Pencapaian
-              </button>
+              </NuxtLink>
               <NuxtLink
                 :to="'/dashboard/class/add-student-' + route.params.code"
                 class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
               >
-                Tambah Siswa
+                Tambah pelajar
               </NuxtLink>
             </div>
           </div>
@@ -334,21 +336,21 @@
         </div>
         <div v-else class="my-10 text-xl border-t">
           <div class="my-5 flex justify-between items-center">
-            <p class="flex items-center">Siswa</p>
+            <p class="flex items-center">pelajar</p>
             <div>
               <NuxtLink
                 :to="'/dashboard/class/add-student-' + route.params.code"
                 class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
               >
-                Tambah Siswa
+                Tambah pelajar
               </NuxtLink>
             </div>
           </div>
-          <span class="text-sm italic">belum ada siswa</span>
+          <span class="text-sm italic">belum ada pelajar</span>
         </div>
       </div>
       <div class="block">
-        <div class="sticky top-20 pl-2 sm:pl-5 lg:pl-0">
+        <div class="sticky top-20 sm:pl-2 sm:pl-5 lg:pl-0">
           <div
             class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow"
           >

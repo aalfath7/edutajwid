@@ -25,6 +25,34 @@ export const detail = async (id: string) => {
   return result;
 };
 
+export const studentProgress = async (id: string) => {
+  const result = await sql({
+    query: `SELECT 
+                users.id_user, 
+                users.name, 
+                users.email, 
+                users.password, 
+                users.image, 
+                users.last_lesson, 
+                users.lesson_passed, 
+                users.xp, 
+                users.role, 
+                join_class.id_joinclass, 
+                join_class.id_class
+            FROM 
+                users
+            INNER JOIN 
+                join_class 
+            ON 
+                users.id_user = join_class.id_user
+            WHERE 
+                join_class.id_class = ?;
+            `,
+    values: [id],
+  });
+  return result;
+};
+
 export const create = async (
   data: Pick<joinClassModel, "id" | "id_class" | "id_user">
 ) => {
