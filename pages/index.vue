@@ -53,7 +53,7 @@
         </div>
       </div>
     </section>
-    <div class="area bg-orange-400">
+    <div class="area">
       <ul class="circles">
         <li v-for="i in 10"></li>
       </ul>
@@ -113,7 +113,7 @@ const logout = () => {
 }
 
 .area {
-  background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+  background-image: linear-gradient(to left, #ff844b, #fdc168);
   position: absolute;
   top: 0;
   left: 0;

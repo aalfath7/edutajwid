@@ -23,6 +23,8 @@ const { authenticated } = storeToRefs(useAuthStore());
 const route = useRoute();
 const message = ref();
 
+const dataUser = await $fetch("/api/users/token/" + route.params.token);
+
 const { results } = await $fetch(
   "/api/users/email-verify/" + route.params.token,
   {
@@ -33,17 +35,15 @@ const { results } = await $fetch(
   }
 );
 if (results.affectedRows === 1) {
-  message.value = "Berhasil verifikasi email";
+  message.value = "Email has been verified";
+
+  const user = ref({
+    email: dataUser.results[0].email,
+    password: dataUser.results[0].password,
+  });
+
+  await authenticatedUser(user.value);
 } else {
-  message.value = "verifikasi email gagal";
+  message.value = "Email not registered";
 }
-
-const dataUser = await $fetch("/api/users/token/" + route.params.token);
-
-const user = ref({
-  email: dataUser.results[0].email,
-  password: dataUser.results[0].password,
-});
-
-await authenticatedUser(user.value);
 </script>
