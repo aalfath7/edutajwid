@@ -1,7 +1,10 @@
 <template>
   <div v-if="results" class="grid lg:grid-cols-3 gap-5">
     <div v-if="title_last_lesson" class="lg:order-last lg:block">
-      <div class="sticky top-20">
+      <div
+        v-if="slug !== '/lesson-48/perbedaan-waqaf-saktah-dan-qathi-review'"
+        class="sticky top-20"
+      >
         <NuxtLink
           :to="slug"
           class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"

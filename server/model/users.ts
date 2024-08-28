@@ -10,6 +10,8 @@ export type UsersModel = {
   last_lesson: string;
   xp: number;
   role: string;
+  email_verify: number;
+  token: string;
 };
 
 export const read = async () => {
@@ -44,6 +46,14 @@ export const getDataWithEmail = async (email: string) => {
   return result;
 };
 
+export const getDataWithToken = async (token: string) => {
+  const result = await sql({
+    query: "SELECT * FROM users WHERE token = ?",
+    values: [token],
+  });
+  return result;
+};
+
 export const login = async (data: Pick<UsersModel, "email" | "password">) => {
   const result = await sql({
     query: "SELECT * FROM users WHERE email = ? AND password = ?",
@@ -53,12 +63,12 @@ export const login = async (data: Pick<UsersModel, "email" | "password">) => {
 };
 
 export const create = async (
-  data: Pick<UsersModel, "id" | "name" | "email" | "password" | "role">
+  data: Pick<UsersModel, "id" | "name" | "email" | "password" | "token">
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO users (id_user, name, email, password, image, last_lesson, lesson_passed, xp, role) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', '', 0, ?)",
-    values: [data.id, data.name, data.email, data.password, data.role],
+      "INSERT INTO users (id_user, name, email, password, image, last_lesson, lesson_passed, xp, role, email_verify, token) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', '[]', 0, 'student', 0, ?)",
+    values: [data.id, data.name, data.email, data.password, data.token],
   });
   return result;
 };
@@ -92,6 +102,17 @@ export const updateLesson = async (
     query: "UPDATE users SET last_lesson = ?, xp = ? WHERE id_user = ?",
     values: [data.last_lesson, data.xp, id],
   });
+};
+
+export const emailVerify = async (
+  token: string,
+  data: Pick<UsersModel, "email_verify">
+) => {
+  const result = await sql({
+    query: "UPDATE users SET email_verify = ? WHERE token = ?",
+    values: [data.email_verify, token],
+  });
+  return result;
 };
 
 export const remove = async (id: string) => {

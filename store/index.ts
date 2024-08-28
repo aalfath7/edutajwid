@@ -167,7 +167,9 @@ export const useAuthStore = defineStore("auth", {
 
           this.authenticated = true;
 
-          localStorage.setItem("authToken", this.token);
+          if (process.client) {
+            localStorage.setItem("authToken", this.token);
+          }
         }
       }
     },

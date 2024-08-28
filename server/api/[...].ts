@@ -18,6 +18,11 @@ router.get(
   "/users/email/:email",
   defineEventHandler(usersController.getDataWithEmail)
 );
+router.get(
+  "/users/token/:token",
+  defineEventHandler(usersController.getDataWithToken)
+);
+
 router.post("/users", defineEventHandler(usersController.create));
 router.post("/login", defineEventHandler(usersController.login));
 router.put("/users/:id", defineEventHandler(usersController.update));
@@ -28,6 +33,14 @@ router.put(
 router.put(
   "/users/update-lesson-passed/:id",
   defineEventHandler(usersController.updateLessonPassed)
+);
+router.put(
+  "/users/update-lesson-passed/:id",
+  defineEventHandler(usersController.updateLessonPassed)
+);
+router.put(
+  "/users/email-verify/:token",
+  defineEventHandler(usersController.emailVerify)
 );
 router.delete("/users/:id", defineEventHandler(usersController.remove));
 

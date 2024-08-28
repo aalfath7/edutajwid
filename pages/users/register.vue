@@ -14,14 +14,6 @@
     <div
       class="flex flex-col justify-center items-center px-2 h-screen lg:h-screen bg-cover bg-orange-300 bg-gradient-to-r from-orange-300 to-green-300"
     >
-      <!-- <div
-        class="bg-gradient-to-r from-orange-300 to-green-300 opacity-80 w-full h-full lg:h-full absolute z-10"
-      ></div>
-      <img
-        src="/src/icon.png"
-        alt=""
-        class="w-96 h-96 opacity-90 fixed -right-32 -bottom-20 -rotate-12 saturate-100"
-      /> -->
       <div
         class="glass z-50 flex flex-col justify-center items-center bg-white rounded-lg shadow-lg w-full sm:max-w-md py-5 px-5"
       >
@@ -62,20 +54,6 @@
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >Email address</label
             >
-          </div>
-          <div class="relative z-0 w-full mb-5 group">
-            <label for="underline_select" class="sr-only"
-              >Underline select</label
-            >
-            <select
-              v-model="form.role"
-              id="underline_select"
-              class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-500 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-500 peer cursor-pointer"
-            >
-              <option value="" selected disabled>Role</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
           </div>
           <div class="relative z-0 w-full mb-5 group">
             <input
@@ -157,7 +135,6 @@ const form = reactive({
   name: "",
   email: "",
   password: "",
-  role: "",
 });
 
 const addData = async () => {

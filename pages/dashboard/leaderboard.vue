@@ -1,13 +1,13 @@
 <template>
   <div class="sm:pl-4 pt-2">
     <div
-      v-show="!leaderboard"
+      v-if="isLoading"
       class="fixed top-0 left-0 right-0 bottom-0 z-50 w-full h-screen bg-white flex justify-center items-center"
     >
       <div class="loader"></div>
     </div>
     <div
-      v-if="leaderboard"
+      v-else
       class="slit-in w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:px-8 dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="flex items-center justify-between mb-4">
@@ -18,7 +18,7 @@
           <h5>Leaderboard</h5>
         </div>
         <div class="text-sm lg:text-lg font-medium text-black">
-          <span class="mr-5 sm:mr-16"> Lesson </span>
+          <span class="mr-5 sm:mr-20"> Lesson </span>
           <span> XP </span>
         </div>
       </div>
@@ -79,12 +79,24 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { BASEAPIURL } = storeToRefs(useAuthStore());
 
-// const { results } = await $fetch("/api/users/leaderboard");
+const isLoading = ref(true);
 const users = ref();
+
+// try {
+//   const { results } = await $fetch("/api/users/leaderboard");
+//   users.value = results;
+// } catch (error) {
+//   console.log(error);
+// } finally {
+//   isLoading.value = false;
+// }
+
 try {
   users.value = await $fetch(BASEAPIURL.value + "/leaderboard");
 } catch (error) {
-  // console.log(error);
+  console.log(error);
+} finally {
+  isLoading.value = false;
 }
 
 const leaderboard = ref();
