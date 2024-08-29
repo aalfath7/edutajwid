@@ -116,14 +116,10 @@ export const emailVerify = async (
 };
 
 export const remove = async (id: string) => {
-  try {
-    await sql({
-      query: "DELETE FROM users WHERE id=?",
-      values: [id],
-    });
+  const results = await sql({
+    query: "DELETE FROM users WHERE id_user = ?",
+    values: [id],
+  });
 
-    return true;
-  } catch (error) {
-    return false;
-  }
+  return results;
 };

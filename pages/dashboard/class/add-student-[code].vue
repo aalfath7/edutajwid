@@ -3,12 +3,22 @@
     <!-- notif tambah pelajar-->
     <Notif
       :is-active="successAddNotif"
-      text="Pelajar Berhasil ditambah"
+      text="Permintaan bergabung kelas telah dikirim"
       type="success"
     />
     <Notif
-      :is-active="registeredStudentNotif"
+      :is-active="acceptStudentNotif"
       text="Pelajar sudah terdaftar"
+      type="failed"
+    />
+    <Notif
+      :is-active="teachersRequestNotif"
+      text="Permintaan bergabung sudah terkirim"
+      type="failed"
+    />
+    <Notif
+      :is-active="studentsRequestNotif"
+      text="Pelajar sudah meminta bergabung"
       type="failed"
     />
     <Notif
@@ -50,18 +60,27 @@
         <div class="w-1/2">
           <span class="text-sm">Hasil</span>
         </div>
-        <div
-          v-if="user"
-          class="shadow border p-2 rounded-lg my-2 flex justify-between items-center"
-        >
-          <p class="capitalize text-sm">{{ user.name }} - {{ user.role }}</p>
-          <button
-            @click="addStudent"
-            type="button"
-            class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+
+        <div v-if="user">
+          <div
+            v-if="user.id_user === dataUser.id_user"
+            class="text-sm italic my-4"
           >
-            Tambah pelajar
-          </button>
+            Guru sudah bergabung dengan kelas
+          </div>
+          <div
+            v-else
+            class="shadow border p-2 rounded-lg my-2 flex justify-between items-center"
+          >
+            <p class="capitalize text-sm">{{ user.name }} - {{ user.role }}</p>
+            <button
+              @click="addStudent"
+              type="button"
+              class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Tambah pelajar
+            </button>
+          </div>
         </div>
         <div v-else-if="user === undefined" class="text-sm italic my-4">
           User tidak ditemukan
@@ -88,19 +107,40 @@ onMounted(() => {
 
 const route = useRoute();
 const router = useRouter();
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+
+const { user: dataUser } = storeToRefs(useAuthStore());
+
+watch(
+  () => dataUser.value.id_user,
+  async (newId) => {
+    if (newId) {
+      dataUser.value.id_user = newId;
+    }
+  },
+  { immediate: true }
+);
 
 const { data: dataClass, refresh: classRefresh } = await useFetch(
   "/api/class/" + route.params.code
 );
 
-const { data: allStudents, refresh: studentsRefresh } = await useFetch(
+const { data: acceptStudent } = await useFetch(
   "/api/joinclass/" + dataClass.value.results[0].id_class
+);
+const { data: studentsRequest } = await useFetch(
+  "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
+);
+const { data: teachersRequest } = await useFetch(
+  "/api/joinclass/get-teachers-request/" + dataClass.value.results[0].id_class
 );
 
 const formStudent = ref({
   id: "",
   id_class: dataClass.value.results[0].id_class,
   id_user: "",
+  status: "teachers request",
 });
 
 const emailNewStudent = ref();
@@ -115,33 +155,49 @@ const duplicatedUser = ref(false);
 const successAddNotif = ref(false);
 const failedAddNotif = ref(false);
 const registeredStudentNotif = ref(false);
+const acceptStudentNotif = ref(false);
+const teachersRequestNotif = ref(false);
+const studentsRequestNotif = ref(false);
 
 const addStudent = async () => {
   if (user.value) {
     formStudent.value.id_user = user.value.id_user;
     if (
-      allStudents.value.results.filter((e) => e.user_name === user.value.name)
+      acceptStudent.value.results.filter((e) => e.user_name === user.value.name)
         .length > 0
     ) {
-      duplicatedUser.value = true;
+      acceptStudentNotif.value = true;
+      setTimeout(() => {
+        acceptStudentNotif.value = false;
+        router.push("/dashboard/class/" + route.params.code);
+      }, 1000);
+    } else if (
+      teachersRequest.value.results.filter(
+        (e) => e.user_name === user.value.name
+      ).length > 0
+    ) {
+      teachersRequestNotif.value = true;
+      setTimeout(() => {
+        teachersRequestNotif.value = false;
+        router.push("/dashboard/class/" + route.params.code);
+      }, 1000);
+    } else if (
+      studentsRequest.value.results.filter(
+        (e) => e.user_name === user.value.name
+      ).length > 0
+    ) {
+      studentsRequestNotif.value = true;
+      setTimeout(() => {
+        studentsRequestNotif.value = false;
+        router.push("/dashboard/class/" + route.params.code);
+      }, 1000);
     } else {
-      duplicatedUser.value = false;
-    }
-
-    if (!duplicatedUser.value) {
       const { data } = await useFetch("/api/joinclass", {
         method: "POST",
-        body: formStudent,
+        body: formStudent.value,
       });
 
       if (data.value.results.affectedRows === 1) {
-        await useFetch("/api/class/update-students/" + route.params.code, {
-          method: "PUT",
-          body: {
-            number_of_students: allStudents.value.results.length + 1,
-          },
-        });
-
         successAddNotif.value = true;
         setTimeout(() => {
           successAddNotif.value = false;
@@ -150,12 +206,6 @@ const addStudent = async () => {
       } else {
         failedAddNotif.value = true;
       }
-    } else {
-      registeredStudentNotif.value = true;
-      setTimeout(() => {
-        registeredStudentNotif.value = false;
-        router.push("/dashboard/class/" + route.params.code);
-      }, 1000);
     }
   } else {
     failedAddNotif.value = true;

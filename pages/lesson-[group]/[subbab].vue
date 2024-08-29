@@ -363,7 +363,7 @@
               @click="getAnswer(answer)"
             >
               <div
-                class="w-44 text-sm sm:text-base capitalize"
+                class="w-44 capitalize"
                 :class="arabic ? 'text-3xl' : 'text-base'"
               >
                 {{ answer }}
@@ -704,7 +704,11 @@ const getAnswer = (res) => {
 const submit = async () => {
   answerSubmit.value = true;
   ifLessonNotPassed.value = allLessonPassed.value[results[0].id_lesson - 1];
-  if (userAnswer.value === answer.value || resultPair.value == true) {
+  if (
+    userAnswer.value === answer.value ||
+    resultPair.value == true ||
+    correctLetter(letterChoice.value, JSON.parse(results[0].answer))
+  ) {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
     allLessonPassed.value[results[0].id_lesson - 1] = true;
@@ -767,9 +771,11 @@ const hijaiyahLetter = [
 // check multiple choices is arabic
 const arabic = ref(false);
 hijaiyahLetter.forEach((e) => {
-  if (e == answerChoices.value) {
-    arabic.value = true;
-  }
+  answerChoices.value.forEach((i) => {
+    if (e == i) {
+      arabic.value = true;
+    }
+  });
 });
 
 let letterChoice = ref([]);
@@ -807,6 +813,11 @@ const checkLetter = (letter) => {
     }
   });
   return stat;
+};
+
+const correctLetter = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) return false;
+  return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort());
 };
 
 // pairing question

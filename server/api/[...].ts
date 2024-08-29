@@ -60,6 +60,22 @@ router.delete("/class/:code", defineEventHandler(classController.remove));
 router.get("/joinclass", defineEventHandler(joinClassController.read));
 router.get("/joinclass/:id", defineEventHandler(joinClassController.detail));
 router.get(
+  "/joinclass/get-teachers-request/:id",
+  defineEventHandler(joinClassController.getTeachersRequest)
+);
+router.get(
+  "/joinclass/get-teachers-request-user/:id",
+  defineEventHandler(joinClassController.getTeachersRequestByIdUser)
+);
+router.get(
+  "/joinclass/get-students-request/:id",
+  defineEventHandler(joinClassController.getStudentsRequest)
+);
+router.get(
+  "/joinclass/get-students-request-user/:id",
+  defineEventHandler(joinClassController.getStudentsRequestByIdUser)
+);
+router.get(
   "/joinclass/students-progress/:id",
   defineEventHandler(joinClassController.studentProgress)
 );

@@ -6,6 +6,16 @@
       type="success"
     />
     <Notif :is-active="failedNotif" text="Buat Kelas gagal" type="failed" />
+    <Notif
+      :is-active="successJoinNotif"
+      text="Berhasil bergabung dengan kelas"
+      type="success"
+    />
+    <Notif
+      :is-active="rejectedNotif"
+      text="Permintaan gabung kelas ditolak"
+      type="failed"
+    />
 
     <!-- Main modal -->
 
@@ -119,6 +129,55 @@
         </button>
       </div>
 
+      <div v-if="user.role === 'student'">
+        <div v-if="requestClass !== undefined">
+          <h2 v-if="requestClass.length > 0">Permintaan Bergabung</h2>
+          <div
+            v-if="requestClass.length > 0"
+            class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:pr-10 pt-5 mb-10"
+          >
+            <div
+              v-for="(item, i) in requestClass"
+              :key="i"
+              class="flex items-center bg-white border border-gray-200 rounded-lg shadow flex-row"
+            >
+              <img
+                class="object-cover w-20 rounded-t-lg md:rounded-none md:rounded-s-lg"
+                src="/src/class.jpg"
+                alt=""
+              />
+              <div class="flex justify-between w-full p-2">
+                <div>
+                  <h5 class="text-xl font-bold">
+                    {{ item.class_name }}
+                  </h5>
+                  <p class="font-normal">
+                    {{ item.school_name }}
+                  </p>
+                  <p>Ust {{ item.user_name }}</p>
+                </div>
+                <div class="flex items-center">
+                  <button
+                    @click="joinClass(item.id_joinclass)"
+                    type="button"
+                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  >
+                    Gabung
+                  </button>
+                  <button
+                    @click="rejectedClass(item.id_joinclass)"
+                    type="button"
+                    class="ml-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                  >
+                    Tolak
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Modal toggle -->
       <button
         v-if="user.role === 'teacher'"
@@ -171,7 +230,6 @@
         </div>
         <div v-else class="border-t pt-5">Belum ada kelas</div>
       </div>
-      <div v-else-if="error" class="border-t pt-5">Tidak ada koneksi</div>
       <div v-else class="border-t pt-5">Belum ada kelas</div>
     </div>
   </div>
@@ -192,36 +250,38 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { authenticated, user } = storeToRefs(useAuthStore());
 
-const {
-  data: allData,
-  error,
-  pending,
-  refresh: allRefresh,
-} = await useFetch("/api/class");
-
 const allClassUser = ref();
 
 const form = ref({
-  id: "",
+  id_class: "",
+  id_user: "",
   name: "",
   school_name: "",
-  teacher: "",
   class_code: "",
 });
 
+const requestClass = ref();
+const refreshData = ref();
+
 watch(
-  () => user.value.name,
-  async (newName) => {
-    if (newName) {
-      form.value.teacher = newName;
+  () => user.value.id_user,
+  async (newId) => {
+    if (newId) {
+      form.value.id_user = newId;
 
       const { data } = await useFetch("/api/class/teacher", {
         method: "POST",
         body: {
-          teacher: newName,
+          id_user: newId,
         },
       });
       allClassUser.value = data.value.results;
+
+      const { data: response } = await useFetch(
+        "/api/joinclass/get-teachers-request-user/" + newId
+      );
+
+      requestClass.value = response.value.results;
     }
   },
   { immediate: true }
@@ -279,6 +339,65 @@ const generateRandomCode = () => {
 const modalIsOpen = ref(false);
 const toggleModal = () => {
   modalIsOpen.value = !modalIsOpen.value;
+};
+
+const successJoinNotif = ref(false);
+
+const joinClass = async (id) => {
+  const response = await useFetch("/api/joinclass/" + id, {
+    method: "PUT",
+    body: {
+      status: "accepted",
+    },
+  });
+
+  if (response.data.value.results.affectedRows === 1) {
+    successJoinNotif.value = true;
+    setTimeout(() => {
+      successJoinNotif.value = false;
+    }, 1000);
+
+    const { data: allStudents } = await useFetch(
+      "/api/joinclass/" + requestClass.value.id_class
+    );
+
+    await useFetch(
+      "/api/class/update-students/" + requestClass.value.class_code,
+      {
+        method: "PUT",
+        body: {
+          number_of_students: allStudents.value.results.length + 1,
+        },
+      }
+    );
+  }
+
+  const { data: dataRequest } = await useFetch(
+    "/api/joinclass/get-teachers-request-user/" + user.id_user
+  );
+
+  requestClass.value = dataRequest.value.results;
+};
+
+const rejectedNotif = ref(false);
+
+const rejectedClass = async (id) => {
+  const response = await useFetch("/api/joinclass/" + id, {
+    method: "DELETE",
+  });
+
+  if (response.data.value.results.affectedRows === 1) {
+    rejectedNotif.value = true;
+    setTimeout(() => {
+      rejectedNotif.value = false;
+    }, 1000);
+  }
+
+  const { data: dataRequest } = await useFetch(
+    "/api/joinclass/get-teachers-request-user/" + user.id_user
+  );
+
+  requestClass.value = dataRequest.value.results;
 };
 
 onMounted(() => {

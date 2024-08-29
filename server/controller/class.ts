@@ -7,7 +7,7 @@ export const read = async () => {
 
 export const getClass = async (evt: H3Event) => {
   const body = await readBody(evt);
-  const result = await classModel.getClass(body.teacher);
+  const result = await classModel.getClass(body.id_user);
   return result;
 };
 
@@ -19,10 +19,10 @@ export const detail = async (evt: H3Event) => {
 export const create = async (evt: H3Event) => {
   const body = await readBody(evt);
   const result = await classModel.create({
-    id: body.id,
+    id_class: body.id_class,
+    id_user: body.id_user,
     name: body.name,
     school_name: body.school_name,
-    teacher: body.teacher,
     class_code: body.class_code,
   });
   return result;
@@ -31,10 +31,10 @@ export const create = async (evt: H3Event) => {
 export const update = async (evt: H3Event) => {
   const body = await readBody(evt);
   const result = await classModel.update(evt.context.params?.code as string, {
-    id: body.id,
+    id_class: body.id_class,
+    id_user: body.id_user,
     name: body.name,
     school_name: body.school_name,
-    teacher: body.teacher,
   });
   return result;
 };

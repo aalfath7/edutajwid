@@ -1,11 +1,11 @@
 import { sql } from "~~/server/db";
 
 export type classModel = {
-  id: number;
+  id_class: number;
+  id_user: number;
   name: string;
   school_name: string;
   number_of_students: number;
-  teacher: string;
   class_code: string;
 };
 
@@ -17,10 +17,10 @@ export const read = async () => {
   return result;
 };
 
-export const getClass = async (teacher: string) => {
+export const getClass = async (id_user: string) => {
   const result = await sql({
-    query: `SELECT * FROM class WHERE teacher = ?`,
-    values: [teacher],
+    query: `SELECT * FROM class WHERE id_user = ?`,
+    values: [id_user],
   });
   return result;
 };
@@ -36,17 +36,17 @@ export const detail = async (code: string) => {
 export const create = async (
   data: Pick<
     classModel,
-    "id" | "name" | "school_name" | "teacher" | "class_code"
+    "id_class" | "id_user" | "name" | "school_name" | "class_code"
   >
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO class (id_class, name, school_name, number_of_students, teacher, class_code) VALUES (?, ?, ?, 0, ?, ?)",
+      "INSERT INTO class (id_class, id_user, name, school_name, number_of_students, class_code) VALUES (?, ?, ?, ?, 0, ?)",
     values: [
-      data.id,
+      data.id_class,
+      data.id_user,
       data.name,
       data.school_name,
-      data.teacher,
       data.class_code,
     ],
   });
@@ -55,12 +55,12 @@ export const create = async (
 
 export const update = async (
   code: string,
-  data: Pick<classModel, "id" | "name" | "school_name" | "teacher">
+  data: Pick<classModel, "id_class" | "id_user" | "name" | "school_name">
 ) => {
   const result = await sql({
     query:
-      "UPDATE class SET name = ?, school_name = ?, teacher = ? WHERE class_code = ?",
-    values: [data.name, data.school_name, data.teacher, code],
+      "UPDATE class SET id_user = ? , name = ?, school_name = ? WHERE class_code = ?",
+    values: [data.id_user, data.name, data.school_name, code],
   });
   return result;
 };

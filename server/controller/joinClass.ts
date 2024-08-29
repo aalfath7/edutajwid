@@ -10,6 +10,34 @@ export const detail = async (evt: H3Event) => {
   return result;
 };
 
+export const getTeachersRequest = async (evt: H3Event) => {
+  const result = await joinClassModel.getTeachersRequest(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
+export const getTeachersRequestByIdUser = async (evt: H3Event) => {
+  const result = await joinClassModel.getTeachersRequestByIdUser(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
+export const getStudentsRequest = async (evt: H3Event) => {
+  const result = await joinClassModel.getStudentsRequest(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
+export const getStudentsRequestByIdUser = async (evt: H3Event) => {
+  const result = await joinClassModel.getStudentsRequestByIdUser(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
 export const studentProgress = async (evt: H3Event) => {
   const result = await joinClassModel.studentProgress(
     evt.context.params?.id as string
@@ -23,20 +51,16 @@ export const create = async (evt: H3Event) => {
     id: body.id,
     id_class: body.id_class,
     id_user: body.id_user,
+    status: body.status,
   });
   return result;
 };
 
 export const update = async (evt: H3Event) => {
   const body = await readBody(evt);
-  const result = await joinClassModel.update(
-    evt.context.params?.code as string,
-    {
-      id: body.id,
-      id_class: body.id_class,
-      id_user: body.id_user,
-    }
-  );
+  const result = await joinClassModel.update(evt.context.params?.id as string, {
+    status: body.status,
+  });
   return result;
 };
 

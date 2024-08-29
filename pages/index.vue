@@ -1,13 +1,13 @@
 <template>
   <div class="px-2 pt-20 bg-animate sm:h-screen relative">
-    <section class="dark:bg-gray-900">
+    <section>
       <div class="py-8 px-4 mx-auto max-w-screen-xl">
         <div
           class="flex flex-col sm:flex-row justify-between slit-in bg-gray-50 bg-opacity-80 dark:bg-gray-800 border border-gray-200 rounded-lg p-8 md:p-12 mb-8"
         >
           <div class="mb-10 sm:mb-0">
             <h1 class="text-xl sm:text-3xl font-bold text-black mb-6">
-              Cara Seru dan Mudah Belajar Tajwid
+              Belajar Ilmu Tajwid Al-Quran
             </h1>
             <p class="font-normal text-sm sm:text-xl mb-6">
               Jadilah salah satu Keluarga Allah SWT dengan mempelajari Ilmu
@@ -53,6 +53,13 @@
         </div>
       </div>
     </section>
+    <div class="w-full flex justify-center pt-10">
+      <span class="tracking-wider text-sm"
+        >© 2024
+        <a href="https://edutajwid.com/" class="hover:underline">EduTajwid™</a>.
+        All Rights Reserved.</span
+      >
+    </div>
     <div class="area">
       <ul class="circles">
         <li v-for="i in 10"></li>
@@ -113,7 +120,7 @@ const logout = () => {
 }
 
 .area {
-  background-image: linear-gradient(to left, #ff844b, #fdc168);
+  background-image: linear-gradient(180deg, rgb(255, 201, 135), #f99872);
   position: absolute;
   top: 0;
   left: 0;

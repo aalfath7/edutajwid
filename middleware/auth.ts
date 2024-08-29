@@ -14,4 +14,8 @@ export default defineNuxtRouteMiddleware((to) => {
       return navigateTo("/");
     }
   }
+
+  if (user.value.role === "admin") {
+    return navigateTo("/dashboard/admin");
+  }
 });

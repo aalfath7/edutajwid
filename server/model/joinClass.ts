@@ -4,6 +4,7 @@ export type joinClassModel = {
   id: number;
   id_class: number;
   id_user: number;
+  status: string;
 };
 
 export const read = async () => {
@@ -19,7 +20,56 @@ export const detail = async (id: string) => {
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class
-            WHERE class.id_class = ?`,
+            WHERE class.id_class = ? and join_class.status = 'accepted'`,
+    values: [id],
+  });
+  return result;
+};
+
+export const getTeachersRequest = async (id: string) => {
+  const result = await sql({
+    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+            FROM join_class
+            INNER JOIN users ON join_class.id_user = users.id_user
+            INNER JOIN class ON join_class.id_class = class.id_class
+            WHERE class.id_class = ? and join_class.status = 'teachers request'`,
+    values: [id],
+  });
+  return result;
+};
+
+export const getTeachersRequestByIdUser = async (id: string) => {
+  const result = await sql({
+    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name, 
+            class.school_name, class.class_code, class.id_class
+            FROM join_class
+            INNER JOIN users ON join_class.id_user = users.id_user
+            INNER JOIN class ON join_class.id_class = class.id_class
+            WHERE join_class.id_user = ? and join_class.status = 'teachers request'`,
+    values: [id],
+  });
+  return result;
+};
+
+export const getStudentsRequest = async (id: string) => {
+  const result = await sql({
+    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+            FROM join_class
+            INNER JOIN users ON join_class.id_user = users.id_user
+            INNER JOIN class ON join_class.id_class = class.id_class
+            WHERE class.id_class = ? and join_class.status = 'students request'`,
+    values: [id],
+  });
+  return result;
+};
+
+export const getStudentsRequestByIdUser = async (id: string) => {
+  const result = await sql({
+    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+            FROM join_class
+            INNER JOIN users ON join_class.id_user = users.id_user
+            INNER JOIN class ON join_class.id_class = class.id_class
+            WHERE join_class.id_user = ? and join_class.status = 'students request'`,
     values: [id],
   });
   return result;
@@ -54,23 +104,23 @@ export const studentProgress = async (id: string) => {
 };
 
 export const create = async (
-  data: Pick<joinClassModel, "id" | "id_class" | "id_user">
+  data: Pick<joinClassModel, "id" | "id_class" | "id_user" | "status">
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO join_class (id_joinclass, id_class, id_user) VALUES (?, ?, ?)",
-    values: [data.id, data.id_class, data.id_user],
+      "INSERT INTO join_class (id_joinclass, id_class, id_user, status) VALUES (?, ?, ?, ?)",
+    values: [data.id, data.id_class, data.id_user, data.status],
   });
   return result;
 };
 
 export const update = async (
   id: string,
-  data: Pick<joinClassModel, "id" | "id_class" | "id_user">
+  data: Pick<joinClassModel, "status">
 ) => {
   const result = await sql({
-    query: "UPDATE join_class SET name = ? WHERE id = ?",
-    values: [data.id, data.id_class, data.id_user, id],
+    query: "UPDATE join_class SET status = ? WHERE id_joinclass = ?",
+    values: [data.status, id],
   });
   return result;
 };
