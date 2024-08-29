@@ -17,12 +17,15 @@
   perspective: 1200px;
 }
 
-@keyframes initAnimation {
+@keyframes animate {
   0% {
-    transform: rotateY(-8deg);
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(-80deg);
   }
   100% {
-    transform: rotateY(-40deg);
+    transform: rotateY(0deg);
   }
 }
 
@@ -33,7 +36,7 @@
   transform-style: preserve-3d;
   transform: rotateY(-40deg);
   transition: 0.5s ease;
-  animation: 1s ease 0s 1 initAnimation;
+  /* animation: 15s ease animate infinite; */
 }
 
 .book-container:hover .book,

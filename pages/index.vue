@@ -53,7 +53,7 @@
         </div>
       </div>
     </section>
-    <div class="w-full flex justify-center pt-10">
+    <div class="w-full flex justify-center sm:pt-10">
       <span class="tracking-wider text-sm"
         >© 2024
         <a href="https://edutajwid.com/" class="hover:underline">EduTajwid™</a>.
