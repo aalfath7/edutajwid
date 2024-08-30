@@ -122,17 +122,27 @@
                 ></span>
                 <span
                   class="block text-sm text-gray-500 truncate dark:text-gray-400"
-                  >{{ user.email }}</span
-                >
+                  >{{ user.email }}
+                </span>
               </div>
               <ul class="py-2" aria-labelledby="user-menu-button">
+                <li>
+                  <NuxtLink
+                    to="/dashboard/account"
+                    class="w-full block text-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    <button @click="accountDropdown = false" type="button">
+                      Kelola Akun
+                    </button>
+                  </NuxtLink>
+                </li>
                 <li>
                   <button
                     type="button"
                     @click="logout"
                     class="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
-                    Logout
+                    Keluar
                   </button>
                 </li>
               </ul>

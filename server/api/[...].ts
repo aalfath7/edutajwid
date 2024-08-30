@@ -25,6 +25,7 @@ router.get(
 
 router.post("/users", defineEventHandler(usersController.create));
 router.post("/login", defineEventHandler(usersController.login));
+router.post("/upload/:id", defineEventHandler(usersController.uploadImage));
 router.put("/users/:id", defineEventHandler(usersController.update));
 router.put(
   "/users/update-lesson/:id",

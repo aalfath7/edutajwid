@@ -77,11 +77,23 @@ export const update = async (
   id: string,
   data: Pick<UsersModel, "id" | "name" | "email" | "password">
 ) => {
-  await sql({
+  const results = await sql({
     query:
       "UPDATE users SET name = ?, email = ?, password = ? WHERE id_user = ?",
     values: [data.name, data.email, data.password, id],
   });
+  return results;
+};
+
+export const updateImage = async (
+  id: string,
+  data: Pick<UsersModel, "image">
+) => {
+  const results = await sql({
+    query: "UPDATE users SET image = ? WHERE id_user = ?",
+    values: [data.image, id],
+  });
+  return results;
 };
 
 export const updateLessonPassed = async (

@@ -2,6 +2,9 @@ import { H3Event } from "h3";
 import * as usersModel from "~/server/model/users";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { createWriteStream } from "fs";
+import { join } from "path";
+import { nanoid } from "nanoid";
 
 export const read = async () => {
   return await usersModel.read();
@@ -72,12 +75,13 @@ export const create = async (evt: H3Event) => {
 
 export const update = async (evt: H3Event) => {
   const body = await readBody(evt);
-  await usersModel.update(evt.context.params?.id as string, {
+  const results = await usersModel.update(evt.context.params?.id as string, {
     id: body.id,
     name: body.name,
     email: body.email,
     password: body.password,
   });
+  return results;
 };
 
 export const updateLessonPassed = async (evt: H3Event) => {
@@ -109,4 +113,30 @@ export const emailVerify = async (evt: H3Event) => {
 export const remove = async (evt: H3Event) => {
   const result = await usersModel.remove(evt.context.params?.id as string);
   return result;
+};
+
+export const uploadImage = async (evt: H3Event) => {
+  const formData = await readMultipartFormData(evt);
+  if (!formData) {
+    return {
+      statusCode: 400,
+      message: "Please upload a file!",
+    };
+  }
+
+  formData.forEach(async (part) => {
+    if (part.filename) {
+      let filename = `${nanoid()}-${part.filename}`;
+      const filePath = join("public/src/users/", filename);
+      const fileStream = createWriteStream(filePath);
+      fileStream.write(part.data);
+      fileStream.end();
+
+      await usersModel.updateImage(evt.context.params?.id as string, {
+        image: filename,
+      });
+    }
+  });
+
+  return true;
 };

@@ -41,7 +41,6 @@ export const update = async (evt: H3Event) => {
 
 export const updateStudents = async (evt: H3Event) => {
   const body = await readBody(evt);
-  console.log(body);
   const result = await classModel.updateStudents(
     evt.context.params?.code as string,
     {

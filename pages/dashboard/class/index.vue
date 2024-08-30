@@ -277,11 +277,6 @@
                   <p class="text-gray-500 text-sm">
                     {{ item.number_of_students }} siswa
                   </p>
-                  <img
-                    class="w-8 h-8 rounded-full"
-                    src="/src/users/my-photo.jpg"
-                    alt="Neil image"
-                  />
                 </div>
               </div>
             </NuxtLink>
@@ -325,11 +320,6 @@
                   <p class="text-gray-500 text-sm">
                     {{ item.number_of_students }} siswa
                   </p>
-                  <img
-                    class="w-8 h-8 rounded-full"
-                    src="/src/users/my-photo.jpg"
-                    alt="Neil image"
-                  />
                 </div>
               </div>
             </NuxtLink>
