@@ -409,20 +409,15 @@ const successNotif = ref(false);
 const failedNotif = ref(false);
 
 const createClass = async () => {
-  let code;
-  do {
-    code = generateRandomCode();
-  } while (
-    allData.value.results.filter((e) => e.class_code == code).length > 1
-  );
+  let code = generateRandomCode();
   form.value.class_code = code;
   try {
-    const { data, error } = await useFetch("/api/class", {
+    const { data: response, error } = await useFetch("/api/class", {
       method: "POST",
       body: form,
     });
 
-    if (data.value.results.affectedRows === 1) {
+    if (response.value.results.affectedRows === 1) {
       successNotif.value = true;
     } else {
       failedNotif.value = true;
@@ -430,7 +425,13 @@ const createClass = async () => {
 
     modalIsOpen.value = false;
 
-    allRefresh();
+    const { data } = await useFetch("/api/class/teacher", {
+      method: "POST",
+      body: {
+        id_user: form.value.id_user,
+      },
+    });
+    allClassTeacher.value = data.value.results;
 
     setTimeout(() => {
       router.push("/dashboard/class/" + code);

@@ -95,8 +95,6 @@ try {
   console.log(error);
 }
 
-console.log(users.value);
-
 const leaderboard = ref();
 
 // if (users.value) {

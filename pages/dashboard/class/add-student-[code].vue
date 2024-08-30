@@ -131,7 +131,6 @@ const studentsRequest = ref();
 const teachersRequest = ref();
 
 if (dataClass) {
-  console.log(dataClass.value.results[0].id_class);
   const { data: accept } = await useFetch(
     "/api/joinclass/" + dataClass.value.results[0].id_class
   );
