@@ -34,6 +34,16 @@
         text="pelajar gagal dihapus"
         type="failed"
       />
+      <Notif
+        :is-active="successJoinNotif"
+        text="Belajar berhasil ditambahkan"
+        type="success"
+      />
+      <Notif
+        :is-active="rejectedNotif"
+        text="Permintaan gabung kelas ditolak"
+        type="failed"
+      />
     </div>
     <!-- modal edit-->
     <div
@@ -266,6 +276,7 @@
             class="w-full h-20 object-cover border rounded-lg opacity-25"
           />
           <button
+            v-if="user.role === 'teacher'"
             @click="toggleSettings"
             type="button"
             class="absolute top-2 right-2 rounded-full border w-8 h-8 bg-white hover:text-gray-500 flex items-center justify-center"
@@ -292,61 +303,62 @@
             </li>
           </ul>
         </div>
-        <h1 class="p-4 text-lg border shadow-lg rounded-lg my-2 bg-green-300">
+        <h1 class="p-4 text-lg border shadow rounded-lg my-2">
           {{ dataClass.results[0].name }} -
-          {{ dataClass.results[0].school_name }}
+          {{ dataClass.results[0].school_name }} <br />
         </h1>
-        <div
-          v-if="allStudents.results.length > 0"
-          class="my-10 text-lg border-t"
-        >
-          <div
-            class="my-5 flex flex-col sm:flex-row justify-between sm:items-center"
-          >
-            <p class="flex items-center mb-2">pelajar</p>
-            <div class="flex justify-between">
-              <NuxtLink
-                :to="'/dashboard/class/students-progress-' + route.params.code"
-                class="mr-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              >
-                Lihat Pencapaian
-              </NuxtLink>
-              <NuxtLink
-                :to="'/dashboard/class/add-student-' + route.params.code"
-                class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              >
-                Tambah pelajar
-              </NuxtLink>
-            </div>
-          </div>
-          <div
-            v-for="(student, i) in allStudents.results"
-            :key="i"
-            class="capitalize my-2 text-sm font-light border p-3 rounded-lg flex justify-between items-center"
-          >
-            <p>{{ student.user_name }}</p>
-            <button
-              @click="toggleRemoveStudentModal(student.id_joinclass)"
-              type="button"
-              class=""
+        <div v-if="user.role === 'teacher'">
+          <div v-if="allStudents.results" class="my-10 text-lg border-t">
+            <div
+              class="my-5 flex flex-col sm:flex-row justify-between sm:items-center"
             >
-              <BootstrapIcon class="text-2xl" name="trash" />
-            </button>
-          </div>
-        </div>
-        <div v-else class="my-10 text-xl border-t">
-          <div class="my-5 flex justify-between items-center">
-            <p class="flex items-center">pelajar</p>
-            <div>
-              <NuxtLink
-                :to="'/dashboard/class/add-student-' + route.params.code"
-                class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              <p class="flex items-center mb-2">Pelajar</p>
+              <div class="flex justify-between">
+                <NuxtLink
+                  :to="
+                    '/dashboard/class/students-progress-' + route.params.code
+                  "
+                  class="mr-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Lihat Pencapaian
+                </NuxtLink>
+                <NuxtLink
+                  :to="'/dashboard/class/add-student-' + route.params.code"
+                  class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Tambah pelajar
+                </NuxtLink>
+              </div>
+            </div>
+            <div
+              v-for="(student, i) in allStudents.results"
+              :key="i"
+              class="capitalize my-2 text-sm font-light border p-3 rounded-lg flex justify-between items-center"
+            >
+              <p>{{ student.user_name }}</p>
+              <button
+                @click="toggleRemoveStudentModal(student.id_joinclass)"
+                type="button"
+                class=""
               >
-                Tambah pelajar
-              </NuxtLink>
+                <BootstrapIcon class="text-2xl" name="trash" />
+              </button>
             </div>
           </div>
-          <span class="text-sm italic">belum ada pelajar</span>
+          <div v-else class="my-10 text-xl border-t">
+            <div class="my-5 flex justify-between items-center">
+              <p class="flex items-center">pelajar</p>
+              <div>
+                <NuxtLink
+                  :to="'/dashboard/class/add-student-' + route.params.code"
+                  class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Tambah pelajar
+                </NuxtLink>
+              </div>
+            </div>
+            <span class="text-sm italic">belum ada pelajar</span>
+          </div>
         </div>
       </div>
       <div class="block">
@@ -372,6 +384,45 @@
               class="w-full bg-green-100 border border-green-300 rounded-lg my-2 p-1 text-sm"
             >
               <span>berhasil salin</span>
+            </div>
+          </div>
+        </div>
+        <div v-if="user.role === 'teacher'" class="mt-5">
+          <div v-if="requestJoinClass.results !== undefined">
+            <h2 v-if="requestJoinClass.results.length > 0">
+              Permintaan Bergabung
+            </h2>
+            <div
+              v-if="requestJoinClass.results.length > 0"
+              class="md:pr-10 pt-5 mb-10"
+            >
+              <div
+                v-for="(item, i) in requestJoinClass.results"
+                :key="i"
+                class="flex items-center bg-white border border-gray-200 rounded-lg shadow flex-row"
+              >
+                <div class="flex justify-between w-full p-2">
+                  <p class="font-normal flex items-center capitalize">
+                    {{ item.user_name }}
+                  </p>
+                  <div class="flex items-center">
+                    <button
+                      @click="acceptJoinClass(item.id_joinclass)"
+                      type="button"
+                      class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                    >
+                      Terima
+                    </button>
+                    <button
+                      @click="rejectedJoinClass(item.id_joinclass)"
+                      type="button"
+                      class="ml-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                      Tolak
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -403,6 +454,10 @@ const { data: dataClass, refresh: classRefresh } = await useFetch(
 
 const { data: allStudents, refresh: studentsRefresh } = await useFetch(
   "/api/joinclass/" + dataClass.value.results[0].id_class
+);
+
+const { data: requestJoinClass, refresh: requestRefresh } = await useFetch(
+  "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
 );
 
 const successNotif = ref(false);
@@ -534,6 +589,58 @@ const editClass = async () => {
   } catch (err) {
     console.error("Error:", err);
   }
+};
+
+const successJoinNotif = ref(false);
+
+const acceptJoinClass = async (id) => {
+  const response = await useFetch("/api/joinclass/" + id, {
+    method: "PUT",
+    body: {
+      status: "accepted",
+    },
+  });
+
+  if (response.data.value.results.affectedRows === 1) {
+    successJoinNotif.value = true;
+    setTimeout(() => {
+      successJoinNotif.value = false;
+    }, 1000);
+
+    const { data: allStudents } = await useFetch(
+      "/api/joinclass/" + dataClass.value.results[0].id_class
+    );
+
+    if (allStudents) {
+      await useFetch("/api/class/update-students/" + route.params.code, {
+        method: "PUT",
+        body: {
+          number_of_students: allStudents.value.results.length,
+        },
+      });
+    }
+
+    requestRefresh();
+    studentsRefresh();
+  }
+};
+
+const rejectedNotif = ref(false);
+
+const rejectedJoinClass = async (id) => {
+  const response = await useFetch("/api/joinclass/" + id, {
+    method: "DELETE",
+  });
+
+  if (response.data.value.results.affectedRows === 1) {
+    rejectedNotif.value = true;
+    setTimeout(() => {
+      rejectedNotif.value = false;
+    }, 1000);
+  }
+
+  requestRefresh();
+  studentsRefresh();
 };
 
 onMounted(() => {

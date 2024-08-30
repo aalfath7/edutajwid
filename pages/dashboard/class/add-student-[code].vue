@@ -126,15 +126,25 @@ const { data: dataClass, refresh: classRefresh } = await useFetch(
   "/api/class/" + route.params.code
 );
 
-const { data: acceptStudent } = await useFetch(
-  "/api/joinclass/" + dataClass.value.results[0].id_class
-);
-const { data: studentsRequest } = await useFetch(
-  "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
-);
-const { data: teachersRequest } = await useFetch(
-  "/api/joinclass/get-teachers-request/" + dataClass.value.results[0].id_class
-);
+const acceptStudent = ref();
+const studentsRequest = ref();
+const teachersRequest = ref();
+
+if (dataClass) {
+  console.log(dataClass.value.results[0].id_class);
+  const { data: accept } = await useFetch(
+    "/api/joinclass/" + dataClass.value.results[0].id_class
+  );
+  acceptStudent.value = accept.value;
+  const { data: students } = await useFetch(
+    "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
+  );
+  studentsRequest.value = students.value;
+  const { data: teachers } = await useFetch(
+    "/api/joinclass/get-teachers-request/" + dataClass.value.results[0].id_class
+  );
+  teachersRequest.value = teachers.value;
+}
 
 const formStudent = ref({
   id: "",

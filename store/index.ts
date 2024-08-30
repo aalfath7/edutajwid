@@ -162,7 +162,7 @@ export const useAuthStore = defineStore("auth", {
             xp: results[0].xp,
           };
 
-          const token = await this.generateToken(payload, SECRETKEY, 3600);
+          const token = await this.generateToken(payload, SECRETKEY, 10800);
           this.token = token;
 
           this.authenticated = true;

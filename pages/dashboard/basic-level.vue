@@ -50,7 +50,7 @@
             </Accordian>
           </li>
         </ol>
-        <div class="flex justify-end mt-20">
+        <div class="flex justify-end">
           <NuxtLink to="/dashboard/medium-level">
             <button
               type="button"

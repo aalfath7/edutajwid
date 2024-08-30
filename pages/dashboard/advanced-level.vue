@@ -49,7 +49,7 @@
           </Accordian>
         </li>
       </ol>
-      <div class="flex mt-20">
+      <div class="flex ml-2">
         <NuxtLink to="/dashboard/medium-level">
           <button
             type="button"

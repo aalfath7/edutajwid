@@ -5,6 +5,11 @@
       text="Buat kelas berhasil"
       type="success"
     />
+    <Notif
+      :is-active="successRequestNotif"
+      text="Permintaan Gabung Kelas terkirim"
+      type="success"
+    />
     <Notif :is-active="failedNotif" text="Buat Kelas gagal" type="failed" />
     <Notif
       :is-active="successJoinNotif"
@@ -14,6 +19,16 @@
     <Notif
       :is-active="rejectedNotif"
       text="Permintaan gabung kelas ditolak"
+      type="failed"
+    />
+    <Notif
+      :is-active="failedRequestNotif"
+      text="Permintaan gabung kelas tidak berhasil dikirim"
+      type="failed"
+    />
+    <Notif
+      :is-active="studentRequested"
+      text="Permintaan gabung sudah terkirim"
       type="failed"
     />
 
@@ -111,22 +126,65 @@
     <div class="slit-in sm:pl-6">
       <div
         v-if="user.role === 'student'"
-        class="flex w-full max-w-md max-h-full mb-10"
+        class="w-full max-w-md max-h-full mb-10 grid grid-cols-3 gap-2"
       >
         <input
+          v-model="classCode"
           type="text"
           name="kelas"
           id="kelas"
-          class="mr-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+          class="col-span-2 mr-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full p-2.5"
           placeholder="Masukkan Kode"
-          required
         />
         <button
-          type="submit"
-          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          @click="searchClass"
+          type="button"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
-          Gabung
+          Cari Kelas
         </button>
+      </div>
+
+      <div v-if="user.role === 'student'">
+        <div v-if="dataSearchClass !== undefined">
+          <h2 v-if="dataSearchClass.length > 0">Kelas tersedia</h2>
+          <div
+            v-if="dataSearchClass.length > 0"
+            class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:pr-10 pt-5 mb-10"
+          >
+            <div
+              v-for="(item, i) in dataSearchClass"
+              :key="i"
+              class="flex items-center bg-white border border-gray-200 rounded-lg shadow flex-row"
+            >
+              <img
+                class="object-cover w-20 rounded-t-lg md:rounded-none md:rounded-s-lg"
+                src="/src/class.jpg"
+                alt=""
+              />
+              <div class="flex justify-between w-full p-2">
+                <div>
+                  <h5 class="text-xl font-bold">
+                    {{ item.name }}
+                  </h5>
+                  <p class="font-normal">
+                    {{ item.school_name }}
+                  </p>
+                </div>
+                <div class="flex items-center">
+                  <button
+                    @click="requestJoinClass"
+                    type="button"
+                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  >
+                    Gabung
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="mb-10">Kelas Tidak Tersedia</div>
+        </div>
       </div>
 
       <div v-if="user.role === 'student'">
@@ -154,7 +212,6 @@
                   <p class="font-normal">
                     {{ item.school_name }}
                   </p>
-                  <p>Ust {{ item.user_name }}</p>
                 </div>
                 <div class="flex items-center">
                   <button
@@ -188,49 +245,99 @@
         Buat Kelas
       </button>
 
-      <div v-if="allClassUser">
-        <div
-          v-if="allClassUser.length > 0"
-          class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:pr-10 border-t pt-5"
-        >
-          <NuxtLink
-            v-for="(item, i) in allClassUser"
-            :key="i"
-            :to="'/dashboard/class/' + item.class_code"
-            class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+      <div v-if="user.role === 'student'">
+        <div v-if="studentClass">
+          <div
+            v-if="studentClass.length > 0"
+            class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:pr-10 border-t pt-5"
           >
-            <img
-              class="object-cover w-full rounded-t-lg h-44 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-              src="/src/class.jpg"
-              alt=""
-            />
-            <div
-              class="flex flex-col justify-between p-4 leading-normal w-full h-full"
+            <NuxtLink
+              v-for="(item, i) in studentClass"
+              :key="i"
+              :to="'/dashboard/class/' + item.class_code"
+              class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
-              <h5
-                class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+              <img
+                class="object-cover w-full rounded-t-lg h-44 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                src="/src/class.jpg"
+                alt=""
+              />
+              <div
+                class="flex flex-col justify-between p-4 leading-normal w-full h-full"
               >
-                {{ item.name }}
-              </h5>
-              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {{ item.school_name }}
-              </p>
-              <div class="w-full flex justify-between items-center">
-                <p class="text-gray-500 text-sm">
-                  {{ item.number_of_students }} siswa
+                <h5
+                  class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                >
+                  {{ item.name }}
+                </h5>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {{ item.school_name }}
                 </p>
-                <img
-                  class="w-8 h-8 rounded-full"
-                  src="/src/users/my-photo.jpg"
-                  alt="Neil image"
-                />
+                <div class="w-full flex justify-between items-center">
+                  <p class="text-gray-500 text-sm">
+                    {{ item.number_of_students }} siswa
+                  </p>
+                  <img
+                    class="w-8 h-8 rounded-full"
+                    src="/src/users/my-photo.jpg"
+                    alt="Neil image"
+                  />
+                </div>
               </div>
-            </div>
-          </NuxtLink>
+            </NuxtLink>
+          </div>
+          <div v-else class="border-t pt-5">
+            Anda belum bergabung dengan kelas
+          </div>
+        </div>
+      </div>
+
+      <div v-if="user.role === 'teacher'">
+        <div v-if="allClassTeacher" class="md:pr-10 border-t pt-5">
+          <h2 class="mb-5">Kelasmu</h2>
+          <div
+            v-if="allClassTeacher.length > 0"
+            class="grid grid-cols-1 lg:grid-cols-2 gap-5"
+          >
+            <NuxtLink
+              v-for="(item, i) in allClassTeacher"
+              :key="i"
+              :to="'/dashboard/class/' + item.class_code"
+              class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+            >
+              <img
+                class="object-cover w-full rounded-t-lg h-44 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                src="/src/class.jpg"
+                alt=""
+              />
+              <div
+                class="flex flex-col justify-between p-4 leading-normal w-full h-full"
+              >
+                <h5
+                  class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                >
+                  {{ item.name }}
+                </h5>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {{ item.school_name }}
+                </p>
+                <div class="w-full flex justify-between items-center">
+                  <p class="text-gray-500 text-sm">
+                    {{ item.number_of_students }} siswa
+                  </p>
+                  <img
+                    class="w-8 h-8 rounded-full"
+                    src="/src/users/my-photo.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+              </div>
+            </NuxtLink>
+          </div>
+          <div v-else class="border-t pt-5">Belum ada kelas</div>
         </div>
         <div v-else class="border-t pt-5">Belum ada kelas</div>
       </div>
-      <div v-else class="border-t pt-5">Belum ada kelas</div>
     </div>
   </div>
 </template>
@@ -250,7 +357,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { authenticated, user } = storeToRefs(useAuthStore());
 
-const allClassUser = ref();
+const allClassTeacher = ref();
 
 const form = ref({
   id_class: "",
@@ -262,6 +369,7 @@ const form = ref({
 
 const requestClass = ref();
 const refreshData = ref();
+const studentClass = ref([]);
 
 watch(
   () => user.value.id_user,
@@ -269,19 +377,29 @@ watch(
     if (newId) {
       form.value.id_user = newId;
 
+      // teacher
       const { data } = await useFetch("/api/class/teacher", {
         method: "POST",
         body: {
           id_user: newId,
         },
       });
-      allClassUser.value = data.value.results;
+      allClassTeacher.value = data.value.results;
 
+      // student
       const { data: response } = await useFetch(
         "/api/joinclass/get-teachers-request-user/" + newId
       );
 
       requestClass.value = response.value.results;
+
+      const { data: dataClass, refresh: refreshClass } = await useFetch(
+        "/api/joinclass/student-class/" + newId
+      );
+      dataClass.value.results.forEach(async (e) => {
+        const results = await useFetch("/api/class/" + e.class_code);
+        studentClass.value.push(results.data.value.results[0]);
+      });
     }
   },
   { immediate: true }
@@ -358,18 +476,29 @@ const joinClass = async (id) => {
     }, 1000);
 
     const { data: allStudents } = await useFetch(
-      "/api/joinclass/" + requestClass.value.id_class
+      "/api/joinclass/" + requestClass.value[0].id_class
     );
 
-    await useFetch(
-      "/api/class/update-students/" + requestClass.value.class_code,
-      {
-        method: "PUT",
-        body: {
-          number_of_students: allStudents.value.results.length + 1,
-        },
-      }
+    if (allStudents) {
+      await useFetch(
+        "/api/class/update-students/" + requestClass.value[0].class_code,
+        {
+          method: "PUT",
+          body: {
+            number_of_students: allStudents.value.results.length,
+          },
+        }
+      );
+    }
+
+    const { data: dataClass, refresh: refreshClass } = await useFetch(
+      "/api/joinclass/student-class/" + form.value.id_user
     );
+    studentClass.value = [];
+    dataClass.value.results.forEach(async (e) => {
+      const results = await useFetch("/api/class/" + e.class_code);
+      studentClass.value.push(results.data.value.results[0]);
+    });
   }
 
   const { data: dataRequest } = await useFetch(
@@ -398,6 +527,65 @@ const rejectedClass = async (id) => {
   );
 
   requestClass.value = dataRequest.value.results;
+};
+
+const classCode = ref();
+const formStudent = ref({
+  id: "",
+  id_class: "",
+  id_user: "",
+  status: "students request",
+});
+
+const successRequestNotif = ref(false);
+const failedRequestNotif = ref(false);
+const studentRequested = ref(false);
+const dataSearchClass = ref();
+
+const searchClass = async () => {
+  const { data: dataClass, refresh: classRefresh } = await useFetch(
+    "/api/class/" + classCode.value
+  );
+  dataSearchClass.value = dataClass.value.results;
+  if (dataClass.value.results.length > 0) {
+    formStudent.value.id_class = dataClass.value.results[0].id_class;
+  }
+};
+
+const requestJoinClass = async () => {
+  const { data: students } = await useFetch(
+    "/api/joinclass/get-students-request-user/" + form.value.id_user
+  );
+
+  formStudent.value.id_user = form.value.id_user;
+
+  if (students.value.results.length > 0) {
+    studentRequested.value = true;
+    setTimeout(() => {
+      studentRequested.value = false;
+    }, 1000);
+  } else {
+    const { data } = await useFetch("/api/joinclass", {
+      method: "POST",
+      body: formStudent.value,
+    });
+
+    if (data.value.results !== null) {
+      if (data.value.results.affectedRows === 1) {
+        successRequestNotif.value = true;
+        setTimeout(() => {
+          successRequestNotif.value = false;
+        }, 1000);
+      }
+    } else {
+      failedRequestNotif.value = true;
+      setTimeout(() => {
+        failedRequestNotif.value = false;
+      }, 1000);
+    }
+  }
+
+  dataSearchClass.value = [];
 };
 
 onMounted(() => {

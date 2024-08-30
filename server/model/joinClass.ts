@@ -16,7 +16,8 @@ export const read = async () => {
 
 export const detail = async (id: string) => {
   const result = await sql({
-    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+    query: `SELECT join_class.id_joinclass, users.name AS user_name, class.name AS class_name, 
+            class.school_name, class.class_code, class.id_class, class.id_user
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class
@@ -26,9 +27,22 @@ export const detail = async (id: string) => {
   return result;
 };
 
+export const getStudentClass = async (id: string) => {
+  const result = await sql({
+    query: `SELECT join_class.id_joinclass, class.class_code
+            FROM join_class
+            INNER JOIN users ON join_class.id_user = users.id_user
+            INNER JOIN class ON join_class.id_class = class.id_class
+            WHERE join_class.id_user = ?
+            AND join_class.status = 'accepted'`,
+    values: [id],
+  });
+  return result;
+};
+
 export const getTeachersRequest = async (id: string) => {
   const result = await sql({
-    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+    query: `SELECT join_class.id_joinclass, users.name AS user_name, class.name AS class_name
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class
@@ -40,8 +54,8 @@ export const getTeachersRequest = async (id: string) => {
 
 export const getTeachersRequestByIdUser = async (id: string) => {
   const result = await sql({
-    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name, 
-            class.school_name, class.class_code, class.id_class
+    query: `SELECT join_class.id_joinclass, users.name AS user_name, class.name AS class_name, 
+            class.school_name, class.class_code, class.id_class, class.id_user
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class
@@ -53,7 +67,7 @@ export const getTeachersRequestByIdUser = async (id: string) => {
 
 export const getStudentsRequest = async (id: string) => {
   const result = await sql({
-    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+    query: `SELECT join_class.id_joinclass, users.name AS user_name, class.name AS class_name
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class
@@ -65,7 +79,7 @@ export const getStudentsRequest = async (id: string) => {
 
 export const getStudentsRequestByIdUser = async (id: string) => {
   const result = await sql({
-    query: `SELECT id_joinclass, users.name AS user_name, class.name AS class_name
+    query: `SELECT join_class.id_joinclass, users.name AS user_name, class.name AS class_name
             FROM join_class
             INNER JOIN users ON join_class.id_user = users.id_user
             INNER JOIN class ON join_class.id_class = class.id_class

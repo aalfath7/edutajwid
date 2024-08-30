@@ -25,7 +25,7 @@
               :key="i"
               scope="col"
               :class="i % 2 === 0 ? 'bg-gray-50' : ''"
-              class="px-6 py-3"
+              class="px-6 py-3 border border-gray-100"
             >
               {{ i }}
             </th>
@@ -46,8 +46,7 @@
             <td
               v-for="(item, i) in student.lesson_passed"
               :key="i"
-              :class="i % 2 !== 0 ? 'bg-gray-50' : ''"
-              class="px-6 py-4"
+              class="px-6 py-4 border border-gray-100"
             >
               <BootstrapIcon
                 v-if="item"
@@ -59,8 +58,7 @@
             <td
               v-for="(item, i) in 95 - student.lesson_passed.length"
               :key="i"
-              :class="i % 2 === 0 ? 'bg-gray-50' : ''"
-              class="px-6 py-4"
+              class="px-6 py-4 border border-gray-100"
             >
               <BootstrapIcon class="text-yellow-200" name="circle-fill" />
             </td>

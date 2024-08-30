@@ -10,6 +10,13 @@ export const detail = async (evt: H3Event) => {
   return result;
 };
 
+export const getStudentClass = async (evt: H3Event) => {
+  const result = await joinClassModel.getStudentClass(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
 export const getTeachersRequest = async (evt: H3Event) => {
   const result = await joinClassModel.getTeachersRequest(
     evt.context.params?.id as string
