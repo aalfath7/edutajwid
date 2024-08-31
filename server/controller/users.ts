@@ -53,23 +53,22 @@ export const create = async (evt: H3Event) => {
     password: body.password,
     token: token,
   });
-  // if (result.error === null) {
-  //   const transporter = nodemailer.createTransport({
-  //     host: "proud.jagoanhosting.com",
-  //     auth: {
-  //       user: "edutajwid@qti.biz.id",
-  //       pass: "3*v6(uayB$}z",
-  //     },
-  //   });
-
-  //   await transporter.sendMail({
-  //     from: '"Edutajwid" <edutajwid@qti.biz.id>',
-  //     to: body.email,
-  //     subject: "Verify Your Email",
-  //     html: `<p>Please verify your email by clicking the following link:</p>
-  //            <a href="http://localhost:3000/users/verification-mail-${token}">Verify Email</a>`,
-  //   });
-  // }
+  if (result.error === null) {
+    // const transporter = nodemailer.createTransport({
+    //   host: "proud.jagoanhosting.com",
+    //   auth: {
+    //     user: "edutajwid@qti.biz.id",
+    //     pass: "3*v6(uayB$}z",
+    //   },
+    // });
+    // await transporter.sendMail({
+    //   from: '"Edutajwid" <edutajwid@qti.biz.id>',
+    //   to: body.email,
+    //   subject: "Verify Your Email",
+    //   html: `<p>Please verify your email by clicking the following link:</p>
+    //          <a href="http://localhost:3000/users/verification-mail-${token}">Verify Email</a>`,
+    // });
+  }
   return result;
 };
 

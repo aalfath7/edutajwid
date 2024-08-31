@@ -98,7 +98,7 @@ const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 // const { results } = await $fetch("/api/lessons/medium-level");
 const results = ref();
 try {
-  results.value = await $fetch(BASEAPIURL.value + "/lessons/medium-level");
+  results.value = await $fetch(BASEAPIURL.value + "/api/lessons/medium-level");
 } catch (error) {
   // console.log(error);
 }

@@ -14,11 +14,10 @@ const con = createPool({
 });
 
 export const sql = async ({ query, values }: Options) => {
-  // return await con.query(query, values);
   try {
     const [results, fields] = await con.query(query, values);
-    return { results, fields, error: null }; // Kembalikan hasil query dan null untuk error
+    return { results, fields, error: null };
   } catch (error) {
-    return { results: null, fields: null, error }; // Kembalikan null untuk hasil dan error yang ditangkap
+    return { results: null, fields: null, error };
   }
 };

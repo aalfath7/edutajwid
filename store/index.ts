@@ -141,35 +141,40 @@ export const useAuthStore = defineStore("auth", {
 
     async authenticatedUser({ email, password }: DataUser) {
       if (email && password) {
-        const { results } = await $fetch("/api/login", {
-          method: "POST",
-          body: {
-            email: email,
-            password: password,
-          },
-        });
-        // this.loading = pending;
+        try {
+          const results: any = await $fetch(this.BASEAPIURL + "/api/login", {
+            method: "POST",
+            body: {
+              email: email,
+              password: password,
+            },
+          });
 
-        if (results) {
-          const payload = {
-            id_user: results[0].id_user,
-            name: results[0].name,
-            email: results[0].email,
-            password: results[0].password,
-            image: results[0].image,
-            role: results[0].role,
-            last_lesson: results[0].last_lesson,
-            xp: results[0].xp,
-          };
+          if (results) {
+            const payload = {
+              id_user: results[0].id_user,
+              name: results[0].name,
+              email: results[0].email,
+              password: results[0].password,
+              image: results[0].image,
+              role: results[0].role,
+              last_lesson: results[0].last_lesson,
+              xp: results[0].xp,
+            };
 
-          const token = await this.generateToken(payload, SECRETKEY, 10800);
-          this.token = token;
+            const token = await this.generateToken(payload, SECRETKEY, 10800);
+            this.token = token;
 
-          this.authenticated = true;
+            this.authenticated = true;
 
-          if (process.client) {
-            localStorage.setItem("authToken", this.token);
+            if (process.client) {
+              localStorage.setItem("authToken", this.token);
+            }
+
+            return true;
           }
+        } catch (err) {
+          console.log(err);
         }
       }
     },

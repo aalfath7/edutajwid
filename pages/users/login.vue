@@ -14,6 +14,7 @@
     />
 
     <div
+      v-if="!loading"
       class="px-2 flex flex-col justify-center items-center h-screen lg:h-screen bg-cover bg-orange-300 bg-gradient-to-r from-orange-300 to-green-300"
     >
       <!-- <div
@@ -85,6 +86,9 @@
         </form>
       </div>
     </div>
+    <div v-else>
+      <Loading :is-loading="true" />
+    </div>
   </div>
 </template>
 
@@ -110,9 +114,12 @@ const user = ref({
 
 const successNotif = ref(false);
 const failedNotif = ref(false);
+const loading = ref(false);
 
 const login = async () => {
-  await authenticatedUser(user.value);
+  const response = await authenticatedUser(user.value);
+
+  console.log(response);
 
   if (authenticated.value === true) {
     successNotif.value = true;

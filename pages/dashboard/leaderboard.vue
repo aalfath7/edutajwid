@@ -79,21 +79,23 @@ const { BASEAPIURL } = storeToRefs(useAuthStore());
 const isLoading = ref(false);
 const users = ref();
 
-try {
-  const { results } = await $fetch("/api/users/leaderboard");
-  users.value = results;
-} catch (error) {
-  console.log(error);
-} finally {
-  isLoading.value = false;
-}
-
 // try {
-//   const { data, pending } = await useFetch(BASEAPIURL.value + "/leaderboard");
-//   users.value = data.value;
+//   const { results } = await $fetch("/api/users/leaderboard");
+//   users.value = results;
 // } catch (error) {
 //   console.log(error);
+// } finally {
+//   isLoading.value = false;
 // }
+
+try {
+  const { data, pending } = await useFetch(
+    BASEAPIURL.value + "/api/leaderboard"
+  );
+  users.value = data.value;
+} catch (error) {
+  console.log(error);
+}
 
 const leaderboard = ref();
 
