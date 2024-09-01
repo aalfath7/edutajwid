@@ -77,9 +77,9 @@
             <th scope="col" class="px-6 py-3">Action</th>
           </tr>
         </thead>
-        <tbody v-if="allData.results.length > 0">
+        <tbody v-if="allData.length > 0">
           <tr
-            v-for="(user, i) in allData.results"
+            v-for="(user, i) in allData"
             :key="i"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
@@ -133,23 +133,25 @@ definePageMeta({
   layout: "admin",
 });
 import { initFlowbite } from "flowbite";
-
-onMounted(() => {
-  initFlowbite();
-});
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+const { BASEAPIURL } = storeToRefs(useAuthStore());
 
 const { data: allData, refresh: refreshData } = await useFetch(
-  "/api/users/request-change-role"
+  BASEAPIURL.value + "/api/users/request-change-role"
 );
 
 const acceptedNotif = ref(false);
 const rejectedNotif = ref(false);
 
 const acceptedUser = async (id) => {
-  const response = await $fetch("/api/users/change-role/" + id, {
-    method: "PUT",
-  });
-  if (response.results.affectedRows === 1) {
+  const response = await $fetch(
+    BASEAPIURL.value + "/api/users/change-role/" + id,
+    {
+      method: "PUT",
+    }
+  );
+  if (response.affectedRows === 1) {
     acceptedNotif.value = true;
     setTimeout(() => {
       acceptedNotif.value = false;
@@ -159,10 +161,13 @@ const acceptedUser = async (id) => {
 };
 
 const rejectedUser = async (id) => {
-  const response = await $fetch("/api/users/rejected/" + id, {
-    method: "PUT",
-  });
-  if (response.results.affectedRows === 1) {
+  const response = await $fetch(
+    BASEAPIURL.value + "/api/users/rejected/" + id,
+    {
+      method: "PUT",
+    }
+  );
+  if (response.affectedRows === 1) {
     rejectedNotif.value = true;
     setTimeout(() => {
       rejectedNotif.value = false;
@@ -179,4 +184,8 @@ const toggleModal = (filename) => {
 };
 
 const file = ref("");
+
+onMounted(() => {
+  initFlowbite();
+});
 </script>

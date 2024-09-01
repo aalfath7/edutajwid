@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: "Home - EduTajwid",
+  title: "Aplikasi Belajar Tajwid Al-Quran - EduTajwid",
 });
 definePageMeta({
   layout: "home",

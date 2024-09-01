@@ -17,7 +17,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="(user, i) in allData.results"
+            v-for="(user, i) in allData"
             :key="i"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
@@ -49,19 +49,24 @@ definePageMeta({
   layout: "admin",
 });
 import { initFlowbite } from "flowbite";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+const { BASEAPIURL } = storeToRefs(useAuthStore());
+
+const { data: allData, refresh: refreshData } = await useFetch(
+  BASEAPIURL.value + "/api/users"
+);
+
+const deleteUser = async (id) => {
+  const response = await useFetch(BASEAPIURL.value + "/api/users/" + id, {
+    method: "DELETE",
+  });
+  if (response.affectedRows === 1) {
+    refreshData();
+  }
+};
 
 onMounted(() => {
   initFlowbite();
 });
-
-const { data: allData, refresh: refreshData } = await useFetch("/api/users");
-
-const deleteUser = async (id) => {
-  const response = await $fetch("/api/users/" + id, {
-    method: "DELETE",
-  });
-  if (response.results.affectedRows === 1) {
-    refreshData();
-  }
-};
 </script>
