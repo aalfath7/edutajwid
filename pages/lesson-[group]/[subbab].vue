@@ -579,7 +579,7 @@ watch(
   async (newValue) => {
     if (newValue) {
       id_user.value = newValue;
-      const { results } = await $fetch("/api/users/person/" + newValue);
+      const { results } = await $fetch("/api/users/" + newValue);
 
       dataUser.value = results[0];
       allLessonPassed.value = JSON.parse(dataUser.value.lesson_passed);

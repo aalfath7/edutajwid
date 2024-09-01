@@ -152,7 +152,7 @@ watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
-      const { data } = await useFetch("/api/users/person/" + newId);
+      const { data } = await useFetch("/api/users/" + newId);
 
       const lesson = await $fetch(
         "/api/lessons/" + data.value.results[0].last_lesson

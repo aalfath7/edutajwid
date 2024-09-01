@@ -17,7 +17,7 @@ router.get(
   "/users/request-change-role",
   defineEventHandler(usersController.getRequestChangeRole)
 );
-router.get("/users/person/:id", defineEventHandler(usersController.detail));
+router.get("/users/:id", defineEventHandler(usersController.detail));
 router.get(
   "/users/email/:email",
   defineEventHandler(usersController.getDataWithEmail)

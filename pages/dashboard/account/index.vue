@@ -153,21 +153,23 @@
 
     <div v-if="dataUser" class="slit-in sm:ml-10 sm:mt-5 sm:max-w-md">
       <div class="flex items-center mb-10 relative">
-        <div class="relative w-20 sm:w-32">
+        <div class="relative w-12 sm:w-32">
           <img
             :src="'/src/users/' + dataUser.image"
             alt=""
-            class="rounded-full border w-20 h-20 sm:h-32 sm:w-32 object-cover"
+            class="rounded-full border w-12 h-12 sm:h-32 sm:w-32 object-cover"
           />
           <BootstrapIcon
             @click="toggleImageModal"
             name="pencil-square"
-            class="text-sm sm:text-2xl absolute bottom-0 right-2 bg-white hover:text-gray-500 cursor-pointer"
+            class="text-sm sm:text-2xl absolute bottom-0 right-0 sm:right-2 bg-white hover:text-gray-500 cursor-pointer"
           />
         </div>
         <div class="ml-10">
           <h1 class="text-sm font-bold">Profil</h1>
-          <p class="capitalize font-bold text-2xl">{{ dataUser.name }}</p>
+          <p class="capitalize font-bold text-xl sm:text-2xl">
+            {{ dataUser.name }}
+          </p>
           <p class="capitalize">{{ dataUser.role }}</p>
         </div>
         <button
@@ -291,9 +293,7 @@ watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
-      const { data } = await useFetch(
-        BASEAPIURL.value + "/api/users/person/" + newId
-      );
+      const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + newId);
       dataUser.value = data.value[0];
 
       updateForm.value.name = dataUser.value.name;
@@ -327,7 +327,7 @@ const update = async () => {
     }, 1000);
 
     const { data: updateData } = await useFetch(
-      BASEAPIURL.value + "/api/users/person/" + dataUser.value.id_user
+      BASEAPIURL.value + "/api/users/" + dataUser.value.id_user
     );
     dataUser.value = updateData.value[0];
     console.log(dataUser.value);
