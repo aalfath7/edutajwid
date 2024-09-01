@@ -143,20 +143,21 @@ export const useAuthStore = defineStore("auth", {
     async authenticatedUser({ email, password }: DataUser) {
       if (email && password) {
         try {
-          // const results: any = await $fetch(this.BASEAPIURL + "/api/login", {
-          //   method: "POST",
-          //   body: {
-          //     email: email,
-          //     password: password,
-          //   },
-          // });
-          const { results } = await $fetch("/api/login", {
+          const results: any = await $fetch(this.BASEAPIURL + "/api/login", {
             method: "POST",
             body: {
               email: email,
               password: password,
             },
           });
+          console.log(results);
+          // const { results } = await $fetch("/api/login", {
+          //   method: "POST",
+          //   body: {
+          //     email: email,
+          //     password: password,
+          //   },
+          // });
 
           if (results) {
             const payload = {
@@ -182,7 +183,7 @@ export const useAuthStore = defineStore("auth", {
             return true;
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
       }
     },

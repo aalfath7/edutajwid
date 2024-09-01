@@ -288,45 +288,43 @@
       </div>
 
       <div v-if="user.role === 'teacher'">
-        <div v-if="allClassTeacher" class="md:pr-10 border-t pt-5">
-          <h2 class="mb-5">Kelasmu</h2>
-          <div
-            v-if="allClassTeacher.length > 0"
-            class="grid grid-cols-1 lg:grid-cols-2 gap-5"
-          >
-            <NuxtLink
-              v-for="(item, i) in allClassTeacher"
-              :key="i"
-              :to="'/dashboard/class/' + item.class_code"
-              class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-            >
-              <img
-                class="object-cover w-full rounded-t-lg h-44 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-                src="/src/class.jpg"
-                alt=""
-              />
-              <div
-                class="flex flex-col justify-between p-4 leading-normal w-full h-full"
+        <div v-if="allClassTeacher">
+          <div v-if="allClassTeacher.length > 0" class="md:pr-10 border-t pt-5">
+            <h2 class="mb-5">Kelasmu</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <NuxtLink
+                v-for="(item, i) in allClassTeacher"
+                :key="i"
+                :to="'/dashboard/class/' + item.class_code"
+                class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
-                <h5
-                  class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                <img
+                  class="object-cover w-full rounded-t-lg h-44 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                  src="/src/class.jpg"
+                  alt=""
+                />
+                <div
+                  class="flex flex-col justify-between p-4 leading-normal w-full h-full"
                 >
-                  {{ item.name }}
-                </h5>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  {{ item.school_name }}
-                </p>
-                <div class="w-full flex justify-between items-center">
-                  <p class="text-gray-500 text-sm">
-                    {{ item.number_of_students }} siswa
+                  <h5
+                    class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                  >
+                    {{ item.name }}
+                  </h5>
+                  <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    {{ item.school_name }}
                   </p>
+                  <div class="w-full flex justify-between items-center">
+                    <p class="text-gray-500 text-sm">
+                      {{ item.number_of_students }} siswa
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </NuxtLink>
+              </NuxtLink>
+            </div>
           </div>
           <div v-else class="border-t pt-5">Belum ada kelas</div>
         </div>
-        <div v-else class="border-t pt-5">Belum ada kelas</div>
       </div>
     </div>
   </div>

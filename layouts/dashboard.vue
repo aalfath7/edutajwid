@@ -55,12 +55,13 @@
                     class="ms-10 flex items-center text-sm rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   >
                     <span class="sr-only">Open user menu</span>
-                    <p class="hidden sm:block mr-5 capitalize">
-                      {{ user.name }}
+                    <p v-if="_user" class="hidden sm:block mr-5 capitalize">
+                      {{ _user.name }}
                     </p>
                     <img
+                      v-if="_user"
                       class="w-8 h-8 rounded-full object-cover border border-gray-800"
-                      :src="'/src/users/' + user.image"
+                      :src="BASEAPIURL + '/uploads/' + _user.image"
                       alt="user photo"
                     />
                   </button>
@@ -78,6 +79,7 @@
                   </span>
                   <!-- Dropdown menu -->
                   <div
+                    v-if="_user"
                     :class="{ 'hidden ': !accountDropdown }"
                     class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute right-0"
                   >
@@ -87,7 +89,7 @@
                       ></span>
                       <span
                         class="block text-sm text-gray-500 truncate dark:text-gray-400"
-                        >{{ user.email }}
+                        >{{ _user.email }}
                       </span>
                     </div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
@@ -156,7 +158,7 @@
                 <span class="ms-3">Papan Peringkat</span>
               </NuxtLink>
             </li>
-            <li v-if="user.name">
+            <li v-if="_user">
               <NuxtLink
                 to="/dashboard/class"
                 class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -170,22 +172,46 @@
         </div>
       </aside>
 
-      <div class="p-4 sm:pl-72 lg:pl-64 pt-20">
+      <div
+        class="p-4 sm:pl-72 lg:pl-64 pt-20 flex flex-col justify-between h-screen"
+      >
         <slot />
+
+        <div class="w-full flex justify-center pt-5 sm:pt-10">
+          <span class="tracking-wider text-sm text-gray-400"
+            >© 2024
+            <a href="https://edutajwid.com/" class="hover:underline"
+              >EduTajwid™</a
+            >. All Rights Reserved.</span
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store";
 const route = useRoute();
 
 const { logUserOut, loadTokenFromLocalStorage } = useAuthStore();
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 const notif = ref(false);
 const accountDropdown = ref(false);
+
+const _user = ref();
+
+watch(
+  () => user.value.id_user,
+  async (newId) => {
+    if (newId) {
+      const { data } = await useFetch("/api/users/person/" + newId);
+      _user.value = data.value.results[0];
+    }
+  },
+  { immediate: true }
+);
 
 const toggleAccountDropdown = () => {
   accountDropdown.value = !accountDropdown.value;

@@ -52,10 +52,6 @@ router.put(
   defineEventHandler(usersController.updateLessonPassed)
 );
 router.put(
-  "/users/update-lesson-passed/:id",
-  defineEventHandler(usersController.updateLessonPassed)
-);
-router.put(
   "/users/email-verify/:token",
   defineEventHandler(usersController.emailVerify)
 );

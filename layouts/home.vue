@@ -94,10 +94,13 @@
               class="ms-10 flex items-center text-sm rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             >
               <span class="sr-only">Open user menu</span>
-              <p class="hidden sm:block mr-5 capitalize">{{ user.name }}</p>
+              <p v-if="_user" class="hidden sm:block mr-5 capitalize">
+                {{ _user.name }}
+              </p>
               <img
+                v-if="_user"
                 class="w-8 h-8 rounded-full object-cover border border-gray-800"
-                :src="'/src/users/' + user.image"
+                :src="BASEAPIURL + '/uploads/' + _user.image"
                 alt="user photo"
               />
             </button>
@@ -113,6 +116,7 @@
             </span>
             <!-- Dropdown menu -->
             <div
+              v-if="_user"
               :class="{ 'hidden ': !accountDropdown }"
               class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute right-0"
             >
@@ -122,7 +126,7 @@
                 ></span>
                 <span
                   class="block text-sm text-gray-500 truncate dark:text-gray-400"
-                  >{{ user.email }}
+                  >{{ _user.email }}
                 </span>
               </div>
               <ul class="py-2" aria-labelledby="user-menu-button">
@@ -210,16 +214,29 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { initFlowbite } from "flowbite";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 
 const { logUserOut, loadTokenFromLocalStorage } = useAuthStore();
 const searchForm = ref(false);
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 const notif = ref(false);
 const accountDropdown = ref(false);
+
+const _user = ref();
+
+watch(
+  () => user.value.id_user,
+  async (newId) => {
+    if (newId) {
+      const { data } = await useFetch("/api/users/person/" + newId);
+      _user.value = data.value.results[0];
+    }
+  },
+  { immediate: true }
+);
 
 const toggleAccountDropdown = () => {
   accountDropdown.value = !accountDropdown.value;

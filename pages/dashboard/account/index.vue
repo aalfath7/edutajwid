@@ -274,7 +274,9 @@ definePageMeta({
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user, changeRole } = storeToRefs(useAuthStore());
+const { authenticated, user, changeRole, BASEAPIURL } = storeToRefs(
+  useAuthStore()
+);
 const { setRequestChangeRole } = useAuthStore();
 
 const dataUser = ref();
@@ -289,8 +291,10 @@ watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
-      const { data } = await useFetch("/api/users/person/" + newId);
-      dataUser.value = data.value.results[0];
+      const { data } = await useFetch(
+        BASEAPIURL.value + "/api/users/person/" + newId
+      );
+      dataUser.value = data.value[0];
 
       updateForm.value.name = dataUser.value.name;
       updateForm.value.email = dataUser.value.email;
@@ -309,22 +313,30 @@ const successNotif = ref(false);
 const failedNotif = ref(false);
 
 const update = async () => {
-  const { data } = await useFetch("/api/users/" + dataUser.value.id_user, {
-    method: "PUT",
-    body: updateForm,
-  });
-  if (data.value.results.affectedRows === 1) {
+  const { data } = await useFetch(
+    BASEAPIURL.value + "/api/users/" + dataUser.value.id_user,
+    {
+      method: "PUT",
+      body: updateForm,
+    }
+  );
+  if (data.value.affectedRows === 1) {
     successNotif.value = true;
     setTimeout(() => {
       successNotif.value = false;
     }, 1000);
+
+    const { data: updateData } = await useFetch(
+      BASEAPIURL.value + "/api/users/person/" + dataUser.value.id_user
+    );
+    dataUser.value = updateData.value[0];
+    console.log(dataUser.value);
   } else {
     failedNotif.value = true;
+    setTimeout(() => {
+      failedNotif.value = false;
+    }, 1000);
   }
-  const { data: updateData } = await useFetch(
-    "/api/users/person/" + dataUser.value.id_user
-  );
-  dataUser.value = updateData.value.results[0];
 };
 
 const imageModal = ref(false);
@@ -355,10 +367,13 @@ const uploadImage = async () => {
   const formData = new FormData();
   formData.append("image", selectedFile.value);
 
-  const response = await $fetch("/api/upload/" + dataUser.value.id_user, {
-    method: "POST",
-    body: formData,
-  });
+  const response = await $fetch(
+    BASEAPIURL.value + "/api/upload/" + dataUser.value.id_user,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
   successImageNotif.value = true;
   setTimeout(() => {
@@ -380,10 +395,13 @@ const uploadFile = async () => {
   const formData = new FormData();
   formData.append("file", selectedFile.value);
 
-  const response = await $fetch("/api/upload-file/" + dataUser.value.id_user, {
-    method: "POST",
-    body: formData,
-  });
+  const response = await $fetch(
+    BASEAPIURL.value + "/api/upload-file/" + dataUser.value.id_user,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
   successFileNotif.value = true;
   setTimeout(() => {
