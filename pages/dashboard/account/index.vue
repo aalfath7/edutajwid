@@ -155,7 +155,7 @@
       <div class="flex items-center mb-10 relative">
         <div class="relative w-12 sm:w-32">
           <img
-            :src="'/src/users/' + dataUser.image"
+            :src="BASEAPIURL + '/uploads/' + dataUser.image"
             alt=""
             class="rounded-full border w-12 h-12 sm:h-32 sm:w-32 object-cover"
           />
@@ -365,12 +365,12 @@ const uploadImage = async () => {
   }
 
   const formData = new FormData();
-  formData.append("image", selectedFile.value);
+  formData.append("file", selectedFile.value);
 
   const response = await $fetch(
     BASEAPIURL.value + "/api/upload/" + dataUser.value.id_user,
     {
-      method: "POST",
+      method: "PUT",
       body: formData,
     }
   );
@@ -398,7 +398,7 @@ const uploadFile = async () => {
   const response = await $fetch(
     BASEAPIURL.value + "/api/upload-file/" + dataUser.value.id_user,
     {
-      method: "POST",
+      method: "PUT",
       body: formData,
     }
   );

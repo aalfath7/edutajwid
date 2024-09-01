@@ -31,7 +31,7 @@
               <div class="flex-shrink-0">
                 <img
                   class="w-8 h-8 rounded-full border border-gray-400 object-cover"
-                  :src="'/src/users/' + item.image"
+                  :src="BASEAPIURL + '/uploads/' + item.image"
                   alt="Neil image"
                 />
               </div>
