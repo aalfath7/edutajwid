@@ -187,7 +187,7 @@
               Batal
             </button>
             <button
-              @click="onDelete(dataClass.results[0].class_code)"
+              @click="onDelete(dataClass[0].class_code)"
               type="button"
               class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             >
@@ -304,11 +304,10 @@
           </ul>
         </div>
         <h1 class="p-4 text-lg border shadow rounded-lg my-2">
-          {{ dataClass.results[0].name }} -
-          {{ dataClass.results[0].school_name }} <br />
+          {{ dataClass[0].name }} - {{ dataClass[0].school_name }} <br />
         </h1>
         <div v-if="user.role === 'teacher'">
-          <div v-if="allStudents.results" class="my-10 text-lg border-t">
+          <div v-if="allStudents" class="my-10 text-lg border-t">
             <div
               class="my-5 flex flex-col sm:flex-row justify-between sm:items-center"
             >
@@ -331,7 +330,7 @@
               </div>
             </div>
             <div
-              v-for="(student, i) in allStudents.results"
+              v-for="(student, i) in allStudents"
               :key="i"
               class="capitalize my-2 text-sm font-light border p-3 rounded-lg flex justify-between items-center"
             >
@@ -374,7 +373,7 @@
             <p
               class="font-normal border rounded-lg py-3 px-2 text-gray-700 dark:text-gray-400 flex justify-between"
             >
-              {{ dataClass.results[0].class_code }}
+              {{ dataClass[0].class_code }}
               <button @click="selectText" type="button" class="">
                 <BootstrapIcon class="text-xl" name="copy" />
               </button>
@@ -388,16 +387,11 @@
           </div>
         </div>
         <div v-if="user.role === 'teacher'" class="mt-5">
-          <div v-if="requestJoinClass.results !== undefined">
-            <h2 v-if="requestJoinClass.results.length > 0">
-              Permintaan Bergabung
-            </h2>
-            <div
-              v-if="requestJoinClass.results.length > 0"
-              class="md:pr-10 pt-5 mb-10"
-            >
+          <div v-if="requestJoinClass !== undefined">
+            <h2 v-if="requestJoinClass.length > 0">Permintaan Bergabung</h2>
+            <div v-if="requestJoinClass.length > 0" class="md:pr-10 pt-5 mb-10">
               <div
-                v-for="(item, i) in requestJoinClass.results"
+                v-for="(item, i) in requestJoinClass"
                 :key="i"
                 class="flex items-center bg-white border border-gray-200 rounded-lg shadow flex-row"
               >
@@ -444,33 +438,37 @@ definePageMeta({
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 
 const route = useRoute();
 const router = useRouter();
 const { data: dataClass, refresh: classRefresh } = await useFetch(
-  "/api/class/" + route.params.code
+  BASEAPIURL.value + "/api/class/" + route.params.code
 );
 
 const { data: allStudents, refresh: studentsRefresh } = await useFetch(
-  "/api/joinclass/" + dataClass.value.results[0].id_class
+  BASEAPIURL.value + "/api/joinclass/" + dataClass.value[0].id_class
 );
 
 const { data: requestJoinClass, refresh: requestRefresh } = await useFetch(
-  "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
+  BASEAPIURL.value +
+    "/api/joinclass/get-students-request/" +
+    dataClass.value[0].id_class
 );
 
 const successNotif = ref(false);
 const failedNotif = ref(false);
 
 const onDelete = async (code) => {
-  const data = await $fetch("/api/class/" + code, {
+  const data = await $fetch(BASEAPIURL.value + "/api/class/" + code, {
     method: "DELETE",
   });
 
   toggleDeleteModal();
 
-  if (data.results.affectedRows === 1) {
+  console.log(data);
+
+  if (data.affectedRows === 1) {
     successNotif.value = true;
   } else {
     failedNotif.value = true;
@@ -486,19 +484,25 @@ const failedRemoveNotif = ref(false);
 
 const idRemove = ref();
 const studentDelete = async () => {
-  const data = await $fetch("/api/joinclass/" + idRemove.value, {
-    method: "DELETE",
-  });
+  const data = await $fetch(
+    BASEAPIURL.value + "/api/joinclass/" + idRemove.value,
+    {
+      method: "DELETE",
+    }
+  );
 
-  if (data.results.affectedRows === 1) {
+  if (data.affectedRows === 1) {
     successRemoveNotif.value = true;
 
-    await useFetch("/api/class/update-students/" + route.params.code, {
-      method: "PUT",
-      body: {
-        number_of_students: allStudents.value.results.length - 1,
-      },
-    });
+    await useFetch(
+      BASEAPIURL.value + "/api/class/update-students/" + route.params.code,
+      {
+        method: "PUT",
+        body: {
+          number_of_students: allStudents.value.length - 1,
+        },
+      }
+    );
 
     setTimeout(() => {
       successRemoveNotif.value = false;
@@ -511,7 +515,7 @@ const studentDelete = async () => {
   toggleRemoveStudentModal();
 };
 
-const textBlock = ref(dataClass.value.results[0].class_code);
+const textBlock = ref(dataClass.value[0].class_code);
 const copySuccess = ref(false);
 
 const selectText = () => {
@@ -553,8 +557,8 @@ const toggleRemoveStudentModal = (id) => {
 
 const form = ref({
   id: "",
-  name: dataClass.value.results[0].name,
-  school_name: dataClass.value.results[0].school_name,
+  name: dataClass.value[0].name,
+  school_name: dataClass.value[0].school_name,
   teacher: "",
   class_code: "",
 });
@@ -568,14 +572,17 @@ const failedEditNotif = ref(false);
 
 const editClass = async () => {
   try {
-    const { data } = await useFetch("/api/class/" + route.params.code, {
-      method: "PUT",
-      body: form,
-    });
+    const { data } = await useFetch(
+      BASEAPIURL.value + "/api/class/" + route.params.code,
+      {
+        method: "PUT",
+        body: form,
+      }
+    );
 
     toggleEditModal();
 
-    if (data.value.results.affectedRows === 1) {
+    if (data.value.affectedRows === 1) {
       successEditNotif.value = true;
 
       setTimeout(() => {
@@ -594,30 +601,33 @@ const editClass = async () => {
 const successJoinNotif = ref(false);
 
 const acceptJoinClass = async (id) => {
-  const response = await useFetch("/api/joinclass/" + id, {
+  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "PUT",
     body: {
       status: "accepted",
     },
   });
 
-  if (response.data.value.results.affectedRows === 1) {
+  if (response.data.value.affectedRows === 1) {
     successJoinNotif.value = true;
     setTimeout(() => {
       successJoinNotif.value = false;
     }, 1000);
 
     const { data: allStudents } = await useFetch(
-      "/api/joinclass/" + dataClass.value.results[0].id_class
+      BASEAPIURL.value + "/api/joinclass/" + dataClass.value[0].id_class
     );
 
     if (allStudents) {
-      await useFetch("/api/class/update-students/" + route.params.code, {
-        method: "PUT",
-        body: {
-          number_of_students: allStudents.value.results.length,
-        },
-      });
+      await useFetch(
+        BASEAPIURL.value + "/api/class/update-students/" + route.params.code,
+        {
+          method: "PUT",
+          body: {
+            number_of_students: allStudents.value.length,
+          },
+        }
+      );
     }
 
     requestRefresh();
@@ -628,11 +638,11 @@ const acceptJoinClass = async (id) => {
 const rejectedNotif = ref(false);
 
 const rejectedJoinClass = async (id) => {
-  const response = await useFetch("/api/joinclass/" + id, {
+  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "DELETE",
   });
 
-  if (response.data.value.results.affectedRows === 1) {
+  if (response.data.value.affectedRows === 1) {
     rejectedNotif.value = true;
     setTimeout(() => {
       rejectedNotif.value = false;

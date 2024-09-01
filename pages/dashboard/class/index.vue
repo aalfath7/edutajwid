@@ -288,7 +288,7 @@
       </div>
 
       <div v-if="user.role === 'teacher'">
-        <div v-if="allClassTeacher">
+        <div v-if="!isLoading">
           <div v-if="allClassTeacher.length > 0" class="md:pr-10 border-t pt-5">
             <h2 class="mb-5">Kelasmu</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -325,6 +325,9 @@
           </div>
           <div v-else class="border-t pt-5">Belum ada kelas</div>
         </div>
+        <div v-else>
+          <Loading :is-loading="true" />
+        </div>
       </div>
     </div>
   </div>
@@ -343,7 +346,7 @@ definePageMeta({
 const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 
 const allClassTeacher = ref();
 
@@ -358,6 +361,7 @@ const form = ref({
 const requestClass = ref();
 const refreshData = ref();
 const studentClass = ref([]);
+const isLoading = ref(true);
 
 watch(
   () => user.value.id_user,
@@ -366,27 +370,30 @@ watch(
       form.value.id_user = newId;
 
       // teacher
-      const { data } = await useFetch("/api/class/teacher", {
+      const { data } = await useFetch(BASEAPIURL.value + "/api/class/teacher", {
         method: "POST",
         body: {
           id_user: newId,
         },
       });
-      allClassTeacher.value = data.value.results;
+      allClassTeacher.value = data.value;
+      if (allClassTeacher.value) {
+        isLoading.value = false;
+      }
 
       // student
       const { data: response } = await useFetch(
-        "/api/joinclass/get-teachers-request-user/" + newId
+        BASEAPIURL.value + "/api/joinclass/get-teachers-request-user/" + newId
       );
 
-      requestClass.value = response.value.results;
+      requestClass.value = response.value;
 
       const { data: dataClass, refresh: refreshClass } = await useFetch(
-        "/api/joinclass/student-class/" + newId
+        BASEAPIURL.value + "/api/joinclass/student-class/" + newId
       );
-      dataClass.value.results.forEach(async (e) => {
+      dataClass.value.forEach(async (e) => {
         const results = await useFetch("/api/class/" + e.class_code);
-        studentClass.value.push(results.data.value.results[0]);
+        studentClass.value.push(results.data.value[0]);
       });
     }
   },
@@ -400,12 +407,15 @@ const createClass = async () => {
   let code = generateRandomCode();
   form.value.class_code = code;
   try {
-    const { data: response, error } = await useFetch("/api/class", {
-      method: "POST",
-      body: form,
-    });
+    const { data: response, error } = await useFetch(
+      BASEAPIURL.value + "/api/class",
+      {
+        method: "POST",
+        body: form,
+      }
+    );
 
-    if (response.value.results.affectedRows === 1) {
+    if (response.value.affectedRows === 1) {
       successNotif.value = true;
     } else {
       failedNotif.value = true;
@@ -413,13 +423,13 @@ const createClass = async () => {
 
     modalIsOpen.value = false;
 
-    const { data } = await useFetch("/api/class/teacher", {
+    const { data } = await useFetch(BASEAPIURL.value + "/api/class/teacher", {
       method: "POST",
       body: {
         id_user: form.value.id_user,
       },
     });
-    allClassTeacher.value = data.value.results;
+    allClassTeacher.value = data.value;
 
     setTimeout(() => {
       router.push("/dashboard/class/" + code);
@@ -451,21 +461,21 @@ const toggleModal = () => {
 const successJoinNotif = ref(false);
 
 const joinClass = async (id) => {
-  const response = await useFetch("/api/joinclass/" + id, {
+  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "PUT",
     body: {
       status: "accepted",
     },
   });
 
-  if (response.data.value.results.affectedRows === 1) {
+  if (response.data.value.affectedRows === 1) {
     successJoinNotif.value = true;
     setTimeout(() => {
       successJoinNotif.value = false;
     }, 1000);
 
     const { data: allStudents } = await useFetch(
-      "/api/joinclass/" + requestClass.value[0].id_class
+      BASEAPIURL.value + "/api/joinclass/" + requestClass.value[0].id_class
     );
 
     if (allStudents) {
@@ -474,37 +484,39 @@ const joinClass = async (id) => {
         {
           method: "PUT",
           body: {
-            number_of_students: allStudents.value.results.length,
+            number_of_students: allStudents.value.length,
           },
         }
       );
     }
 
     const { data: dataClass, refresh: refreshClass } = await useFetch(
-      "/api/joinclass/student-class/" + form.value.id_user
+      BASEAPIURL.value + "/api/joinclass/student-class/" + form.value.id_user
     );
     studentClass.value = [];
-    dataClass.value.results.forEach(async (e) => {
+    dataClass.value.forEach(async (e) => {
       const results = await useFetch("/api/class/" + e.class_code);
-      studentClass.value.push(results.data.value.results[0]);
+      studentClass.value.push(results.data.value[0]);
     });
   }
 
   const { data: dataRequest } = await useFetch(
-    "/api/joinclass/get-teachers-request-user/" + user.id_user
+    BASEAPIURL.value +
+      "/api/joinclass/get-teachers-request-user/" +
+      user.id_user
   );
 
-  requestClass.value = dataRequest.value.results;
+  requestClass.value = dataRequest.value;
 };
 
 const rejectedNotif = ref(false);
 
 const rejectedClass = async (id) => {
-  const response = await useFetch("/api/joinclass/" + id, {
+  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "DELETE",
   });
 
-  if (response.data.value.results.affectedRows === 1) {
+  if (response.data.value.affectedRows === 1) {
     rejectedNotif.value = true;
     setTimeout(() => {
       rejectedNotif.value = false;
@@ -512,10 +524,12 @@ const rejectedClass = async (id) => {
   }
 
   const { data: dataRequest } = await useFetch(
-    "/api/joinclass/get-teachers-request-user/" + user.id_user
+    BASEAPIURL.value +
+      "/api/joinclass/get-teachers-request-user/" +
+      user.id_user
   );
 
-  requestClass.value = dataRequest.value.results;
+  requestClass.value = dataRequest.value;
 };
 
 const classCode = ref();
@@ -533,34 +547,36 @@ const dataSearchClass = ref();
 
 const searchClass = async () => {
   const { data: dataClass, refresh: classRefresh } = await useFetch(
-    "/api/class/" + classCode.value
+    BASEAPIURL.value + "/api/class/" + classCode.value
   );
-  dataSearchClass.value = dataClass.value.results;
-  if (dataClass.value.results.length > 0) {
-    formStudent.value.id_class = dataClass.value.results[0].id_class;
+  dataSearchClass.value = dataClass.value;
+  if (dataClass.value.length > 0) {
+    formStudent.value.id_class = dataClass.value[0].id_class;
   }
 };
 
 const requestJoinClass = async () => {
   const { data: students } = await useFetch(
-    "/api/joinclass/get-students-request-user/" + form.value.id_user
+    BASEAPIURL.value +
+      "/api/joinclass/get-students-request-user/" +
+      form.value.id_user
   );
 
   formStudent.value.id_user = form.value.id_user;
 
-  if (students.value.results.length > 0) {
+  if (students.value.length > 0) {
     studentRequested.value = true;
     setTimeout(() => {
       studentRequested.value = false;
     }, 1000);
   } else {
-    const { data } = await useFetch("/api/joinclass", {
+    const { data } = await useFetch(BASEAPIURL.value + "/api/joinclass", {
       method: "POST",
       body: formStudent.value,
     });
 
-    if (data.value.results !== null) {
-      if (data.value.results.affectedRows === 1) {
+    if (data.value !== null) {
+      if (data.value.affectedRows === 1) {
         successRequestNotif.value = true;
         setTimeout(() => {
           successRequestNotif.value = false;

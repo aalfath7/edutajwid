@@ -25,8 +25,25 @@
         >
           <li v-if="item" class="py-4 sm:py-5 border-t">
             <div class="flex items-center">
-              <div class="mr-8 w-3 text-sm lg:text-base">
-                {{ i + 1 }}
+              <div
+                class="rounded-full relative w-5 h-5 flex justify-center items-center mr-8 w-3 text-sm lg:text-base"
+              >
+                <span class="z-10">{{ i + 1 }}</span>
+                <BootstrapIcon
+                  v-if="i + 1 === 1"
+                  class="text-3xl text-yellow-200 absolute -top-1"
+                  name="award-fill"
+                />
+                <BootstrapIcon
+                  v-if="i + 1 === 2"
+                  class="text-3xl text-yellow-300 absolute -top-1"
+                  name="award-fill"
+                />
+                <BootstrapIcon
+                  v-if="i + 1 === 3"
+                  class="text-3xl text-yellow-400 absolute -top-1"
+                  name="award-fill"
+                />
               </div>
               <div class="flex-shrink-0">
                 <img

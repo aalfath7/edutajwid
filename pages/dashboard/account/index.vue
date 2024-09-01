@@ -2,7 +2,7 @@
   <div>
     <Notif
       :is-active="successImageNotif"
-      text="Gambar berhasil di ubah : Silahkan Login Kembali"
+      text="Gambar berhasil di ubah"
       type="success"
     />
     <Notif
@@ -12,7 +12,7 @@
     />
     <Notif
       :is-active="successNotif"
-      text="Berhasil ubah data akun : Silahkan Login Kembali"
+      text="Berhasil ubah data akun"
       type="success"
     />
     <Notif :is-active="failedNotif" text="Ubah data gagal" type="failed" />
