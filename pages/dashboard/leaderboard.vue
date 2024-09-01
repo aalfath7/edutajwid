@@ -92,7 +92,6 @@ try {
   const { data, pending } = await useFetch(
     BASEAPIURL.value + "/api/leaderboard"
   );
-  console.log(data);
   if (data.value) {
     users.value = data.value;
     isLoading.value = false;

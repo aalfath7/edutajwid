@@ -150,7 +150,6 @@ export const useAuthStore = defineStore("auth", {
               password: password,
             },
           });
-          console.log(results);
           // const { results } = await $fetch("/api/login", {
           //   method: "POST",
           //   body: {

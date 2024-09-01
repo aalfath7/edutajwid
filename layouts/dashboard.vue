@@ -206,8 +206,10 @@ watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
-      const { data } = await useFetch("/api/users/person/" + newId);
-      _user.value = data.value.results[0];
+      const { data } = await useFetch(
+        BASEAPIURL.value + "/api/users/person/" + newId
+      );
+      _user.value = data.value[0];
     }
   },
   { immediate: true }
