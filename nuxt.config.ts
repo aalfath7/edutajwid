@@ -25,6 +25,7 @@ export default defineNuxtConfig({
         }, // Ganti dengan URL gambar thumbnail
         { property: "og:url", content: "https://edutajwid.com" },
       ],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
   devtools: { enabled: true },
