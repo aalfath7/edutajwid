@@ -1,7 +1,7 @@
 <template>
   <div class="sm:pl-4 pt-2">
     <div
-      v-if="users"
+      v-if="!isLoading"
       class="slit-in w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:px-8 dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="flex items-center justify-between mb-4">
@@ -76,7 +76,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { BASEAPIURL } = storeToRefs(useAuthStore());
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 const users = ref();
 
 // try {
@@ -93,6 +93,7 @@ try {
     BASEAPIURL.value + "/api/leaderboard"
   );
   users.value = data.value;
+  isLoading.value = pending.value;
 } catch (error) {
   console.log(error);
 }

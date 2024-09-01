@@ -119,8 +119,6 @@ const loading = ref(false);
 const login = async () => {
   const response = await authenticatedUser(user.value);
 
-  console.log(response);
-
   if (authenticated.value === true) {
     successNotif.value = true;
 

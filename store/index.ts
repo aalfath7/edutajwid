@@ -52,6 +52,7 @@ export const useAuthStore = defineStore("auth", {
     authenticated: false,
     loading: false,
     token: "",
+    changeRole: false,
     user: {} as {
       id_user: string;
       name: string;
@@ -142,7 +143,14 @@ export const useAuthStore = defineStore("auth", {
     async authenticatedUser({ email, password }: DataUser) {
       if (email && password) {
         try {
-          const results: any = await $fetch(this.BASEAPIURL + "/api/login", {
+          // const results: any = await $fetch(this.BASEAPIURL + "/api/login", {
+          //   method: "POST",
+          //   body: {
+          //     email: email,
+          //     password: password,
+          //   },
+          // });
+          const { results } = await $fetch("/api/login", {
             method: "POST",
             body: {
               email: email,
@@ -203,6 +211,7 @@ export const useAuthStore = defineStore("auth", {
             xp: result.xp,
           };
 
+          this.changeRole = result.role === "teacher";
           this.XP = result.xp;
           this.user = user;
           this.authenticated = true;
@@ -222,6 +231,9 @@ export const useAuthStore = defineStore("auth", {
       this.user.xp = 0;
       this.XP = 0;
       localStorage.removeItem("authToken");
+    },
+    setRequestChangeRole() {
+      this.changeRole = true;
     },
   },
 });

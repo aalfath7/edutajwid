@@ -13,6 +13,10 @@ router.get(
   "/users/leaderboard",
   defineEventHandler(usersController.getLeaderboard)
 );
+router.get(
+  "/users/request-change-role",
+  defineEventHandler(usersController.getRequestChangeRole)
+);
 router.get("/users/person/:id", defineEventHandler(usersController.detail));
 router.get(
   "/users/email/:email",
@@ -26,7 +30,19 @@ router.get(
 router.post("/users", defineEventHandler(usersController.create));
 router.post("/login", defineEventHandler(usersController.login));
 router.post("/upload/:id", defineEventHandler(usersController.uploadImage));
+router.post(
+  "/upload-file/:id",
+  defineEventHandler(usersController.uploadFileRequest)
+);
 router.put("/users/:id", defineEventHandler(usersController.update));
+router.put(
+  "/users/change-role/:id",
+  defineEventHandler(usersController.changeRole)
+);
+router.put(
+  "/users/rejected/:id",
+  defineEventHandler(usersController.rejectedChangeRole)
+);
 router.put(
   "/users/update-lesson/:id",
   defineEventHandler(usersController.updateLesson)

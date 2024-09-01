@@ -14,6 +14,10 @@ export const getLeaderboard = async () => {
   return await usersModel.getLeaderboard();
 };
 
+export const getRequestChangeRole = async () => {
+  return await usersModel.getRequestChangeRole();
+};
+
 export const detail = async (evt: H3Event) => {
   const result = await usersModel.detail(evt.context.params?.id as string);
   return result;
@@ -109,6 +113,18 @@ export const emailVerify = async (evt: H3Event) => {
   return result;
 };
 
+export const changeRole = async (evt: H3Event) => {
+  const result = await usersModel.changeRole(evt.context.params?.id as string);
+  return result;
+};
+
+export const rejectedChangeRole = async (evt: H3Event) => {
+  const result = await usersModel.rejectedChangeRole(
+    evt.context.params?.id as string
+  );
+  return result;
+};
+
 export const remove = async (evt: H3Event) => {
   const result = await usersModel.remove(evt.context.params?.id as string);
   return result;
@@ -133,6 +149,32 @@ export const uploadImage = async (evt: H3Event) => {
 
       await usersModel.updateImage(evt.context.params?.id as string, {
         image: filename,
+      });
+    }
+  });
+
+  return true;
+};
+
+export const uploadFileRequest = async (evt: H3Event) => {
+  const formData = await readMultipartFormData(evt);
+  if (!formData) {
+    return {
+      statusCode: 400,
+      message: "Please upload a file!",
+    };
+  }
+
+  formData.forEach(async (part) => {
+    if (part.filename) {
+      let filename = `${nanoid()}-${part.filename}`;
+      const filePath = join("public/file/", filename);
+      const fileStream = createWriteStream(filePath);
+      fileStream.write(part.data);
+      fileStream.end();
+
+      await usersModel.promote(evt.context.params?.id as string, {
+        file: filename,
       });
     }
   });

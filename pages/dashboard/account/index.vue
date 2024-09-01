@@ -6,6 +6,11 @@
       type="success"
     />
     <Notif
+      :is-active="successFileNotif"
+      text="Permintaan menjadi Guru sudah terkirim"
+      type="success"
+    />
+    <Notif
       :is-active="successNotif"
       text="Berhasil ubah data akun : Silahkan Login Kembali"
       type="success"
@@ -59,6 +64,7 @@
                 class="block w-full text-sm text-green-900 border border-green-300 rounded-lg cursor-pointer bg-green-50 dark:text-green-400 focus:outline-none"
                 type="file"
                 @change="onFileChange"
+                accept="image/*"
               />
             </div>
             <div class="text-center px-4">
@@ -76,9 +82,77 @@
         </div>
       </div>
     </div>
+    <!-- modal Request to be Teacher-->
+    <div
+      :class="requestChangeRole ? '' : 'hidden'"
+      class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
+    >
+      <div
+        @click="toggleRequestChangeRole"
+        class="absolute opacity-70 bg-gray-900 w-full h-full"
+      ></div>
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+              Request to be Teacher
+            </h3>
+            <button
+              @click="toggleRequestChangeRole"
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              <svg
+                class="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+          <p class="p-4">
+            Lampirkan tanda pengenal, sertifikat, atau surat keterangan yang
+            menandakan anda adalah guru.
+          </p>
+          <form @submit.prevent="uploadFile">
+            <div class="px-4">
+              <!-- <img :src="'/src/users/' + dataUser.image" alt="" /> -->
+              <input
+                class="block w-full text-sm text-green-900 border border-green-300 rounded-lg cursor-pointer bg-green-50 dark:text-green-400 focus:outline-none"
+                type="file"
+                @change="onFileChange"
+              />
+            </div>
+            <div class="text-center px-4">
+              {{ message }}
+            </div>
+            <div class="p-4">
+              <button
+                type="submit"
+                class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              >
+                Kirim Permintaan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    <div v-if="dataUser" class="sm:ml-24 sm:max-w-md">
-      <div class="flex items-center mb-10">
+    <div v-if="dataUser" class="slit-in sm:ml-10 sm:mt-5 sm:max-w-md">
+      <div class="flex items-center mb-10 relative">
         <div class="relative w-20 sm:w-32">
           <img
             :src="'/src/users/' + dataUser.image"
@@ -96,6 +170,30 @@
           <p class="capitalize font-bold text-2xl">{{ dataUser.name }}</p>
           <p class="capitalize">{{ dataUser.role }}</p>
         </div>
+        <button
+          v-if="!changeRole"
+          @click="toggleSettings"
+          type="button"
+          class="absolute top-0 right-0 w-8 h-8 bg-white hover:text-gray-500 flex items-center justify-center"
+        >
+          <BootstrapIcon name="three-dots" class="text-2xl" />
+        </button>
+
+        <ul
+          v-show="settings"
+          class="z-30 absolute top-0 right-0 bg-white border px-2 rounded-lg shadow-lg"
+        >
+          <li class="flex justify-end">
+            <button @click="toggleSettings" type="button">
+              <BootstrapIcon class="text-2xl" name="x" />
+            </button>
+          </li>
+          <li class="py-3 px-3 border-t hover:text-gray-500">
+            <button @click="toggleRequestChangeRole" type="button">
+              Request to be Teacher
+            </button>
+          </li>
+        </ul>
       </div>
       <div v-if="updateForm">
         <div class="mb-5">
@@ -176,7 +274,8 @@ definePageMeta({
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, changeRole } = storeToRefs(useAuthStore());
+const { setRequestChangeRole } = useAuthStore();
 
 const dataUser = ref();
 
@@ -232,6 +331,7 @@ const imageModal = ref(false);
 
 const toggleImageModal = () => {
   imageModal.value = !imageModal.value;
+  settings.value = false;
 };
 
 const selectedFile = ref();
@@ -247,7 +347,6 @@ function onFileChange(event) {
 const successImageNotif = ref(false);
 
 const uploadImage = async () => {
-  console.log(selectedFile.value);
   if (!selectedFile.value) {
     message.value = "Masukkan file terlebih dahulu!";
     return;
@@ -267,6 +366,45 @@ const uploadImage = async () => {
   }, 1000);
 
   imageModal.value = false;
+};
+
+const successFileNotif = ref(false);
+
+const uploadFile = async () => {
+  console.log(selectedFile.value);
+  if (!selectedFile.value) {
+    message.value = "Masukkan file terlebih dahulu!";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", selectedFile.value);
+
+  const response = await $fetch("/api/upload-file/" + dataUser.value.id_user, {
+    method: "POST",
+    body: formData,
+  });
+
+  successFileNotif.value = true;
+  setTimeout(() => {
+    successFileNotif.value = false;
+  }, 1000);
+
+  setRequestChangeRole();
+  requestChangeRole.value = false;
+};
+
+const settings = ref(false);
+
+const toggleSettings = () => {
+  settings.value = !settings.value;
+};
+
+const requestChangeRole = ref(false);
+
+const toggleRequestChangeRole = () => {
+  requestChangeRole.value = !requestChangeRole.value;
+  settings.value = false;
 };
 
 onMounted(() => {

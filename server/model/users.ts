@@ -12,6 +12,7 @@ export type UsersModel = {
   role: string;
   email_verify: number;
   token: string;
+  file: string;
 };
 
 export const read = async () => {
@@ -30,6 +31,14 @@ export const getLeaderboard = async () => {
   return result;
 };
 
+export const getRequestChangeRole = async () => {
+  const result = await sql({
+    query: "SELECT * FROM users WHERE promote = 'requested'",
+  });
+
+  return result;
+};
+
 export const detail = async (id: string) => {
   const result = await sql({
     query: "SELECT * FROM users WHERE id_user = ?",
@@ -40,7 +49,7 @@ export const detail = async (id: string) => {
 
 export const getDataWithEmail = async (email: string) => {
   const result = await sql({
-    query: "SELECT * FROM users WHERE email = ?",
+    query: "SELECT * FROM users WHERE email = ? and role = 'student'",
     values: [email],
   });
   return result;
@@ -67,10 +76,27 @@ export const create = async (
 ) => {
   const result = await sql({
     query:
-      "INSERT INTO users (id_user, name, email, password, image, last_lesson, lesson_passed, xp, role, email_verify, token) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', '[]', 0, 'student', 0, ?)",
+      "INSERT INTO users (id_user, name, email, password, image, last_lesson, lesson_passed, xp, role, email_verify, token, promote) VALUES (?, ?, ?, ?, 'user.png', 'definisi-alquran', '[]', 0, 'student', 0, ?, '')",
     values: [data.id, data.name, data.email, data.password, data.token],
   });
   return result;
+};
+
+export const changeRole = async (id: string) => {
+  const results = await sql({
+    query:
+      "UPDATE users SET role = 'teacher', promote = 'accepted' WHERE id_user = ?",
+    values: [id],
+  });
+  return results;
+};
+
+export const rejectedChangeRole = async (id: string) => {
+  const results = await sql({
+    query: "UPDATE users SET promote = 'rejected' WHERE id_user = ?",
+    values: [id],
+  });
+  return results;
 };
 
 export const update = async (
@@ -92,6 +118,14 @@ export const updateImage = async (
   const results = await sql({
     query: "UPDATE users SET image = ? WHERE id_user = ?",
     values: [data.image, id],
+  });
+  return results;
+};
+
+export const promote = async (id: string, data: Pick<UsersModel, "file">) => {
+  const results = await sql({
+    query: "UPDATE users SET promote = 'requested', file = ? WHERE id_user = ?",
+    values: [data.file, id],
   });
   return results;
 };
