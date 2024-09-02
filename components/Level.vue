@@ -19,10 +19,10 @@ const props = defineProps({
 });
 let bg: string;
 if (props.title === "Alif - Basic Level") {
-  bg = "bg-blue-200 border-blue-200";
-} else if (props.title === "Ba' - Medium Level") {
   bg = "bg-green-200 border-green-200";
+} else if (props.title === "Ba' - Medium Level") {
+  bg = "bg-lime-200 border-lime-200";
 } else {
-  bg = "bg-yellow-200 border-yellow-200";
+  bg = "bg-orange-200 border-orange-200";
 }
 </script>

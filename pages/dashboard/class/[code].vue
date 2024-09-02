@@ -466,8 +466,6 @@ const onDelete = async (code) => {
 
   toggleDeleteModal();
 
-  console.log(data);
-
   if (data.affectedRows === 1) {
     successNotif.value = true;
   } else {
@@ -556,11 +554,8 @@ const toggleRemoveStudentModal = (id) => {
 };
 
 const form = ref({
-  id: "",
   name: dataClass.value[0].name,
   school_name: dataClass.value[0].school_name,
-  teacher: "",
-  class_code: "",
 });
 
 if (authenticated) {

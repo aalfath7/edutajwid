@@ -78,28 +78,33 @@ definePageMeta({
   layout: "dashboard",
   middleware: "auth",
 });
-onMounted(() => {
-  initFlowbite();
-});
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/store/index";
+const { BASEAPIURL } = storeToRefs(useAuthStore());
 
 const route = useRoute();
 const router = useRouter();
 
 const { data: dataClass, refresh: classRefresh } = await useFetch(
-  "/api/class/" + route.params.code
+  BASEAPIURL.value + "/api/class/" + route.params.code
 );
 
 const { data: allStudents, refresh: studentsRefresh } = await useFetch(
-  "/api/joinclass/students-progress/" + dataClass.value.results[0].id_class
+  BASEAPIURL.value +
+    "/api/joinclass/students-progress/" +
+    dataClass.value[0].id_class
 );
 
 const data = ref();
 
-data.value = allStudents.value.results.map((i) => {
+data.value = allStudents.value.map((i) => {
   let student = {
     name: i.name,
     lesson_passed: JSON.parse(i.lesson_passed),
   };
   return student;
+});
+onMounted(() => {
+  initFlowbite();
 });
 </script>

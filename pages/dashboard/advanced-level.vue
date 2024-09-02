@@ -29,7 +29,7 @@
       >
         <li :id="bab.title" v-for="(bab, i) in filter" :key="i" class="ms-6">
           <span
-            class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900"
+            class="absolute flex items-center justify-center w-6 h-6 bg-orange-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-orange-900"
           >
             <BootstrapIcon class="text-2xl" name="journal-text" />
           </span>

@@ -117,7 +117,7 @@ const data = [
     desc: "Mempelajari tentang definisi Al-Quran, Ilmu Tajwid, Huruf Hijaiyah, dan Makhorijul Huruf",
     link: "/dashboard/basic-level",
     symbol: "ا",
-    style: "bg-blue-200 border-blue-200 hover:bg-blue-100",
+    style: "bg-green-200 border-green-200 hover:bg-green-100",
     visible: true,
   },
   {
@@ -125,7 +125,7 @@ const data = [
     desc: "Mempelajari tentang Sifatul Huruf, dua huruf yang saling bertemu, hukum Mim dan nun, dan Mad",
     link: "/dashboard/medium-level",
     symbol: "ب",
-    style: "bg-green-200 border-green-200 hover:bg-green-100",
+    style: "bg-lime-200 border-lime-200 hover:bg-lime-100",
     visible: true,
   },
   {
@@ -133,7 +133,7 @@ const data = [
     desc: "Mempelajari tentang kesempurnaan harokat, Immalah, Tashil, Isymam, Waqaf dan Ibtida",
     link: "/dashboard/advanced-level",
     symbol: "ت",
-    style: "bg-yellow-200 border-yellow-200 hover:bg-yellow-100",
+    style: "bg-orange-200 border-orange-200 hover:bg-orange-100",
     visible: true,
   },
 ];

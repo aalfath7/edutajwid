@@ -62,11 +62,15 @@
         </div>
 
         <div v-if="user">
+          {{ user.length }}
           <div
             v-if="user.id_user === dataUser.id_user"
             class="text-sm italic my-4"
           >
             Guru sudah bergabung dengan kelas
+          </div>
+          <div v-else-if="user.role === 'teacher'" class="text-sm italic my-4">
+            Guru tidak boleh bergabung
           </div>
           <div
             v-else
@@ -110,7 +114,7 @@ const router = useRouter();
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 
-const { user: dataUser } = storeToRefs(useAuthStore());
+const { user: dataUser, BASEAPIURL } = storeToRefs(useAuthStore());
 
 watch(
   () => dataUser.value.id_user,
@@ -123,7 +127,7 @@ watch(
 );
 
 const { data: dataClass, refresh: classRefresh } = await useFetch(
-  "/api/class/" + route.params.code
+  BASEAPIURL.value + "/api/class/" + route.params.code
 );
 
 const acceptStudent = ref();
@@ -132,22 +136,26 @@ const teachersRequest = ref();
 
 if (dataClass) {
   const { data: accept } = await useFetch(
-    "/api/joinclass/" + dataClass.value.results[0].id_class
+    BASEAPIURL.value + "/api/joinclass/" + dataClass.value[0].id_class
   );
   acceptStudent.value = accept.value;
   const { data: students } = await useFetch(
-    "/api/joinclass/get-students-request/" + dataClass.value.results[0].id_class
+    BASEAPIURL.value +
+      "/api/joinclass/get-students-request/" +
+      dataClass.value[0].id_class
   );
   studentsRequest.value = students.value;
   const { data: teachers } = await useFetch(
-    "/api/joinclass/get-teachers-request/" + dataClass.value.results[0].id_class
+    BASEAPIURL.value +
+      "/api/joinclass/get-teachers-request/" +
+      dataClass.value[0].id_class
   );
   teachersRequest.value = teachers.value;
 }
 
 const formStudent = ref({
   id: "",
-  id_class: dataClass.value.results[0].id_class,
+  id_class: dataClass.value[0].id_class,
   id_user: "",
   status: "teachers request",
 });
@@ -156,8 +164,10 @@ const emailNewStudent = ref();
 const user = ref(false);
 
 const getUser = async () => {
-  const { results } = await $fetch("/api/users/email/" + emailNewStudent.value);
-  user.value = results[0];
+  const data = await $fetch(
+    BASEAPIURL.value + "/api/users/email/" + emailNewStudent.value
+  );
+  user.value = data[0];
 };
 
 const duplicatedUser = ref(false);
@@ -172,7 +182,7 @@ const addStudent = async () => {
   if (user.value) {
     formStudent.value.id_user = user.value.id_user;
     if (
-      acceptStudent.value.results.filter((e) => e.user_name === user.value.name)
+      acceptStudent.value.filter((e) => e.user_name === user.value.name)
         .length > 0
     ) {
       acceptStudentNotif.value = true;
@@ -181,9 +191,8 @@ const addStudent = async () => {
         router.push("/dashboard/class/" + route.params.code);
       }, 1000);
     } else if (
-      teachersRequest.value.results.filter(
-        (e) => e.user_name === user.value.name
-      ).length > 0
+      teachersRequest.value.filter((e) => e.user_name === user.value.name)
+        .length > 0
     ) {
       teachersRequestNotif.value = true;
       setTimeout(() => {
@@ -191,9 +200,8 @@ const addStudent = async () => {
         router.push("/dashboard/class/" + route.params.code);
       }, 1000);
     } else if (
-      studentsRequest.value.results.filter(
-        (e) => e.user_name === user.value.name
-      ).length > 0
+      studentsRequest.value.filter((e) => e.user_name === user.value.name)
+        .length > 0
     ) {
       studentsRequestNotif.value = true;
       setTimeout(() => {
@@ -201,12 +209,12 @@ const addStudent = async () => {
         router.push("/dashboard/class/" + route.params.code);
       }, 1000);
     } else {
-      const { data } = await useFetch("/api/joinclass", {
+      const { data } = await useFetch(BASEAPIURL.value + "/api/joinclass", {
         method: "POST",
         body: formStudent.value,
       });
 
-      if (data.value.results.affectedRows === 1) {
+      if (data.value.affectedRows === 1) {
         successAddNotif.value = true;
         setTimeout(() => {
           successAddNotif.value = false;

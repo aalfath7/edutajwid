@@ -336,7 +336,7 @@
 <script setup>
 import { initFlowbite } from "flowbite";
 useHead({
-  title: "Hijai - Belajar Tajwid Dengan Mudah",
+  title: "Edutajwid - Belajar Tajwid Dengan Mudah",
 });
 definePageMeta({
   layout: "dashboard",
@@ -392,7 +392,9 @@ watch(
         BASEAPIURL.value + "/api/joinclass/student-class/" + newId
       );
       dataClass.value.forEach(async (e) => {
-        const results = await useFetch("/api/class/" + e.class_code);
+        const results = await useFetch(
+          BASEAPIURL.value + "/api/class/" + e.class_code
+        );
         studentClass.value.push(results.data.value[0]);
       });
     }
@@ -415,7 +417,7 @@ const createClass = async () => {
       }
     );
 
-    if (response.value.affectedRows === 1) {
+    if (response.affectedRows === 1) {
       successNotif.value = true;
     } else {
       failedNotif.value = true;
@@ -461,14 +463,14 @@ const toggleModal = () => {
 const successJoinNotif = ref(false);
 
 const joinClass = async (id) => {
-  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
+  const { data } = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "PUT",
     body: {
       status: "accepted",
     },
   });
 
-  if (response.data.value.affectedRows === 1) {
+  if (data.value.affectedRows === 1) {
     successJoinNotif.value = true;
     setTimeout(() => {
       successJoinNotif.value = false;
@@ -495,7 +497,9 @@ const joinClass = async (id) => {
     );
     studentClass.value = [];
     dataClass.value.forEach(async (e) => {
-      const results = await useFetch("/api/class/" + e.class_code);
+      const results = await useFetch(
+        BASEAPIURL.value + "/api/class/" + e.class_code
+      );
       studentClass.value.push(results.data.value[0]);
     });
   }
@@ -512,11 +516,11 @@ const joinClass = async (id) => {
 const rejectedNotif = ref(false);
 
 const rejectedClass = async (id) => {
-  const response = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
+  const { data } = await useFetch(BASEAPIURL.value + "/api/joinclass/" + id, {
     method: "DELETE",
   });
 
-  if (response.data.value.affectedRows === 1) {
+  if (data.value.affectedRows === 1) {
     rejectedNotif.value = true;
     setTimeout(() => {
       rejectedNotif.value = false;
