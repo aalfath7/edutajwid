@@ -146,7 +146,7 @@ definePageMeta({
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { authenticatedUser } = useAuthStore();
-const { authenticated } = storeToRefs(useAuthStore());
+const { authenticated, BASEAPIURL } = storeToRefs(useAuthStore());
 const router = useRouter();
 const confirmPass = ref();
 const notifSuccess = ref(false);
@@ -164,33 +164,29 @@ const form = reactive({
 const addData = async () => {
   if (form.password === confirmPass.value) {
     passwordNotSame.value = false;
-    try {
-      const { results, error } = await $fetch("/api/users", {
-        method: "POST",
-        body: form,
-      });
+    const { data, error } = await useFetch(BASEAPIURL.value + "/api/users", {
+      method: "POST",
+      body: form,
+    });
 
-      if (results) {
-        notifSuccess.value = true;
+    if (data.value) {
+      notifSuccess.value = true;
 
-        setTimeout(() => {
-          login();
-        }, 1000);
-      } else if (error.code === "ER_DUP_ENTRY") {
-        notifDuplicate.value = true;
+      setTimeout(() => {
+        login();
+      }, 1000);
+    } else if (error.value.data.details === "ER_DUP_ENTRY") {
+      notifDuplicate.value = true;
 
-        setTimeout(() => {
-          notifDuplicate.value = false;
-        }, 1000);
-      } else {
-        notifNotSuccess.value = true;
+      setTimeout(() => {
+        notifDuplicate.value = false;
+      }, 1000);
+    } else {
+      notifNotSuccess.value = true;
 
-        setTimeout(() => {
-          notifNotSuccess.value = false;
-        }, 1000);
-      }
-    } catch (error) {
-      console.log(error);
+      setTimeout(() => {
+        notifNotSuccess.value = false;
+      }, 1000);
     }
   } else {
     passwordNotSame.value = true;
@@ -202,7 +198,6 @@ const login = async () => {
     email: form.email,
     password: form.password,
   });
-
   if (authenticated) {
     router.push("/");
   }

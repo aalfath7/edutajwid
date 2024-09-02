@@ -1,5 +1,10 @@
 <template>
   <div>
+    <Notif
+      :is-active="successNotif"
+      text="Hapus Pengguna Berhasil"
+      type="success"
+    />
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table
         class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -27,6 +32,7 @@
             <td class="px-6 py-4 capitalize">{{ user.role }}</td>
             <td class="px-6 py-4 capitalize">
               <button
+                v-if="user.role !== 'admin'"
                 type="button"
                 @click="deleteUser(user.id_user)"
                 class="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -57,11 +63,17 @@ const { data: allData, refresh: refreshData } = await useFetch(
   BASEAPIURL.value + "/api/users"
 );
 
+const successNotif = ref(false);
+
 const deleteUser = async (id) => {
-  const response = await useFetch(BASEAPIURL.value + "/api/users/" + id, {
+  const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + id, {
     method: "DELETE",
   });
-  if (response.affectedRows === 1) {
+  if (data.value.affectedRows === 1) {
+    successNotif.value = true;
+    setTimeout(() => {
+      successNotif.value = false;
+    }, 1000);
     refreshData();
   }
 };

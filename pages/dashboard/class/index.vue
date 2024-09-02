@@ -204,12 +204,14 @@
                 src="/src/class.jpg"
                 alt=""
               />
-              <div class="flex justify-between w-full p-2">
+              <div
+                class="flex flex-col sm:flex-row sm:justify-between w-full p-2 ml-5"
+              >
                 <div>
-                  <h5 class="text-xl font-bold">
+                  <h5 class="text-xl font-bold capitalize">
                     {{ item.class_name }}
                   </h5>
-                  <p class="font-normal">
+                  <p class="font-normal capitalize">
                     {{ item.school_name }}
                   </p>
                 </div>
@@ -417,7 +419,7 @@ const createClass = async () => {
       }
     );
 
-    if (response.affectedRows === 1) {
+    if (response.value.affectedRows === 1) {
       successNotif.value = true;
     } else {
       failedNotif.value = true;

@@ -2,7 +2,6 @@
   <div class="lg:h-screen">
     <!-- confetti -->
     <Confetti :actived="finishedBab" />
-
     <!-- modal -->
     <div
       :class="finishedBab ? 'zoom' : 'hidden'"
@@ -26,7 +25,7 @@
             <div class="py-2">
               <BootstrapIcon class="text-8xl text-yellow-300" name="award" />
               <h2 class="mt-5 text-sm sm:text-base">
-                Selamat Kamu telah menyelesaikan bab {{ lesson.bab }}
+                Selamat Kamu telah menyelesaikan bab {{ results[0].bab }}
               </h2>
               <div class="border-t pt-2 mt-2">
                 <p class="text-sm sm:text-base">
@@ -36,15 +35,18 @@
             </div>
             <div class="mt-5 flex">
               <NuxtLink
-                :to="lesson.nextLink"
+                :to="results[0].nextLink"
                 class="text-center flex items-center justify-center w-full text-black bg-white hover:bg-gray-100 focus:ring-4 border border-gray-200 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-2"
               >
                 Kembali
               </NuxtLink>
               <NuxtLink
-                v-if="nextLesson[0]"
+                v-if="nextLesson.results[0]"
                 :to="
-                  '/lesson-' + nextLesson[0].lesson + '/' + nextLesson[0].slug
+                  '/lesson-' +
+                  nextLesson.results[0].lesson +
+                  '/' +
+                  nextLesson.results[0].slug
                 "
                 class="text-center flex items-center justify-center w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
               >
@@ -69,11 +71,11 @@
       <h1
         class="capitalize text-sm sm:text-xl text-center flex items-center justify-center"
       >
-        {{ lesson.subbab }}
+        {{ results[0].subbab }}
       </h1>
       <div class="w-full flex justify-end">
         <div v-if="dataUser" class="text-sm flex items-center">
-          <span class="hidden sm:inline">Lesson : {{ lesson.lesson }}</span>
+          <span class="hidden sm:inline">Lesson : {{ results[0].lesson }}</span>
           <span
             class="ml-5 bg-green-500 text-white shadow rounded-full text-sm mx-1 w-5 h-5 flex justify-center items-center"
             >xp</span
@@ -91,7 +93,7 @@
 
     <!-- text and image -->
     <div
-      v-if="lesson.type === 'text image'"
+      v-if="results[0].type === 'text image'"
       class="relative flex flex-col justify-center items-center pt-20 pb-40 px-2"
     >
       <div class="flex w-full sm:w-2/3 mb-2 items-center text-blue-500">
@@ -101,9 +103,14 @@
       <div
         class="w-full sm:w-2/3 flex justify-center items-center flex-col rounded-lg border-2 border-green-500 shadow-lg p-5"
       >
-        <img v-if="lesson.image" class="w-32 my-2" :src="lesson.image" alt="" />
+        <img
+          v-if="results[0].image"
+          class="w-32 my-2"
+          :src="results[0].image"
+          alt=""
+        />
         <div
-          v-html="lesson.content"
+          v-html="results[0].content"
           class="text-sm sm:text-lg leading-relaxed text-justify"
         ></div>
       </div>
@@ -124,7 +131,7 @@
 
     <!-- video -->
     <div
-      v-else-if="lesson.type === 'video'"
+      v-else-if="results[0].type === 'video'"
       class="p-5 lg:p-20 h-screen flex pt-56 items-start lg:items-center justify-center"
     >
       <video class="w-full lg:w-2/3 rounded-lg" controls>
@@ -149,30 +156,36 @@
     <!-- content question -->
     <div v-else>
       <div class="lg:h-full overflow-auto grid md:grid-rows-2 px-5">
+        <!-- question -->
         <div
           class="flex justify-center items-center flex-col pt-20 lg:pt-5 pb-5"
         >
+          <!-- tag -->
+          <!-- pengatahuan tag-->
           <div
-            v-if="lesson.type === 'multiple choice question'"
+            v-if="results[0].type === 'multiple choice question'"
             class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
           >
             <BootstrapIcon name="clouds" class="text-2xl mr-2" />
             <span class="text-sm">Pilih</span>
           </div>
+          <!-- denger bacaan tag -->
           <div
-            v-else-if="lesson.type === 'sound question'"
+            v-else-if="results[0].type === 'sound question'"
             class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
           >
             <BootstrapIcon name="clouds" class="text-2xl mr-2" />
             <span class="text-sm">Dengar Bacaan</span>
           </div>
+          <!-- search question tag -->
           <div
-            v-else-if="lesson.type === 'search question'"
+            v-else-if="results[0].type === 'search question'"
             class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
           >
             <BootstrapIcon name="clouds" class="text-2xl mr-2" />
             <span class="text-sm">Cari</span>
           </div>
+          <!-- pairing tag -->
           <div
             v-else
             class="flex text-blue-500 w-full w-4/5 lg:w-2/5 lg:pt-16 pb-2 items-center"
@@ -181,24 +194,26 @@
             <span class="text-sm">Pasangkan</span>
           </div>
 
+          <!-- multiple choice question -->
           <div
-            v-if="lesson.type === 'multiple choice question'"
+            v-if="results[0].type === 'multiple choice question'"
             class="flex items-center w-4/5 lg:w-2/5"
           >
-            <img :src="lesson.image" class="w-24 mr-4" alt="" />
+            <img :src="results[0].image" class="w-24 mr-4" alt="" />
             <div class="p-5 border rounded-lg">
-              <p v-html="lesson.question" class="text-sm sm:text-base"></p>
+              <p v-html="results[0].question" class="text-sm sm:text-base"></p>
             </div>
           </div>
 
+          <!-- Search question -->
           <div
-            v-else-if="lesson.type === 'search question'"
+            v-else-if="results[0].type === 'search question'"
             class="flex flex-col justify-center w-4/5 lg:w-2/5"
           >
             <div class="flex items-center">
-              <img :src="lesson.image" class="w-24 mr-4" alt="" />
+              <img :src="results[0].image" class="w-24 mr-4" alt="" />
               <div class="p-5 border rounded-lg">
-                <p class="text-sm sm:text-base">{{ lesson.question }}</p>
+                <p class="text-sm sm:text-base">{{ results[0].question }}</p>
               </div>
             </div>
             <div class="flex justify-center py-2 my-2 border-y-2 h-16">
@@ -216,12 +231,13 @@
             </div>
           </div>
 
+          <!-- pairing question -->
           <div
-            v-else-if="lesson.type === 'pairing question'"
+            v-else-if="results[0].type === 'pairing question'"
             class="flex flex-col justify-center w-4/5 lg:w-2/5"
           >
             <div class="p-5 border rounded-lg mb-2">
-              <p class="text-sm sm:text-base">{{ lesson.question }}</p>
+              <p class="text-sm sm:text-base">{{ results[0].question }}</p>
             </div>
             <div v-if="isMobile" class="select-none grid grid-cols-2 gap-2">
               <div>
@@ -302,9 +318,10 @@
             </div>
           </div>
 
+          <!-- sound question -->
           <div v-else class="flex flex-col justify-center w-4/5 lg:w-2/5">
             <div class="flex items-center">
-              <img :src="lesson.image" class="w-24 mr-4" alt="" />
+              <img :src="results[0].image" class="w-24 mr-4" alt="" />
               <div class="p-5 border rounded-lg">
                 <p class="text-sm sm:text-xl">Bunyi Huruf apa berikut ini?</p>
               </div>
@@ -314,7 +331,7 @@
                 :class="{
                   'pointer-events-none': answerSubmit,
                 }"
-                @click="playSound(lesson.question)"
+                @click="playSound(results[0].question)"
                 type="button"
                 class="border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
               >
@@ -324,10 +341,13 @@
           </div>
         </div>
 
+        <!-- answer section -->
+
+        <!-- multiple choice -->
         <div
           v-if="
-            lesson.type === 'multiple choice question' ||
-            lesson.type === 'sound question'
+            results[0].type === 'multiple choice question' ||
+            results[0].type === 'sound question'
           "
           class="flex justify-center py-10 border-t-2"
         >
@@ -352,8 +372,9 @@
           </div>
         </div>
 
+        <!-- pairing answer -->
         <div
-          v-else-if="lesson.type === 'pairing question'"
+          v-else-if="results[0].type === 'pairing question'"
           class="flex justify-center items-center max-h-56 border-t-2"
         >
           <div
@@ -411,6 +432,7 @@
           </div>
         </div>
 
+        <!-- search letter -->
         <div v-else class="flex justify-center py-5 border-t-2">
           <div class="pb-20">
             <div class="italic text-gray-300 text-center w-full capitalize">
@@ -440,6 +462,7 @@
           </div>
         </div>
       </div>
+      <!-- alert -->
 
       <div
         v-if="answerSubmit"
@@ -464,17 +487,17 @@
           <div>
             <span>Jawaban Anda Sebagian Benar</span
             ><BootstrapIcon class="ml-4 text-2xl" name="check2-circle" /><br />
-            <span>Jawaban yang benar : {{ lesson.content }}</span>
+            <span>Jawaban yang benar : {{ results[0].content }}</span>
           </div>
         </div>
         <div v-else class="text-sm flex items-center text-red-500 mr-2">
           <div>
             <span>Jawaban Anda Salah </span>
             <BootstrapIcon class="mx-4 text-2xl" name="x-circle" /><br />
-            <span v-if="!lesson.content"
+            <span v-if="!results[0].content"
               >Jawaban yang benar : {{ answer }}</span
             >
-            <span v-else>Jawaban yang benar : {{ lesson.content }}</span>
+            <span v-else>Jawaban yang benar : {{ results[0].content }}</span>
           </div>
         </div>
         <button
@@ -490,6 +513,15 @@
         v-else
         class="fixed w-full bottom-0 py-5 md:px-20 bg-white flex items-center justify-end px-4 border-y-2 border-gray-300"
       >
+        <!-- <div class="flex">
+          <button
+            @click=""
+            type="button"
+            class="ml-2 flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          >
+            Skip
+          </button>
+        </div> -->
         <button
           type="button"
           :class="{
@@ -533,11 +565,7 @@ const handleResize = () => {
   }
 };
 
-const { data } = await useFetch(
-  BASEAPIURL.value + "/api/lessons/" + route.params.subbab
-);
-
-const lesson = ref(data.value[0]);
+const { results } = await $fetch("/api/lessons/" + route.params.subbab);
 
 const id_user = ref();
 const dataUser = ref();
@@ -551,11 +579,9 @@ watch(
   async (newValue) => {
     if (newValue) {
       id_user.value = newValue;
-      const { data } = await useFetch(
-        BASEAPIURL.value + "/api/users/" + newValue
-      );
+      const { results } = await $fetch("/api/users/" + newValue);
 
-      dataUser.value = data.value[0];
+      dataUser.value = results[0];
       allLessonPassed.value = JSON.parse(dataUser.value.lesson_passed);
 
       if (XP.value < dataUser.value.xp) {
@@ -572,18 +598,14 @@ watch(
         }, 0.1);
       }
 
-      const lesson = await $fetch(
-        BASEAPIURL.value + "/api/lessons/" + dataUser.value.last_lesson
-      );
+      const lesson = await $fetch("/api/lessons/" + results[0].last_lesson);
 
-      last_lesson.value = lesson[0].id_lesson;
+      last_lesson.value = lesson.results[0].id_lesson;
 
       // check this lesson enable
-      const thisLesson = await $fetch(
-        BASEAPIURL.value + "/api/lessons/" + route.params.subbab
-      );
+      const thisLesson = await $fetch("/api/lessons/" + route.params.subbab);
 
-      if (lesson[0].id_lesson < thisLesson[0].id_lesson) {
+      if (lesson.results[0].id_lesson < thisLesson.results[0].id_lesson) {
         router.push("/dashboard");
       }
 
@@ -595,9 +617,10 @@ watch(
 
 const finishedBab = ref(false);
 const nextLesson = await $fetch(
-  BASEAPIURL.value + "/api/lessons/get-data/" + (lesson.value.id_lesson + 1)
+  "/api/lessons/get-data/" + (results[0].id_lesson + 1)
 );
 
+// generate xp
 const startTime = ref(0);
 const resultGenXP = ref(0);
 
@@ -616,52 +639,44 @@ const generateXP = () => {
 };
 
 const next = async () => {
-  if ((lesson.value.type = "text image")) {
+  if ((results[0].type = "text image")) {
     if (id_user.value) {
-      if (lesson.value.id_lesson !== 95) {
-        if (lesson.value.id_lesson === last_lesson.value) {
+      if (results[0].id_lesson !== 95) {
+        if (results[0].id_lesson === last_lesson.value) {
           if (allLessonPassed.value.length + 1 === last_lesson.value) {
             allLessonPassed.value.push(true);
           }
           generateXP();
-          await $fetch(
-            BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
-            {
-              method: "PUT",
-              body: {
-                last_lesson: nextLesson[0].slug,
-                xp: dataUser.value.xp + resultGenXP.value,
-              },
-            }
-          );
+          await $fetch("/api/users/update-lesson/" + id_user.value, {
+            method: "PUT",
+            body: {
+              last_lesson: nextLesson.results[0].slug,
+              xp: dataUser.value.xp + resultGenXP.value,
+            },
+          });
 
-          await $fetch(
-            BASEAPIURL.value +
-              "/api/users/update-lesson-passed/" +
-              id_user.value,
-            {
-              method: "PUT",
-              body: {
-                lesson_passed: "[" + allLessonPassed.value.toString() + "]",
-              },
-            }
-          );
+          await $fetch("/api/users/update-lesson-passed/" + id_user.value, {
+            method: "PUT",
+            body: {
+              lesson_passed: "[" + allLessonPassed.value.toString() + "]",
+            },
+          });
         }
 
-        if (lesson.value.id_lesson < last_lesson.value) {
-          router.push(lesson.value.nextLink);
+        if (results[0].id_lesson < last_lesson.value) {
+          router.push(results[0].nextLink);
         }
 
         if (
-          lesson.value.nextLink === "/dashboard/basic-level" ||
-          lesson.value.nextLink === "/dashboard/medium-level" ||
-          lesson.value.nextLink === "/dashboard/advanced-level"
+          results[0].nextLink === "/dashboard/basic-level" ||
+          results[0].nextLink === "/dashboard/medium-level" ||
+          results[0].nextLink === "/dashboard/advanced-level"
         ) {
           totalGetXP.value = totalGetXP.value + resultGenXP.value;
           startAnimation();
           finishedBab.value = true;
         } else {
-          router.push(lesson.value.nextLink);
+          router.push(results[0].nextLink);
         }
       }
     }
@@ -677,10 +692,10 @@ const manyAnswer = ref();
 const questionArr = ref();
 // get answer
 
-manyAnswer.value = JSON.parse(lesson.value.answer);
+manyAnswer.value = JSON.parse(results[0].answer);
 answer.value = manyAnswer.value[0];
-answerChoices.value = JSON.parse(lesson.value.answerChoices);
-questionArr.value = JSON.parse(lesson.value.questionArr);
+answerChoices.value = JSON.parse(results[0].answerChoices);
+questionArr.value = JSON.parse(results[0].questionArr);
 
 // multiple choice and sound question
 const getAnswer = (res) => {
@@ -688,35 +703,32 @@ const getAnswer = (res) => {
 };
 const submit = async () => {
   answerSubmit.value = true;
-  ifLessonNotPassed.value = allLessonPassed.value[lesson.value.id_lesson - 1];
+  ifLessonNotPassed.value = allLessonPassed.value[results[0].id_lesson - 1];
   if (
     userAnswer.value === answer.value ||
     resultPair.value == true ||
-    correctLetter(letterChoice.value, JSON.parse(lesson.value.answer))
+    correctLetter(letterChoice.value, JSON.parse(results[0].answer))
   ) {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
-    allLessonPassed.value[lesson.value.id_lesson - 1] = true;
+    allLessonPassed.value[results[0].id_lesson - 1] = true;
   } else if (resultPair.value == "partly true") {
     new Audio("/sound/correct.mp3").play();
     result.value = "partly true";
-    allLessonPassed.value[lesson.value.id_lesson - 1] = true;
+    allLessonPassed.value[results[0].id_lesson - 1] = true;
   } else {
     new Audio("/sound/wrong.mp3").play();
     result.value = false;
-    allLessonPassed.value[lesson.value.id_lesson - 1] = false;
+    allLessonPassed.value[results[0].id_lesson - 1] = false;
   }
 
   if (ifLessonNotPassed) {
-    await $fetch(
-      BASEAPIURL.value + "/api/users/update-lesson-passed/" + id_user.value,
-      {
-        method: "PUT",
-        body: {
-          lesson_passed: "[" + allLessonPassed.value.toString() + "]",
-        },
-      }
-    );
+    await $fetch("/api/users/update-lesson-passed/" + id_user.value, {
+      method: "PUT",
+      body: {
+        lesson_passed: "[" + allLessonPassed.value.toString() + "]",
+      },
+    });
   }
 };
 const playSound = (sound) => {
@@ -787,7 +799,7 @@ const getLetter = (letter) => {
     letterChoice.value.push(letter);
   }
 
-  if (JSON.parse(lesson.value.answer).length === letterChoice.value.length) {
+  if (JSON.parse(results[0].answer).length === letterChoice.value.length) {
     userAnswer.value = true;
   }
 };
