@@ -145,18 +145,16 @@ watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
-      const { data } = await useFetch("/api/users/" + newId);
+      const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + newId);
 
-      // const lesson = await $fetch(
-      //   "/api/lessons/" + data.value.results[0].last_lesson
-      // );
+      const lesson = await $fetch(
+        BASEAPIURL.value + "/api/lessons/" + data.value[0].last_lesson
+      );
 
-      // if (lesson.results[0].id_lesson !== 1) {
-      //   title_last_lesson.value =
-      //     lesson.results[0].subbab + " - " + lesson.results[0].bab;
-      //   slug.value =
-      //     "/lesson-" + lesson.results[0].lesson + "/" + lesson.results[0].slug;
-      // }
+      if (lesson[0].id_lesson !== 1) {
+        title_last_lesson.value = lesson[0].subbab + " - " + lesson[0].bab;
+        slug.value = "/lesson-" + lesson[0].lesson + "/" + lesson[0].slug;
+      }
     }
   },
   { immediate: true }

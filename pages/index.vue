@@ -43,9 +43,9 @@
         <div
           class="text-black slit-in w-full p-4 text-center bg-gray-50 bg-opacity-80 border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
         >
-          <h5 class="mb-2 text-xl md:text-2xl font-bold">
+          <h2 class="mb-2 text-xl md:text-2xl font-bold">
             خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ
-          </h5>
+          </h2>
           <p class="text-sm sm:text-xl">
             “Sebaik-baik kalian adalah orang yang belajar Al-Qur`an dan
             mengajarkannya.” (H.R. At-Tirmidzi)

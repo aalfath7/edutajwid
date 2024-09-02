@@ -66,11 +66,13 @@
           name="house-door-fill"
         />
       </NuxtLink>
-      <h1
-        class="capitalize text-sm sm:text-xl text-center flex items-center justify-center"
-      >
-        {{ lesson.subbab }}
-      </h1>
+      <div class="flex items-center justify-center">
+        <h1
+          class="capitalize text-sm sm:text-xl text-start sm:text-center whitespace-nowrap text-ellipsis overflow-hidden"
+        >
+          {{ lesson.subbab }}
+        </h1>
+      </div>
       <div class="w-full flex justify-end">
         <div v-if="dataUser" class="text-sm flex items-center">
           <span class="hidden sm:inline">Lesson : {{ lesson.lesson }}</span>
@@ -228,7 +230,7 @@
                 <div
                   v-for="(item, i) in questionArr"
                   :key="i"
-                  class="text-center flex items-center justify-center cursor-pointer shadow border border-gray-200 w-full h-10 my-2"
+                  class="inline-block text-center flex items-center justify-center cursor-pointer shadow border border-gray-200 w-full h-10 my-2 text-sm"
                 >
                   {{ item }}
                 </div>
@@ -238,11 +240,11 @@
                   v-for="(item, i) in dropItem"
                   :key="i"
                   :class="pairingStyle(item)"
-                  class="select-none cursor-pointer text-center flex items-center justify-center border-2 w-full h-10 my-2"
+                  class="relative inline-block select-none cursor-pointer text-center flex items-center justify-center border-2 w-full h-10 my-2"
                   @click="chooseBlock(i)"
                 >
-                  <span>{{ item }}</span>
-                  <span v-if="answerSubmit">
+                  <span class="text-sm inline-block">{{ item }}</span>
+                  <span v-if="answerSubmit" class="absolute right-0 bg-white">
                     <BootstrapIcon
                       v-if="matchedItem[i]"
                       name="check"
@@ -329,26 +331,28 @@
             lesson.type === 'multiple choice question' ||
             lesson.type === 'sound question'
           "
-          class="flex justify-center py-10 border-t-2"
+          class="flex w-full justify-center border-t-2"
         >
-          <div class="grid grid-cols-3 gap-4 pb-20 p-2 overflow-hidden">
-            <button
-              v-for="answer in answerChoices"
-              type="button"
-              :class="{
-                'pointer-events-none': answerSubmit,
-                'ring-gray-200 ring-4': userAnswer === answer,
-              }"
-              class="h-32 sm:h-44 flex flex-col items-center justify-center p-5 mb-2 font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
-              @click="getAnswer(answer)"
-            >
-              <div
-                class="w-44 capitalize"
-                :class="arabic ? 'text-3xl' : 'text-base'"
+          <div class="flex justify-center py-10 w-full sm:max-w-xl">
+            <div class="w-full grid grid-cols-3 gap-4 p-2 overflow-hidden">
+              <button
+                v-for="answer in answerChoices"
+                type="button"
+                :class="{
+                  'pointer-events-none': answerSubmit,
+                  'ring-gray-200 ring-4': userAnswer === answer,
+                }"
+                class="p-2 h-24 sm:w-44 sm:h-44 mb-2 font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+                @click="getAnswer(answer)"
               >
-                {{ answer }}
-              </div>
-            </button>
+                <p
+                  class="capitalize"
+                  :class="arabic ? 'text-3xl' : 'text-sm sm:text-base'"
+                >
+                  {{ answer }}
+                </p>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -426,7 +430,7 @@
                 :class="{
                   'ring-gray-100': checkLetter(letter),
                 }"
-                class="bg-white border-gray-200 flex items-center justify-center rounded-lg border py-2 px-16 text-sm font-medium text-gray-900 focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+                class="bg-white border-gray-200 flex items-center justify-center rounded-lg border py-2 px-8 sm:px-16 text-sm font-medium text-gray-900 focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
                 @click="getLetter(letter)"
               >
                 <p
@@ -448,29 +452,41 @@
           'bg-green-100': result,
           'bg-yellow-100': result === 'partly true',
         }"
-        class="fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-between px-4 border-y-2 border-gray-300"
+        class="fixed w-full bottom-0 py-5 md:px-20 flex flex-col sm:flex-row items-end sm:items-center justify-between px-4 border-y-2 border-gray-300"
       >
         <div
           v-if="result === true"
           class="text-sm flex items-center text-green-500"
         >
-          <span>Jawaban Anda Benar</span>
-          <BootstrapIcon class="ml-4 text-2xl" name="check2-circle" />
+          <span>Jawaban Anda Benar.</span>
+          <BootstrapIcon
+            v-if="!isMobile"
+            class="ml-4 text-2xl"
+            name="check2-circle"
+          />
         </div>
         <div
           v-else-if="result === 'partly true'"
           class="text-sm flex items-center text-yellow-500"
         >
           <div>
-            <span>Jawaban Anda Sebagian Benar</span
-            ><BootstrapIcon class="ml-4 text-2xl" name="check2-circle" /><br />
+            <span>Jawaban Anda Sebagian Benar.</span
+            ><BootstrapIcon
+              v-if="!isMobile"
+              class="ml-4 text-2xl"
+              name="check2-circle"
+            /><br />
             <span>Jawaban yang benar : {{ lesson.content }}</span>
           </div>
         </div>
         <div v-else class="text-sm flex items-center text-red-500 mr-2">
           <div>
-            <span>Jawaban Anda Salah </span>
-            <BootstrapIcon class="mx-4 text-2xl" name="x-circle" /><br />
+            <span>Jawaban Anda Salah.</span>
+            <BootstrapIcon
+              v-if="!isMobile"
+              class="mx-4 text-2xl"
+              name="x-circle"
+            /><br />
             <span v-if="!lesson.content"
               >Jawaban yang benar : {{ answer }}</span
             >
@@ -480,10 +496,14 @@
         <button
           @click="next"
           type="button"
-          class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          class="mt-2 flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
         >
           Lanjutkan
-          <BootstrapIcon class="ml-4 text-2xl" name="arrow-right-circle" />
+          <BootstrapIcon
+            v-if="!isMobile"
+            class="ml-4 text-2xl"
+            name="arrow-right-circle"
+          />
         </button>
       </div>
       <div
@@ -496,7 +516,7 @@
             'pointer-events-none': userAnswer === false,
             'text-gray-800': userAnswer !== false,
           }"
-          class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-100 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          class="flex items-center py-2.5 px-5 text-sm font-medium text-gray-100 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
           @click="submit"
         >
           Submit
