@@ -405,7 +405,7 @@
                 answerGroup.length +
                 ' '
               "
-              class="pt-2 grid gap-1"
+              class="pt-2 grid gap-1 mb-24"
             >
               <div
                 v-for="(item, i) in answerGroup"
