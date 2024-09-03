@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div v-if="lesson">
+    <div v-if="data">
       <!-- confetti -->
       <Confetti :actived="finishedBab" />
 
@@ -601,8 +601,12 @@ const handleResize = () => {
 const { data } = await useFetch(
   BASEAPIURL.value + "/api/lessons/" + route.params.subbab
 );
-
 const lesson = ref(data.value[0]);
+
+// const { data } = await useFetch("/api/lessons/" + route.params.subbab);
+
+// const lesson = ref();
+// lesson.value = data.value.results[0];
 
 const id_user = ref();
 const dataUser = ref();
@@ -730,6 +734,11 @@ const next = async () => {
           }
         } else {
           router.push(lesson.value.nextLink);
+        }
+      } else {
+        if (last_lesson.value === lesson.value.id_lesson) {
+          startAnimation();
+          finishedBab.value = true;
         }
       }
     }

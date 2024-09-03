@@ -14,9 +14,7 @@
           >
             Lanjut Belajar
           </h5>
-          <p
-            class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
-          >
+          <p class="capitalize font-normal text-gray-700 dark:text-gray-400">
             {{ title_last_lesson }}
           </p>
         </NuxtLink>

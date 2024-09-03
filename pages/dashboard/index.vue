@@ -10,14 +10,13 @@
             :to="slug"
             class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
-            <h5
+            <h1
               class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
-              Lanjut Belajar
-            </h5>
-            <p
-              class="capitalize font-normal text-gray-700 dark:text-gray-400 italic"
-            >
+              <span v-if="slug === 'definisi-alquran'">Mulai</span>
+              <span v-else>Lanjut</span> Belajar
+            </h1>
+            <p class="capitalize font-normal text-gray-700 dark:text-gray-400">
               {{ title_last_lesson }}
             </p>
           </NuxtLink>
@@ -151,10 +150,8 @@ watch(
         BASEAPIURL.value + "/api/lessons/" + data.value[0].last_lesson
       );
 
-      if (lesson[0].id_lesson !== 1) {
-        title_last_lesson.value = lesson[0].subbab + " - " + lesson[0].bab;
-        slug.value = "/lesson-" + lesson[0].lesson + "/" + lesson[0].slug;
-      }
+      title_last_lesson.value = lesson[0].subbab + " - " + lesson[0].bab;
+      slug.value = "/lesson-" + lesson[0].lesson + "/" + lesson[0].slug;
     }
   },
   { immediate: true }
