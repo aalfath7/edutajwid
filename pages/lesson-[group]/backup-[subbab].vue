@@ -58,6 +58,31 @@
       </div>
     </div>
 
+    <div
+      :class="{ 'translate-y-0': hello }"
+      class="duration-500 -translate-y-full bg-white w-full h-screen fixed z-50 flex justify-center items-center p-2"
+    >
+      <div class="flex">
+        <div class="flex items-end">
+          <img :src="results[0].image" alt="" class="object-cover sm:w-32" />
+        </div>
+        <div>
+          <p class="p-2 border rounded-lg">
+            {{ message }}
+          </p>
+          <div class="flex justify-end">
+            <button
+              @click="closeHello"
+              type="button"
+              class="text-center flex items-center justify-center text-green-700 bg-white hover:text-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
+            >
+              Lanjut belajar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- nav -->
     <div
       class="bg-white w-full fixed grid grid-cols-3 p-4 md:px-20 border-b-2 border-gray-300 z-50"
@@ -551,8 +576,21 @@ definePageMeta({
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user, XP, BASEAPIURL } = storeToRefs(useAuthStore());
-const { loadTokenFromLocalStorage } = useAuthStore();
+const {
+  authenticated,
+  user,
+  XP,
+  BASEAPIURL,
+  hello: sayHello,
+  wrongAnswer,
+  correctAnswer,
+} = storeToRefs(useAuthStore());
+const {
+  loadTokenFromLocalStorage,
+  setHello,
+  setWrongAnswer,
+  setCorrectAnswer,
+} = useAuthStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -578,6 +616,7 @@ watch(
   () => user.value.id_user,
   async (newValue) => {
     if (newValue) {
+      newValue = 7;
       id_user.value = newValue;
       const { results } = await $fetch("/api/users/" + newValue);
 
@@ -712,6 +751,7 @@ const submit = async () => {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
     allLessonPassed.value[results[0].id_lesson - 1] = true;
+    setCorrectAnswer(true);
   } else if (resultPair.value == "partly true") {
     new Audio("/sound/correct.mp3").play();
     result.value = "partly true";
@@ -720,6 +760,7 @@ const submit = async () => {
     new Audio("/sound/wrong.mp3").play();
     result.value = false;
     allLessonPassed.value[results[0].id_lesson - 1] = false;
+    setWrongAnswer(true);
   }
 
   if (ifLessonNotPassed) {
@@ -977,6 +1018,56 @@ const startAnimation = () => {
       }
     }
   }, 10);
+};
+
+const hello = ref();
+const message = ref(
+  "Selamat datang, hari ini kamu akan belajar " + results[0].subbab
+);
+if (sayHello.value) {
+  hello.value = true;
+}
+
+if (wrongAnswer.value) {
+  let randomInteger = Math.floor(Math.random() * 6);
+  if (randomInteger === 0) {
+    hello.value = true;
+    message.value =
+      "Kegagalan adalah awal dari keberhasilan, Yuk lanjut belajar kembali dengan lebih semangat!";
+  } else if (randomInteger === 1) {
+    hello.value = true;
+    message.value = "Jawabanmu salah. Coba perbaiki lagi nanti.";
+  } else if (randomInteger === 2) {
+    hello.value = true;
+    message.value = "Jangan menyerah. Yuk Belajar lagi dengan lebih baik.";
+  } else {
+    hello.value = false;
+    setWrongAnswer(false);
+  }
+}
+
+if (correctAnswer.value) {
+  let randomInteger = Math.floor(Math.random() * 6);
+  if (randomInteger === 0) {
+    hello.value = true;
+    message.value = "Kamu hebat. Semangat!";
+  } else if (randomInteger === 1) {
+    hello.value = true;
+    message.value = "Jawabanmu Benar. Keren sekali!";
+  } else if (randomInteger === 2) {
+    hello.value = true;
+    message.value = "Aku kasih kamu jempol. Karena jawabanmu hebat.";
+  } else {
+    hello.value = false;
+    setWrongAnswer(false);
+  }
+}
+
+const closeHello = () => {
+  hello.value = false;
+  setHello(false);
+  setWrongAnswer(false);
+  setCorrectAnswer(false);
 };
 
 onUnmounted(() => {

@@ -64,8 +64,20 @@ export const useAuthStore = defineStore("auth", {
       xp: number;
     },
     XP: 0,
+    hello: true,
+    wrongAnswer: false,
+    correctAnswer: false,
   }),
   actions: {
+    setHello(value: any) {
+      this.hello = value;
+    },
+    setWrongAnswer(value: any) {
+      this.wrongAnswer = value;
+    },
+    setCorrectAnswer(value: any) {
+      this.correctAnswer = value;
+    },
     async generateToken(payload: any, secretKey: any, expiresInSeconds: any) {
       const header = {
         alg: "HS256",
