@@ -18,7 +18,7 @@
               type="button"
               class="text-center flex items-center justify-center text-green-700 bg-white hover:text-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
             >
-              Lanjut belajar
+              Lanjut
             </button>
           </div>
         </div>
@@ -584,15 +584,8 @@ const {
   XP,
   BASEAPIURL,
   hello: sayHello,
-  wrongAnswer,
-  correctAnswer,
 } = storeToRefs(useAuthStore());
-const {
-  loadTokenFromLocalStorage,
-  setHello,
-  setWrongAnswer,
-  setCorrectAnswer,
-} = useAuthStore();
+const { loadTokenFromLocalStorage, setHello } = useAuthStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -730,7 +723,8 @@ const next = async () => {
           lesson.value.nextLink === "/dashboard/advanced-level"
         ) {
           totalGetXP.value = totalGetXP.value + resultGenXP.value;
-          if (last_lesson.value < lesson.value.id_lesson) {
+
+          if (last_lesson.value === lesson.value.id_lesson) {
             startAnimation();
             finishedBab.value = true;
           }
@@ -771,7 +765,7 @@ const submit = async () => {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
     allLessonPassed.value[lesson.value.id_lesson - 1] = true;
-    setCorrectAnswer(true);
+    correctAnswer();
   } else if (resultPair.value == "partly true") {
     new Audio("/sound/correct.mp3").play();
     result.value = "partly true";
@@ -780,7 +774,7 @@ const submit = async () => {
     new Audio("/sound/wrong.mp3").play();
     result.value = false;
     allLessonPassed.value[lesson.value.id_lesson - 1] = false;
-    setWrongAnswer(true);
+    wrongAnswer();
   }
 
   if (ifLessonNotPassed) {
@@ -1045,13 +1039,13 @@ const startAnimation = () => {
 
 const hello = ref();
 const message = ref(
-  "Selamat datang, hari ini kamu akan belajar mengenai " + lesson.value.subbab
+  "Selamat datang, kali ini kamu akan belajar mengenai " + lesson.value.subbab
 );
 if (sayHello.value) {
   hello.value = true;
 }
 
-if (wrongAnswer.value) {
+const wrongAnswer = () => {
   let randomInteger = Math.floor(Math.random() * 6);
   if (randomInteger === 0) {
     hello.value = true;
@@ -1062,14 +1056,14 @@ if (wrongAnswer.value) {
     message.value = "Jawabanmu salah. Coba perbaiki lagi nanti.";
   } else if (randomInteger === 2) {
     hello.value = true;
-    message.value = "Jangan menyerah. Yuk Belajar lagi dengan lebih baik.";
+    message.value =
+      "Jawabanmu Salah. Tapi jangan menyerah. Yuk Belajar lagi dengan lebih baik.";
   } else {
     hello.value = false;
-    setWrongAnswer(false);
   }
-}
+};
 
-if (correctAnswer.value) {
+const correctAnswer = () => {
   let randomInteger = Math.floor(Math.random() * 6);
   if (randomInteger === 0) {
     hello.value = true;
@@ -1082,15 +1076,12 @@ if (correctAnswer.value) {
     message.value = "Aku kasih kamu jempol. Karena jawabanmu hebat.";
   } else {
     hello.value = false;
-    setWrongAnswer(false);
   }
-}
+};
 
 const closeHello = () => {
   hello.value = false;
   setHello(false);
-  setWrongAnswer(false);
-  setCorrectAnswer(false);
 };
 
 onUnmounted(() => {
