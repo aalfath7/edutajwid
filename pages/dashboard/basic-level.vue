@@ -126,8 +126,6 @@ const {
 const { setExamQuestions, setGrade } = useAuthStore();
 const router = useRouter();
 
-console.log(gradeExamBefore.value);
-
 // const { results } = await $fetch("/api/lessons/basic-level");
 const results = ref();
 try {
@@ -218,7 +216,7 @@ watch(
         });
       });
 
-      // grade.value = JSON.parse(dataUser.value.exam)[0];
+      grade.value = JSON.parse(dataUser.value.exam)[0];
       // if (gradeExamBefore.value[0] > grade.value) {
       //   await useFetch(
       //     BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,

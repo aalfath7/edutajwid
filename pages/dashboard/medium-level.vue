@@ -227,7 +227,7 @@ watch(
         });
       });
 
-      // grade.value = JSON.parse(dataUser.value.exam)[1];
+      grade.value = JSON.parse(dataUser.value.exam)[1];
       // if (gradeExamBefore.value[1] > grade.value) {
       //   await useFetch(
       //     BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
