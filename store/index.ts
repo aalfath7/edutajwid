@@ -65,10 +65,18 @@ export const useAuthStore = defineStore("auth", {
     },
     XP: 0,
     hello: true,
+    examQuestions: [],
+    grade: [0, 0, 0],
   }),
   actions: {
     setHello(value: any) {
       this.hello = value;
+    },
+    setExamQuestions(exam: []) {
+      this.examQuestions = exam;
+    },
+    setGrade(value: number, i: number) {
+      this.grade[i] = value;
     },
     async generateToken(payload: any, secretKey: any, expiresInSeconds: any) {
       const header = {

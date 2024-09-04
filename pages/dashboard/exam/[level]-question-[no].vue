@@ -1,36 +1,12 @@
 <template>
   <div class="lg:h-screen">
-    <div
-      :class="{ 'translate-y-0': hello }"
-      class="duration-500 -translate-y-full bg-white w-full h-screen fixed z-50 flex justify-center items-center p-2"
-    >
-      <div class="flex">
-        <div class="flex items-end">
-          <img :src="lesson.image" alt="" class="object-cover sm:w-32" />
-        </div>
-        <div>
-          <p class="p-2 border rounded-lg">
-            {{ message }}
-          </p>
-          <div class="flex justify-end">
-            <button
-              @click="closeHello"
-              type="button"
-              class="text-center flex items-center justify-center text-green-700 bg-white hover:text-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
-            >
-              Lanjut
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="data">
+    <div v-if="lesson">
       <!-- confetti -->
-      <Confetti :actived="finishedBab" />
+      <Confetti :actived="finishedExam" />
 
       <!-- modal -->
       <div
-        :class="finishedBab ? 'zoom' : 'hidden'"
+        :class="finishedExam ? 'zoom' : 'hidden'"
         class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
       >
         <div
@@ -51,44 +27,32 @@
               <div class="py-2">
                 <BootstrapIcon class="text-8xl text-yellow-300" name="award" />
                 <h2 class="mt-5 text-sm sm:text-base">
-                  Selamat Kamu telah menyelesaikan bab {{ lesson.bab }}
+                  Selamat Kamu telah menyelesaikan ujian
+                  {{ route.params.level }}
                 </h2>
                 <div class="border-t pt-2 mt-2">
                   <p class="text-sm sm:text-base">
-                    Kamu mendapatkan total {{ xp }} XP tambahan.
-                  </p>
-                  <p
-                    v-if="lesson.id_lesson === 29 || lesson.id_lesson === 75"
-                    class=""
-                  >
-                    Silahkan Ikuti Tes naik level.
+                    Nilaimu : {{ finalGrade }} <br /><br />
+                    <!-- <span class="italic text-sm"
+                      >Sistem akan menyimpan nilaimu yang terbesar</span
+                    > -->
                   </p>
                 </div>
               </div>
               <div class="mt-5 flex">
                 <NuxtLink
-                  :to="lesson.nextLink"
+                  :to="'/dashboard/' + route.params.level"
                   class="text-center flex items-center justify-center w-full text-black bg-white hover:bg-gray-100 focus:ring-4 border border-gray-200 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-2"
                 >
                   Kembali
                 </NuxtLink>
-                <div
-                  v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
-                  class="w-full"
+                <NuxtLink
+                  v-if="nextLesson !== ''"
+                  :to="nextLesson"
+                  class="ml-2 text-center flex items-center justify-center w-full text-black bg-white hover:bg-gray-100 focus:ring-4 border border-gray-200 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-2 cursor-pointer"
                 >
-                  <NuxtLink
-                    v-if="nextLesson[0]"
-                    :to="
-                      '/lesson-' +
-                      nextLesson[0].lesson +
-                      '/' +
-                      nextLesson[0].slug
-                    "
-                    class="text-center flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                  >
-                    Lanjut Belajar
-                  </NuxtLink>
-                </div>
+                  Lanjut Belajar
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -130,75 +94,8 @@
         </div>
       </div>
 
-      <!-- text and image -->
-      <div v-if="lesson.type === 'text image'">
-        <div
-          class="relative flex flex-col justify-center items-center pt-20 pb-40 px-2"
-        >
-          <div class="flex w-full sm:w-2/3 mb-2 items-center text-blue-500">
-            <BootstrapIcon name="clouds" class="text-2xl mr-2" />
-            <span class="text-sm">Pelajari</span>
-          </div>
-          <div
-            class="w-full sm:w-2/3 flex justify-center items-center flex-col rounded-lg border-2 border-green-500 shadow-lg p-5"
-          >
-            <img
-              v-if="lesson.image"
-              class="w-32 my-2"
-              :src="lesson.image"
-              alt=""
-            />
-            <div
-              v-html="lesson.content"
-              class="text-sm sm:text-lg leading-relaxed text-justify"
-            ></div>
-          </div>
-
-          <div
-            class="bg-white fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-end px-4 border-y-2 border-gray-300"
-          >
-            <button
-              @click="next"
-              type="button"
-              class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-            >
-              Lanjutkan
-              <BootstrapIcon
-                v-if="!isMobile"
-                class="ml-4 text-2xl"
-                name="arrow-right-circle"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- video -->
-      <div
-        v-else-if="lesson.type === 'video'"
-        class="p-5 lg:p-20 h-screen flex pt-56 items-start lg:items-center justify-center"
-      >
-        <video class="w-full lg:w-2/3 rounded-lg" controls>
-          <source src="" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        <div
-          class="fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-end px-4 border-y-2 border-gray-300"
-        >
-          <button
-            @click="next"
-            type="button"
-            class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
-            Lanjutkan
-            <BootstrapIcon class="ml-4 text-2xl" name="arrow-right-circle" />
-          </button>
-        </div>
-      </div>
-
       <!-- content question -->
-      <div v-else>
+      <div>
         <div class="lg:h-full overflow-auto grid md:grid-rows-2 px-5">
           <div
             class="flex justify-center items-center flex-col pt-20 lg:pt-5 pb-5"
@@ -353,7 +250,10 @@
               </div>
             </div>
 
-            <div v-else class="flex flex-col justify-center w-4/5 lg:w-2/5">
+            <div
+              v-else-if="lesson.type === 'search question'"
+              class="flex flex-col justify-center w-4/5 lg:w-2/5"
+            >
               <div class="flex items-center">
                 <img :src="lesson.image" class="w-24 mr-4" alt="" />
                 <div class="p-5 border rounded-lg">
@@ -372,6 +272,10 @@
                   <BootstrapIcon name="volume-up-fill" class="text-3xl" />
                 </button>
               </div>
+            </div>
+
+            <div v-else>
+              <Loading :is-loading="true" />
             </div>
           </div>
 
@@ -592,14 +496,9 @@ definePageMeta({
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const {
-  authenticated,
-  user,
-  XP,
-  BASEAPIURL,
-  hello: sayHello,
-} = storeToRefs(useAuthStore());
-const { loadTokenFromLocalStorage, setHello } = useAuthStore();
+const { authenticated, user, XP, BASEAPIURL, examQuestions, grade } =
+  storeToRefs(useAuthStore());
+const { loadTokenFromLocalStorage, setGrade } = useAuthStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -612,22 +511,35 @@ const handleResize = () => {
   }
 };
 
-const { data } = await useFetch(
-  BASEAPIURL.value + "/api/lessons/" + route.params.subbab
-);
-const lesson = ref(data.value[0]);
+const lesson = ref();
+if (examQuestions.value[route.params.no - 1]) {
+  lesson.value = examQuestions.value[route.params.no - 1];
+} else {
+  lesson.value = {
+    id_lesson: 0,
+    lesson: 0,
+    bab: "",
+    subbab: "",
+    slug: "",
+    type: "",
+    image: "",
+    nextLink: "",
+    content: "",
+    question: "",
+    questionArr: `[""]`,
+    answer: `[""]`,
+    answerChoices: `[]`,
+  };
+  router.push("/dashboard/" + route.params.level);
+}
 
-// const { data } = await useFetch("/api/lessons/" + route.params.subbab);
-
-// const lesson = ref();
-// lesson.value = data.value.results[0];
+// if (lesson.value.id_lesson === 0) {
+//   router.push("/dashboard/" + route.params.level);
+// }
 
 const id_user = ref();
 const dataUser = ref();
-const last_lesson = ref();
 const totalGetXP = ref(0);
-const allLessonPassed = ref();
-const ifLessonNotPassed = ref(false);
 
 watch(
   () => user.value.id_user,
@@ -639,137 +551,56 @@ watch(
       );
 
       dataUser.value = data.value[0];
-      allLessonPassed.value = JSON.parse(dataUser.value.lesson_passed);
-
-      if (XP.value < dataUser.value.xp) {
-        setInterval(() => {
-          if (XP.value < dataUser.value.xp) {
-            if (dataUser.value.xp - XP.value > 100) {
-              XP.value = XP.value + 100;
-            } else if (dataUser.value.xp - XP.value > 50) {
-              XP.value = XP.value + 10;
-            } else {
-              XP.value++;
-            }
-          }
-        }, 0.1);
-      }
-
-      const lesson = await $fetch(
-        BASEAPIURL.value + "/api/lessons/" + dataUser.value.last_lesson
-      );
-
-      last_lesson.value = lesson[0].id_lesson;
-
-      // check this lesson enable
-      const thisLesson = await $fetch(
-        BASEAPIURL.value + "/api/lessons/" + route.params.subbab
-      );
-
-      if (lesson[0].id_lesson < thisLesson[0].id_lesson) {
-        router.push("/dashboard");
-      }
-
-      totalGetXP.value = dataUser.value.xp - user.value.xp;
     }
   },
   { immediate: true }
 );
 
 const finishedBab = ref(false);
-const nextLesson = await $fetch(
-  BASEAPIURL.value + "/api/lessons/get-data/" + (lesson.value.id_lesson + 1)
-);
-
-const startTime = ref(0);
-const resultGenXP = ref(0);
-
-onMounted(() => {
-  startTime.value = Date.now();
-});
-
-const generateXP = () => {
-  const currentTime = Date.now();
-  const timeElapsed = (currentTime - startTime.value) / 1000;
-
-  const baseXP = 100;
-  const multiplier = Math.max(0.5, (10 - timeElapsed) / 5);
-
-  resultGenXP.value = Math.floor(baseXP * multiplier);
-};
+const nextLesson = ref("");
 
 const next = async () => {
-  if ((lesson.value.type = "text image")) {
-    if (id_user.value) {
-      if (lesson.value.id_lesson !== 95) {
-        if (lesson.value.id_lesson === last_lesson.value) {
-          if (allLessonPassed.value.length + 1 === last_lesson.value) {
-            allLessonPassed.value.push(true);
-          }
-          generateXP();
-
-          if (lesson.value.id_lesson === 29 || lesson.value.id_lesson === 75) {
-            await $fetch(
-              BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
-              {
-                method: "PUT",
-                body: {
-                  last_lesson: lesson.value.slug,
-                  xp: dataUser.value.xp + resultGenXP.value,
-                },
-              }
-            );
-          } else {
-            await $fetch(
-              BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
-              {
-                method: "PUT",
-                body: {
-                  last_lesson: nextLesson[0].slug,
-                  xp: dataUser.value.xp + resultGenXP.value,
-                },
-              }
-            );
-          }
-
-          await $fetch(
-            BASEAPIURL.value +
-              "/api/users/update-lesson-passed/" +
-              id_user.value,
-            {
-              method: "PUT",
-              body: {
-                lesson_passed: "[" + allLessonPassed.value.toString() + "]",
-              },
-            }
-          );
-        }
-
-        if (lesson.value.id_lesson < last_lesson.value) {
-          router.push(lesson.value.nextLink);
-        }
-
-        if (
-          lesson.value.nextLink === "/dashboard/basic-level" ||
-          lesson.value.nextLink === "/dashboard/medium-level" ||
-          lesson.value.nextLink === "/dashboard/advanced-level"
-        ) {
-          totalGetXP.value = totalGetXP.value + resultGenXP.value;
-
-          if (last_lesson.value === lesson.value.id_lesson) {
-            startAnimation();
-            finishedBab.value = true;
-          }
-        } else {
-          router.push(lesson.value.nextLink);
-        }
-      } else {
-        if (last_lesson.value === lesson.value.id_lesson) {
-          startAnimation();
-          finishedBab.value = true;
-        }
+  if (route.params.no == 5) {
+    if (
+      dataUser.value.last_lesson === "makhroj-alkhoisyum-review" ||
+      dataUser.value.last_lesson === "mad-layyin-review"
+    ) {
+      let slug;
+      if (route.params.level === "basic-level") {
+        slug = "pengenalan-sifatul-huruf";
+        nextLesson.value = "/lesson-16/" + slug;
       }
+      if (route.params.level === "medium-level") {
+        slug = "kesempurnaan-harokat";
+        nextLesson.value = "/lesson-38/" + slug;
+      }
+      if (route.params.level === "advanced-level") {
+        slug = "pengenalan-waqaf-dan-ibtida";
+        nextLesson.value = "";
+      }
+
+      await $fetch(
+        BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
+        {
+          method: "PUT",
+          body: {
+            last_lesson: slug,
+            xp: dataUser.value.xp,
+          },
+        }
+      );
     }
+    finishedExam.value = true;
+    // router.push("/dashboard/" + route.params.level);
+  }
+
+  if (route.params.no < 5) {
+    router.push(
+      "/dashboard/exam/" +
+        route.params.level +
+        "-question-" +
+        (Number(route.params.no) + 1)
+    );
   }
 };
 
@@ -780,7 +611,6 @@ let answerSubmit = ref(false);
 const answerChoices = ref();
 const manyAnswer = ref();
 const questionArr = ref();
-// get answer
 
 manyAnswer.value = JSON.parse(lesson.value.answer);
 answer.value = manyAnswer.value[0];
@@ -791,9 +621,61 @@ questionArr.value = JSON.parse(lesson.value.questionArr);
 const getAnswer = (res) => {
   userAnswer.value = res;
 };
+
+const finishedExam = ref(false);
+const finalGrade = ref(0);
+
 const submit = async () => {
+  let gradeBasic = JSON.parse(dataUser.value.exam)[0];
+  let gradeMedium = JSON.parse(dataUser.value.exam)[1];
+  let gradeAdvanced = JSON.parse(dataUser.value.exam)[2];
+
+  if (gradeBasic == undefined) {
+    gradeBasic = 0;
+  }
+  if (gradeMedium == undefined) {
+    gradeMedium = 0;
+  }
+  if (gradeAdvanced == undefined) {
+    gradeAdvanced = 0;
+  }
+
+  if (route.params.level === "basic-level") {
+    finalGrade.value = JSON.parse(dataUser.value.exam)[0];
+  }
+  if (route.params.level === "medium-level") {
+    finalGrade.value = JSON.parse(dataUser.value.exam)[1];
+  }
+  if (route.params.level === "advanced-level") {
+    finalGrade.value = JSON.parse(dataUser.value.exam)[2];
+  }
+
+  if (route.params.no == 1) {
+    if (route.params.level === "basic-level") {
+      setGrade(JSON.parse(dataUser.value.exam)[0], 0);
+    }
+    if (route.params.level === "medium-level") {
+      setGrade(JSON.parse(dataUser.value.exam)[1], 1);
+    }
+    if (route.params.level === "advanced-level") {
+      setGrade(JSON.parse(dataUser.value.exam)[0], 2);
+    }
+
+    gradeBasic = 0;
+    gradeMedium = 0;
+    gradeAdvanced = 0;
+    await useFetch(
+      BASEAPIURL.value + "/api/users/update-exam/" + id_user.value,
+      {
+        method: "PUT",
+        body: {
+          exam: "[" + 0 + "," + 0 + "," + 0 + "]",
+        },
+      }
+    );
+  }
+
   answerSubmit.value = true;
-  ifLessonNotPassed.value = allLessonPassed.value[lesson.value.id_lesson - 1];
   if (
     userAnswer.value === answer.value ||
     resultPair.value == true ||
@@ -801,29 +683,60 @@ const submit = async () => {
   ) {
     new Audio("/sound/correct.mp3").play();
     result.value = true;
-    allLessonPassed.value[lesson.value.id_lesson - 1] = true;
-    correctAnswer();
-  } else if (resultPair.value == "partly true") {
-    new Audio("/sound/correct.mp3").play();
-    result.value = "partly true";
-    allLessonPassed.value[lesson.value.id_lesson - 1] = true;
-  } else {
-    new Audio("/sound/wrong.mp3").play();
-    result.value = false;
-    allLessonPassed.value[lesson.value.id_lesson - 1] = false;
-    wrongAnswer();
-  }
 
-  if (ifLessonNotPassed) {
-    await $fetch(
-      BASEAPIURL.value + "/api/users/update-lesson-passed/" + id_user.value,
+    if (route.params.level === "basic-level") {
+      gradeBasic = gradeBasic + 20;
+      finalGrade.value = gradeBasic;
+    }
+    if (route.params.level === "medium-level") {
+      gradeMedium = gradeMedium + 20;
+      finalGrade.value = gradeMedium;
+    }
+    if (route.params.level === "advanced-level") {
+      gradeAdvanced = gradeAdvanced + 20;
+      finalGrade.value = gradeAdvanced;
+    }
+
+    await useFetch(
+      BASEAPIURL.value + "/api/users/update-exam/" + id_user.value,
       {
         method: "PUT",
         body: {
-          lesson_passed: "[" + allLessonPassed.value.toString() + "]",
+          exam:
+            "[" + gradeBasic + "," + gradeMedium + "," + gradeAdvanced + "]",
         },
       }
     );
+  } else if (resultPair.value == "partly true") {
+    new Audio("/sound/correct.mp3").play();
+    result.value = "partly true";
+
+    if (route.params.level === "basic-level") {
+      gradeBasic = gradeBasic + 10;
+      finalGrade.value = gradeBasic;
+    }
+    if (route.params.level === "medium-level") {
+      gradeMedium = gradeMedium + 10;
+      finalGrade.value = gradeMedium;
+    }
+    if (route.params.level === "advanced-level") {
+      gradeAdvanced = gradeAdvanced + 10;
+      finalGrade.value = gradeAdvanced;
+    }
+
+    await useFetch(
+      BASEAPIURL.value + "/api/users/update-exam/" + id_user.value,
+      {
+        method: "PUT",
+        body: {
+          exam:
+            "[" + gradeBasic + "," + gradeMedium + "," + gradeAdvanced + "]",
+        },
+      }
+    );
+  } else {
+    new Audio("/sound/wrong.mp3").play();
+    result.value = false;
   }
 };
 const playSound = (sound) => {
@@ -1050,79 +963,6 @@ onMounted(async () => {
     windowWidth.value = window.innerWidth;
     window.addEventListener("resize", handleResize);
   }
-});
-onUnmounted(() => {
-  if (process.client) {
-    window.removeEventListener("resize", handleResize);
-  }
-});
-
-const xp = ref(0);
-let interval;
-
-const startAnimation = () => {
-  interval = setInterval(() => {
-    if (xp.value < totalGetXP.value) {
-      if (totalGetXP.value - xp.value > 100) {
-        xp.value = xp.value + 100;
-      } else if (totalGetXP.value - xp.value > 50) {
-        xp.value = xp.value + 10;
-      } else {
-        xp.value++;
-      }
-    }
-  }, 10);
-};
-
-const hello = ref();
-const message = ref(
-  "Selamat datang, kali ini kamu akan belajar mengenai " + lesson.value.subbab
-);
-if (sayHello.value) {
-  hello.value = true;
-}
-
-const wrongAnswer = () => {
-  let randomInteger = Math.floor(Math.random() * 6);
-  if (randomInteger === 0) {
-    hello.value = true;
-    message.value =
-      "Kegagalan adalah awal dari keberhasilan, Yuk lanjut belajar kembali dengan lebih semangat!";
-  } else if (randomInteger === 1) {
-    hello.value = true;
-    message.value = "Jawabanmu salah. Coba perbaiki lagi nanti.";
-  } else if (randomInteger === 2) {
-    hello.value = true;
-    message.value =
-      "Jawabanmu Salah. Tapi jangan menyerah. Yuk Belajar lagi dengan lebih baik.";
-  } else {
-    hello.value = false;
-  }
-};
-
-const correctAnswer = () => {
-  let randomInteger = Math.floor(Math.random() * 6);
-  if (randomInteger === 0) {
-    hello.value = true;
-    message.value = "Kamu hebat. Semangat!";
-  } else if (randomInteger === 1) {
-    hello.value = true;
-    message.value = "Jawabanmu Benar. Keren sekali!";
-  } else if (randomInteger === 2) {
-    hello.value = true;
-    message.value = "Aku kasih kamu jempol. Karena jawabanmu hebat.";
-  } else {
-    hello.value = false;
-  }
-};
-
-const closeHello = () => {
-  hello.value = false;
-  setHello(false);
-};
-
-onUnmounted(() => {
-  clearInterval(interval);
 });
 </script>
 

@@ -47,6 +47,37 @@
           </Accordian>
         </li>
       </ol>
+      <div id="exam" class="pl-10">
+        <button
+          @click="exam"
+          type="button"
+          :class="
+            last_lesson < 95 || !authenticated
+              ? 'cursor-not-allowed pointer-events-none'
+              : ''
+          "
+          class="mb-5 rounded-lg shadow-sm flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3 capitalize"
+        >
+          <span class="text-start text-sm sm:text-base"
+            >Basic Level Exam
+            <span v-if="last_lesson > 29 && grade !== 0">
+              - Grade : {{ grade }}</span
+            ></span
+          >
+          <div class="flex items-center">
+            <BootstrapIcon
+              v-if="grade >= 60 && last_lesson > 95"
+              class="text-2xl text-green-700"
+              name="shield-check"
+            />
+            <BootstrapIcon
+              v-if="last_lesson < 95 || !authenticated"
+              class="text-2xl"
+              name="lock-fill"
+            />
+          </div>
+        </button>
+      </div>
       <div class="flex ml-2">
         <NuxtLink to="/dashboard/medium-level">
           <button
@@ -81,7 +112,14 @@ definePageMeta({
 import { initFlowbite } from "flowbite";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
+const {
+  authenticated,
+  user,
+  BASEAPIURL,
+  grade: gradeExamBefore,
+} = storeToRefs(useAuthStore());
+const { setExamQuestions, setGrade } = useAuthStore();
+const router = useRouter();
 
 // const { results } = await $fetch("/api/lessons/advanced-level");
 const results = ref();
@@ -142,12 +180,16 @@ const status = (id_lesson) => {
 };
 
 const last_bab = ref();
+const dataUser = ref();
+const grade = ref();
 
 watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
       const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + newId);
+
+      dataUser.value = data.value[0];
 
       const lesson = await $fetch(
         BASEAPIURL.value + "/api/lessons/" + data.value[0].last_lesson
@@ -167,6 +209,27 @@ watch(
           }
         });
       });
+
+      // grade.value = JSON.parse(dataUser.value.exam)[2];
+      // if (gradeExamBefore.value[2] > grade.value) {
+      //   await useFetch(
+      //     BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
+      //     {
+      //       method: "PUT",
+      //       body: {
+      //         exam:
+      //           "[" +
+      //           JSON.parse(dataUser.value.exam)[0] +
+      //           "," +
+      //           JSON.parse(dataUser.value.exam)[1] +
+      //           "," +
+      //           gradeExamBefore.value[2] +
+      //           "]",
+      //       },
+      //     }
+      //   );
+      //   grade.value = gradeExamBefore.value[2];
+      // }
     }
   },
   { immediate: true }
@@ -187,10 +250,33 @@ const scrollIntoSection = (section) => {
   }
 };
 
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+const randomLesson = shuffle([
+  ...results.value.filter((e) => e.type !== "text image"),
+]);
+
+const examQuestions = randomLesson.slice(0, 5);
+
+const exam = async () => {
+  setExamQuestions(examQuestions);
+  router.push("/dashboard/exam/advanced-level-question-1");
+};
+
 onMounted(() => {
   initFlowbite();
   setTimeout(() => {
-    scrollIntoSection(last_bab.value);
+    if (last_lesson.value !== 29) {
+      scrollIntoSection(last_bab.value);
+    } else {
+      scrollIntoSection("exam");
+    }
   }, 500);
 });
 </script>

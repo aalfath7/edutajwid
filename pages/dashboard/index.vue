@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="data" class="slit-in grid lg:grid-cols-3 gap-5">
+    <div v-if="dataLevel" class="slit-in grid lg:grid-cols-3 gap-5">
       <div v-if="title_last_lesson" class="lg:order-last lg:block">
         <div
           v-if="slug !== '/lesson-48/perbedaan-waqaf-saktah-dan-qathi-review'"
@@ -24,7 +24,7 @@
       </div>
       <div class="lg:col-span-2 lg:ml-3 -mt-5">
         <ol class="mt-5 items-start xl:flex">
-          <li v-for="item in data" class="relative mb-6 xl:mb-0">
+          <li v-for="item in dataLevel" class="relative mb-6 xl:mb-0">
             <div class="flex items-center">
               <div
                 :class="item.style"
@@ -110,7 +110,7 @@ import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
 const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 
-const data = [
+const dataLevel = [
   {
     title: "Alif - Basic Level",
     desc: "Mempelajari tentang definisi Al-Quran, Ilmu Tajwid, Huruf Hijaiyah, dan Makhorijul Huruf",
@@ -125,7 +125,7 @@ const data = [
     link: "/dashboard/medium-level",
     symbol: "ب",
     style: "bg-lime-200 border-lime-200 hover:bg-lime-100",
-    visible: true,
+    visible: false,
   },
   {
     title: "Ta ' - Advanced Level",
@@ -133,7 +133,7 @@ const data = [
     link: "/dashboard/advanced-level",
     symbol: "ت",
     style: "bg-orange-200 border-orange-200 hover:bg-orange-100",
-    visible: true,
+    visible: false,
   },
 ];
 
@@ -149,6 +149,15 @@ watch(
       const lesson = await $fetch(
         BASEAPIURL.value + "/api/lessons/" + data.value[0].last_lesson
       );
+
+      if (lesson[0].id_lesson > 29 && lesson[0].id_lesson < 75) {
+        dataLevel[1].visible = true;
+      }
+
+      if (lesson[0].id_lesson > 75) {
+        dataLevel[1].visible = true;
+        dataLevel[2].visible = true;
+      }
 
       title_last_lesson.value = lesson[0].subbab + " - " + lesson[0].bab;
       slug.value = "/lesson-" + lesson[0].lesson + "/" + lesson[0].slug;
