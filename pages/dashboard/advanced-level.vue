@@ -78,7 +78,7 @@
           </div>
         </button>
       </div>
-      <div class="flex ml-2">
+      <div class="flex ml-10">
         <NuxtLink to="/dashboard/medium-level">
           <button
             type="button"

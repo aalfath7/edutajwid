@@ -2,7 +2,7 @@
   <div class="lg:h-screen">
     <div v-if="lesson">
       <!-- confetti -->
-      <Confetti :actived="finishedExam" />
+      <Confetti :actived="finishedExam && finalGrade >= 60" />
 
       <!-- modal -->
       <div
@@ -10,8 +10,10 @@
         class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
       >
         <div
-          @click=""
-          class="absolute opacity-70 w-full h-full bg-gradient-to-b from-green-500 to-transparent"
+          :class="
+            finishedExam && finalGrade >= 60 ? 'from-green-500' : 'from-red-500'
+          "
+          class="absolute opacity-70 w-full h-full bg-gradient-to-b to-transparent"
         ></div>
         <div class="relative p-4 w-full max-w-md max-h-full">
           <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
@@ -27,8 +29,7 @@
               <div class="py-2">
                 <BootstrapIcon class="text-8xl text-yellow-300" name="award" />
                 <h2 class="mt-5 text-sm sm:text-base">
-                  Selamat Kamu telah menyelesaikan ujian
-                  {{ route.params.level }}
+                  {{ message }}
                 </h2>
                 <div class="border-t pt-2 mt-2">
                   <p class="text-sm sm:text-base">
@@ -558,8 +559,10 @@ watch(
 
 const finishedBab = ref(false);
 const nextLesson = ref("");
+const message = ref("Hebat sekali!");
 
 const next = async () => {
+  console.log(finalGrade.value);
   if (route.params.no == 5) {
     if (
       dataUser.value.last_lesson === "makhroj-alkhoisyum-review" ||
@@ -579,16 +582,24 @@ const next = async () => {
         nextLesson.value = "";
       }
 
-      await $fetch(
-        BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
-        {
-          method: "PUT",
-          body: {
-            last_lesson: slug,
-            xp: dataUser.value.xp,
-          },
-        }
-      );
+      console.log(finalGrade.value);
+
+      if (finalGrade.value >= 60) {
+        message.value = "Selamat kamu telah lulus ujian " + route.params.level;
+        await $fetch(
+          BASEAPIURL.value + "/api/users/update-lesson/" + id_user.value,
+          {
+            method: "PUT",
+            body: {
+              last_lesson: slug,
+              xp: dataUser.value.xp,
+            },
+          }
+        );
+      } else {
+        message.value =
+          "Maaf nilaimu belum mencukupi. Silahkan kerjakan kembali.";
+      }
     }
     finishedExam.value = true;
     // router.push("/dashboard/" + route.params.level);
@@ -653,23 +664,24 @@ const submit = async () => {
   if (route.params.no == 1) {
     if (route.params.level === "basic-level") {
       setGrade(JSON.parse(dataUser.value.exam)[0], 0);
+      gradeBasic = 0;
     }
     if (route.params.level === "medium-level") {
       setGrade(JSON.parse(dataUser.value.exam)[1], 1);
+      gradeMedium = 0;
     }
     if (route.params.level === "advanced-level") {
       setGrade(JSON.parse(dataUser.value.exam)[0], 2);
+      gradeAdvanced = 0;
     }
 
-    gradeBasic = 0;
-    gradeMedium = 0;
-    gradeAdvanced = 0;
     await useFetch(
       BASEAPIURL.value + "/api/users/update-exam/" + id_user.value,
       {
         method: "PUT",
         body: {
-          exam: "[" + 0 + "," + 0 + "," + 0 + "]",
+          exam:
+            "[" + gradeBasic + "," + gradeMedium + "," + gradeAdvanced + "]",
         },
       }
     );

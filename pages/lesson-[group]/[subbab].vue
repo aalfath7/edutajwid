@@ -72,12 +72,9 @@
                 >
                   Kembali
                 </NuxtLink>
-                <div
-                  v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
-                  class="w-full"
-                >
+                <div class="w-full" v-if="nextLesson[0]">
                   <NuxtLink
-                    v-if="nextLesson[0]"
+                    v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
                     :to="
                       '/lesson-' +
                       nextLesson[0].lesson +
