@@ -59,7 +59,7 @@
           class="mb-5 rounded-lg shadow-sm flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3 capitalize"
         >
           <span class="text-start text-sm sm:text-base"
-            >Basic Level Exam
+            >Advanced Level Exam
             <span v-if="last_lesson > 29 && grade !== 0">
               - Grade : {{ grade }}</span
             ></span
@@ -101,7 +101,7 @@
 
 <script setup>
 useHead({
-  title: "Hijai - Belajar Tajwid Dengan Mudah",
+  title: "EduTajwid - Belajar Tajwid Dengan Mudah",
 });
 
 definePageMeta({
