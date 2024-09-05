@@ -51,12 +51,12 @@
             </button>
           </div>
           <div v-if="file" class="p-4">
-            <iframe
-              :src="'/file/' + file"
+            <embed
+              :src="BASEAPIURL + '/uploads/' + file"
               width="100%"
               height="600px"
               style="border: none"
-            ></iframe>
+            />
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ import { useAuthStore } from "~/store/index";
 const { BASEAPIURL } = storeToRefs(useAuthStore());
 
 const { data: allData, refresh: refreshData } = await useFetch(
-  BASEAPIURL.value + "/api/users/request-change-role"
+  BASEAPIURL.value + "/api/request-change-role"
 );
 
 const acceptedNotif = ref(false);
