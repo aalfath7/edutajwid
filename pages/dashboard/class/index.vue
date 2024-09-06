@@ -488,7 +488,9 @@ const joinClass = async (id) => {
 
     if (allStudents) {
       await useFetch(
-        "/api/class/update-students/" + requestClass.value[0].class_code,
+        BASEAPIURL.value +
+          "/api/class/update-students/" +
+          requestClass.value[0].class_code,
         {
           method: "PUT",
           body: {

@@ -59,9 +59,9 @@
                   </p>
                   <p
                     v-if="lesson.id_lesson === 29 || lesson.id_lesson === 75"
-                    class=""
+                    class="text-sm sm:text-base"
                   >
-                    Silahkan Ikuti Tes naik level.
+                    Silahkan ikuti tes naik level.
                   </p>
                 </div>
               </div>
@@ -72,9 +72,11 @@
                 >
                   Kembali
                 </NuxtLink>
-                <div class="w-full" v-if="nextLesson[0]">
+                <div
+                  class="w-full"
+                  v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
+                >
                   <NuxtLink
-                    v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
                     :to="
                       '/lesson-' +
                       nextLesson[0].lesson +
