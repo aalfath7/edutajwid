@@ -66,6 +66,13 @@ const { data: allData, refresh: refreshData } = await useFetch(
 const successNotif = ref(false);
 
 const deleteUser = async (id) => {
+  const { data: classRemove } = await useFetch(
+    BASEAPIURL.value + "/api/class/remove/" + id,
+    {
+      method: "DELETE",
+    }
+  );
+
   const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + id, {
     method: "DELETE",
   });
