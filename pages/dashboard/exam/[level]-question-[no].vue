@@ -20,8 +20,17 @@
             <div
               class="text-center p-4 md:p-5 border-b rounded-t dark:border-gray-600"
             >
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+              <h3
+                v-if="finalGrade >= 60"
+                class="text-xl font-semibold text-gray-900 dark:text-white"
+              >
                 Congratulation!
+              </h3>
+              <h3
+                v-else
+                class="text-xl font-semibold text-gray-900 dark:text-white"
+              >
+                Oops
               </h3>
             </div>
 
@@ -559,10 +568,9 @@ watch(
 
 const finishedBab = ref(false);
 const nextLesson = ref("");
-const message = ref("Hebat sekali!");
+const message = ref("");
 
 const next = async () => {
-  console.log(finalGrade.value);
   if (route.params.no == 5) {
     if (
       dataUser.value.last_lesson === "makhroj-alkhoisyum-review" ||
@@ -581,8 +589,6 @@ const next = async () => {
         slug = "pengenalan-waqaf-dan-ibtida";
         nextLesson.value = "";
       }
-
-      console.log(finalGrade.value);
 
       if (finalGrade.value >= 60) {
         message.value = "Selamat kamu telah lulus ujian " + route.params.level;

@@ -1,8 +1,8 @@
 <template>
-  <div class="sm:pl-4 pt-2">
+  <div class="slit-in sm:pl-4 pt-2">
     <div
       v-if="!isLoading"
-      class="slit-in w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:px-8 dark:bg-gray-800 dark:border-gray-700"
+      class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:px-8 dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="flex items-center justify-between mb-4">
         <div
@@ -77,6 +77,9 @@
     <div v-else>
       <Loading :is-loading="true" />
     </div>
+    <span class="block mt-6 italic text-sm text-gray-500"
+      >The leaderboard will be reset after {{ timeRemaining }}</span
+    >
   </div>
 </template>
 
@@ -96,15 +99,6 @@ const { BASEAPIURL } = storeToRefs(useAuthStore());
 const isLoading = ref(true);
 const users = ref();
 
-// try {
-//   const { results } = await $fetch("/api/users/leaderboard");
-//   users.value = results;
-// } catch (error) {
-//   console.log(error);
-// } finally {
-//   isLoading.value = false;
-// }
-
 try {
   const { data, pending } = await useFetch(
     BASEAPIURL.value + "/api/leaderboard"
@@ -117,18 +111,30 @@ try {
   console.log(error);
 }
 
-const leaderboard = ref();
+const timeRemaining = ref("");
 
-// if (users.value) {
-//   leaderboard.value = await Promise.all(
-//     users.value.map(async (user) => {
-//       const lesson = await $fetch(
-//         BASEAPIURL.value + "/lessons/" + user.last_lesson
-//       );
-//       if (lesson[0]) {
-//         return { ...user, last_lesson: lesson[0].id_lesson };
-//       }
-//     })
-//   );
-// }
+const calculateTimeRemaining = () => {
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const nextMonth = new Date(now.getFullYear(), currentMonth + 1, 1);
+  const difference = nextMonth - now;
+
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+  timeRemaining.value = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+};
+
+onMounted(() => {
+  calculateTimeRemaining();
+  const interval = setInterval(calculateTimeRemaining, 1000);
+
+  onBeforeUnmount(() => {
+    clearInterval(interval);
+  });
+});
 </script>

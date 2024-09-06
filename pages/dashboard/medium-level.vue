@@ -228,25 +228,25 @@ watch(
       });
 
       grade.value = JSON.parse(dataUser.value.exam)[1];
-      // if (gradeExamBefore.value[1] > grade.value) {
-      //   await useFetch(
-      //     BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
-      //     {
-      //       method: "PUT",
-      //       body: {
-      //         exam:
-      //           "[" +
-      //           JSON.parse(dataUser.value.exam)[0] +
-      //           "," +
-      //           gradeExamBefore.value[1] +
-      //           "," +
-      //           JSON.parse(dataUser.value.exam)[2] +
-      //           "]",
-      //       },
-      //     }
-      //   );
-      //   grade.value = gradeExamBefore.value[1];
-      // }
+      if (gradeExamBefore.value[1] > grade.value) {
+        await useFetch(
+          BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
+          {
+            method: "PUT",
+            body: {
+              exam:
+                "[" +
+                JSON.parse(dataUser.value.exam)[0] +
+                "," +
+                gradeExamBefore.value[1] +
+                "," +
+                JSON.parse(dataUser.value.exam)[2] +
+                "]",
+            },
+          }
+        );
+        grade.value = gradeExamBefore.value[1];
+      }
     }
   },
   { immediate: true }

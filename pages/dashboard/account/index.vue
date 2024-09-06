@@ -173,7 +173,11 @@
           <p class="capitalize">{{ dataUser.role }}</p>
         </div>
         <button
-          v-if="!changeRole && dataUser.role !== 'teacher'"
+          v-if="
+            !changeRole &&
+            dataUser.role !== 'teacher' &&
+            dataUser.promote !== 'requested'
+          "
           @click="toggleSettings"
           type="button"
           class="absolute top-0 right-0 w-8 h-8 bg-white hover:text-gray-500 flex items-center justify-center"

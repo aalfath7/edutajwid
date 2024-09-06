@@ -8,7 +8,7 @@
     />
     <Notif
       :is-active="failedNotif"
-      text="login gagal"
+      text="Email atau password salah"
       type="failed"
       link="/users/login"
     />

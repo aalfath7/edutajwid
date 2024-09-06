@@ -5,7 +5,7 @@
       <div
         class="overflow-x-auto relative shadow-md border border-gray-200 rounded-lg"
       >
-        <div class="sticky left-0 z-50 flex justify-end w-full px-6 py-3">
+        <div class="sticky left-0 z-40 flex justify-end w-full px-6 py-3">
           <p class="text-xs uppercase font-bold">Lesson</p>
         </div>
         <table

@@ -16,7 +16,7 @@
             <h1
               class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
-              <span v-if="slug === 'definisi-alquran'">Mulai</span>
+              <span v-if="slug === '/lesson-1/definisi-alquran'">Mulai</span>
               <span v-else>Lanjut</span> Belajar
             </h1>
             <p class="capitalize font-normal text-gray-700 dark:text-gray-400">
@@ -217,25 +217,25 @@ watch(
       });
 
       grade.value = JSON.parse(dataUser.value.exam)[0];
-      // if (gradeExamBefore.value[0] > grade.value) {
-      //   await useFetch(
-      //     BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
-      //     {
-      //       method: "PUT",
-      //       body: {
-      //         exam:
-      //           "[" +
-      //           gradeExamBefore.value[0] +
-      //           "," +
-      //           JSON.parse(dataUser.value.exam)[1] +
-      //           "," +
-      //           JSON.parse(dataUser.value.exam)[2] +
-      //           "]",
-      //       },
-      //     }
-      //   );
-      //   grade.value = gradeExamBefore.value[0];
-      // }
+      if (gradeExamBefore.value[0] > grade.value) {
+        await useFetch(
+          BASEAPIURL.value + "/api/users/update-exam/" + dataUser.value.id_user,
+          {
+            method: "PUT",
+            body: {
+              exam:
+                "[" +
+                gradeExamBefore.value[0] +
+                "," +
+                JSON.parse(dataUser.value.exam)[1] +
+                "," +
+                JSON.parse(dataUser.value.exam)[2] +
+                "]",
+            },
+          }
+        );
+        grade.value = gradeExamBefore.value[0];
+      }
     }
   },
   { immediate: true }

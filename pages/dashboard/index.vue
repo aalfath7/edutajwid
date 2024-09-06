@@ -13,12 +13,34 @@
             <h1
               class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
-              <span v-if="slug === 'definisi-alquran'">Mulai</span>
+              <span v-if="slug === '/lesson-1/definisi-alquran'">Mulai</span>
               <span v-else>Lanjut</span> Belajar
             </h1>
             <p class="capitalize font-normal text-gray-700 dark:text-gray-400">
               {{ title_last_lesson }}
             </p>
+          </NuxtLink>
+        </div>
+        <div
+          v-if="
+            slug === '/lesson-48/perbedaan-waqaf-saktah-dan-qathi-review' &&
+            finalExam >= 60
+          "
+          class="sticky top-20"
+        >
+          <NuxtLink
+            to="/dashboard/certificate"
+            class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 relative flex flex-col items-center justify-center"
+          >
+            <p class="text-2xl font-bold mb-5">Congratulation!!</p>
+            <p class="mb-2 text-center">
+              Kamu telah menyelesaikan semua pembelajaran. <br />Ini
+              Sertifikatmu
+            </p>
+            <BootstrapIcon
+              name="patch-check-fill"
+              class="text-6xl text-orange-400"
+            />
           </NuxtLink>
         </div>
       </div>
@@ -139,12 +161,17 @@ const dataLevel = [
 
 const title_last_lesson = ref();
 const slug = ref();
+const dataUser = ref();
+const finalExam = ref();
 
 watch(
   () => user.value.id_user,
   async (newId) => {
     if (newId) {
       const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + newId);
+
+      dataUser.value = data.value[0];
+      finalExam.value = JSON.parse(dataUser.value.exam)[2];
 
       const lesson = await $fetch(
         BASEAPIURL.value + "/api/lessons/" + data.value[0].last_lesson

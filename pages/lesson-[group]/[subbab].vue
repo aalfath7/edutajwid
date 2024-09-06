@@ -63,6 +63,12 @@
                   >
                     Silahkan ikuti tes naik level.
                   </p>
+                  <p
+                    v-if="lesson.id_lesson === 95"
+                    class="text-sm sm:text-base"
+                  >
+                    Silahkan ikuti tes advanced level
+                  </p>
                 </div>
               </div>
               <div class="mt-5 flex">
@@ -74,7 +80,11 @@
                 </NuxtLink>
                 <div
                   class="w-full"
-                  v-if="lesson.id_lesson !== 29 && lesson.id_lesson !== 75"
+                  v-if="
+                    lesson.id_lesson !== 29 &&
+                    lesson.id_lesson !== 75 &&
+                    lesson.id_lesson !== 95
+                  "
                 >
                   <NuxtLink
                     :to="
