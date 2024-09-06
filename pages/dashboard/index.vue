@@ -32,10 +32,10 @@
             to="/dashboard/certificate"
             class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 relative flex flex-col items-center justify-center"
           >
-            <p class="text-2xl font-bold mb-5">Congratulation!!</p>
+            <p class="text-2xl font-bold mb-2">Selamat!!</p>
             <p class="mb-2 text-center">
               Kamu telah menyelesaikan semua pembelajaran. <br />Ini
-              Sertifikatmu
+              sertifikatmu
             </p>
             <BootstrapIcon
               name="patch-check-fill"

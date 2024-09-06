@@ -9,7 +9,7 @@
           <img
             src="/src/logo-edutajwid.png"
             alt=""
-            class="h-2 md:h-10 mx-auto"
+            class="h-5 md:h-10 mx-auto"
           />
           <h1 class="text-xl md:text-5xl font-bold mb-1 md:mb-4">Sertifikat</h1>
           <p class="text-xs md:text-base mb-1 md:mb-4">Diberikan kepada :</p>
@@ -18,10 +18,12 @@
           >
             {{ userName }}
           </h2>
-          <p class="text-xs md:text-base mb-1 sm:mb-2">
-            Telah berhasil menyelesaikan pembelajaran Tajwid Al-Quran<br />
-            dengan nilai akhir : {{ average }}, predikat : {{ predicate }}.
-          </p>
+          <div class="flex justify-center">
+            <p class="text-xs md:text-base mb-1 sm:mb-2 max-w-md">
+              Telah berhasil menyelesaikan pembelajaran Tajwid Alquran dengan
+              nilai akhir : {{ average }}, predikat : {{ predicate }}.
+            </p>
+          </div>
           <div class="flex justify-center">
             <table>
               <tr>
