@@ -306,13 +306,13 @@
         <h1 class="p-4 text-lg border shadow rounded-lg my-2">
           {{ dataClass[0].name }} - {{ dataClass[0].school_name }} <br />
         </h1>
-        <div v-if="user.role === 'teacher'">
+        <div>
           <div v-if="allStudents" class="my-10 text-lg border-t">
             <div
               class="my-5 flex flex-col sm:flex-row justify-between sm:items-center"
             >
               <p class="flex items-center mb-2">Pelajar</p>
-              <div class="flex justify-between">
+              <div v-if="user.role === 'teacher'" class="flex justify-between">
                 <NuxtLink
                   :to="
                     '/dashboard/class/students-progress-' + route.params.code
@@ -336,6 +336,7 @@
             >
               <p>{{ student.user_name }}</p>
               <button
+                v-if="user.role === 'teacher'"
                 @click="toggleRemoveStudentModal(student.id_joinclass)"
                 type="button"
                 class=""
@@ -363,26 +364,31 @@
       <div class="block">
         <div class="sticky top-20 sm:pl-2 sm:pl-5 lg:pl-0">
           <div
-            class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow"
+            class="block lg:max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow text-center"
           >
-            <h5
-              class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
-            >
-              Kode Kelas
-            </h5>
-            <p
-              class="font-normal border rounded-lg py-3 px-2 text-gray-700 dark:text-gray-400 flex justify-between"
-            >
-              {{ dataClass[0].class_code }}
-              <button @click="selectText" type="button" class="">
-                <BootstrapIcon class="text-xl" name="copy" />
-              </button>
-            </p>
-            <div
-              v-show="copySuccess"
-              class="w-full bg-green-100 border border-green-300 rounded-lg my-2 p-1 text-sm"
-            >
-              <span>berhasil salin</span>
+            <h2 class="mb-2 font-bold">Data Kelas</h2>
+            <div class="mb-2 flex justify-center">
+              <img
+                :src="BASEAPIURL + '/uploads/' + dataClass[0].image"
+                alt="teacher"
+                class="w-20 h-20 rounded-full border border-gray-400 object-cover"
+              />
+            </div>
+            <p class="mb-2 capitalize">Guru : {{ dataClass[0].teacher }}</p>
+            <div class="mb-2 tracking-tight text-gray-900">
+              Kode Kelas :
+              <span class="">
+                {{ dataClass[0].class_code }}
+                <button @click="selectText" type="button" class="">
+                  <BootstrapIcon class="text-sm" name="copy" />
+                </button>
+              </span>
+              <div
+                v-show="copySuccess"
+                class="w-full bg-green-100 border border-green-300 rounded-lg my-2 p-1 text-sm"
+              >
+                <span>berhasil salin</span>
+              </div>
             </div>
           </div>
         </div>

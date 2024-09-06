@@ -279,6 +279,11 @@
                   <p class="text-gray-500 text-sm">
                     {{ item.number_of_students }} siswa
                   </p>
+                  <img
+                    class="w-8 h-8 rounded-full border border-gray-400 object-cover"
+                    :src="BASEAPIURL + '/uploads/' + item.image"
+                    alt="Neil image"
+                  />
                 </div>
               </div>
             </NuxtLink>
@@ -320,6 +325,11 @@
                     <p class="text-gray-500 text-sm">
                       {{ item.number_of_students }} siswa
                     </p>
+                    <img
+                      class="w-8 h-8 rounded-full border border-gray-400 object-cover"
+                      :src="BASEAPIURL + '/uploads/' + item.image"
+                      alt="Neil image"
+                    />
                   </div>
                 </div>
               </NuxtLink>
@@ -372,12 +382,9 @@ watch(
       form.value.id_user = newId;
 
       // teacher
-      const { data } = await useFetch(BASEAPIURL.value + "/api/class/teacher", {
-        method: "POST",
-        body: {
-          id_user: newId,
-        },
-      });
+      const { data } = await useFetch(
+        BASEAPIURL.value + "/api/class/teacher/" + newId
+      );
       allClassTeacher.value = data.value;
       if (allClassTeacher.value) {
         isLoading.value = false;
@@ -427,12 +434,9 @@ const createClass = async () => {
 
     modalIsOpen.value = false;
 
-    const { data } = await useFetch(BASEAPIURL.value + "/api/class/teacher", {
-      method: "POST",
-      body: {
-        id_user: form.value.id_user,
-      },
-    });
+    const { data } = await useFetch(
+      BASEAPIURL.value + "/api/class/teacher/" + form.value.id_user
+    );
     allClassTeacher.value = data.value;
 
     setTimeout(() => {
