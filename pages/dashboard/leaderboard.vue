@@ -117,26 +117,26 @@ const calculateTimeRemaining = () => {
   const now = new Date();
   const currentDay = now.getDay();
 
-  const daysUntilMonday = (1 - currentDay + 7) % 7;
+  let daysUntilMonday = (1 - currentDay + 7) % 7;
   if (daysUntilMonday === 0) {
     daysUntilMonday = 7;
   }
 
-  const nextMonday = new Date(
+  let nextMonday = new Date(
     now.getFullYear(),
     now.getMonth(),
     now.getDate() + daysUntilMonday
   );
   nextMonday.setHours(0, 0, 0, 0);
 
-  const difference = nextMonday - now;
+  let difference = nextMonday - now;
 
-  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
+  let days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  let hours = Math.floor(
     (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
-  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
   timeRemaining.value = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
 };
