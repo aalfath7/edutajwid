@@ -1,5 +1,5 @@
 <template>
-  <div v-if="results" class="grid lg:grid-cols-3 gap-5">
+  <div v-if="!isLoading" class="grid lg:grid-cols-3 gap-5">
     <div v-if="title_last_lesson" class="lg:order-last lg:block">
       <div
         v-if="slug !== '/lesson-48/perbedaan-waqaf-saktah-dan-qathi-review'"
@@ -123,10 +123,15 @@ const router = useRouter();
 
 // const { results } = await $fetch("/api/lessons/advanced-level");
 const results = ref();
+const isLoading = ref(true);
 try {
-  results.value = await $fetch(
+  const { data } = await useFetch(
     BASEAPIURL.value + "/api/lessons/advanced-level"
   );
+  results.value = data.value;
+  if (data.value) {
+    isLoading.value = false;
+  }
 } catch (error) {
   // console.log(error);
 }

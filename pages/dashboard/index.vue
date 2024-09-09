@@ -170,7 +170,9 @@ watch(
     if (newId) {
       const { data } = await useFetch(BASEAPIURL.value + "/api/users/" + newId);
 
-      dataUser.value = data.value[0];
+      if (data.value) {
+        dataUser.value = data.value[0];
+      }
       finalExam.value = JSON.parse(dataUser.value.exam)[2];
 
       const lesson = await $fetch(
