@@ -76,15 +76,6 @@ definePageMeta({
   layout: "home",
   middleware: "auth",
 });
-
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "~/store/index";
-const { logUserOut } = useAuthStore();
-const { authenticated } = storeToRefs(useAuthStore());
-
-const logout = () => {
-  logUserOut();
-};
 </script>
 
 <style scoped>
@@ -99,24 +90,6 @@ const logout = () => {
     scale(1);
   filter: blur(0);
   opacity: 1;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
-.neu {
-  border-radius: 25px;
-  background: linear-gradient(145deg, #e6e6e6, #ffffff);
-  box-shadow: 7px 7px 14px #d1d1d1, -7px -7px 14px #ffffff;
 }
 
 .area {

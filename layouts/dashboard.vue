@@ -259,7 +259,6 @@ watch(
 );
 
 onMounted(() => {
-  // window size
   if (process.client) {
     windowWidth.value = window.innerWidth;
     window.addEventListener("resize", handleResize);

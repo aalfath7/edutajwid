@@ -7,7 +7,6 @@ interface DataUser {
   password: string;
 }
 
-// Helper function untuk encode ke Base64
 function base64Encode(input: any) {
   return btoa(JSON.stringify(input))
     .replace(/=/g, "")
@@ -15,7 +14,6 @@ function base64Encode(input: any) {
     .replace(/\//g, "_");
 }
 
-// Helper function untuk decode dari Base64
 function base64Decode(input: any) {
   input = input.replace(/-/g, "+").replace(/_/g, "/");
   const pad = input.length % 4;
@@ -25,7 +23,6 @@ function base64Decode(input: any) {
   return JSON.parse(atob(input));
 }
 
-// Helper function untuk generate HMAC SHA-256
 async function generateHMAC(message: any, secretKey: any) {
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -162,13 +159,6 @@ export const useAuthStore = defineStore("auth", {
               password: password,
             },
           });
-          // const { results } = await $fetch("/api/login", {
-          //   method: "POST",
-          //   body: {
-          //     email: email,
-          //     password: password,
-          //   },
-          // });
 
           if (results) {
             const payload = {

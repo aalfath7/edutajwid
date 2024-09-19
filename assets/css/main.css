@@ -26,26 +26,21 @@
   text-shadow: -2px 2px 6px rgba(0, 0, 0, 0.6);
 }
 
-/* Gaya scrollbar global */
 ::-webkit-scrollbar {
-  width: 10px; /* Lebar scrollbar */
+  width: 10px;
   height: 10px;
 }
 
-/* Track scrollbar - bagian luar */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Warna latar belakang track */
-  border-radius: 10px; /* Sudut melengkung */
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
-/* Handle scrollbar - bagian yang dapat digeser */
 ::-webkit-scrollbar-thumb {
-  background: #cdcdcd; /* Warna handle scrollbar */
-  border-radius: 10px; /* Sudut melengkung */
+  background: #cdcdcd;
 }
 
-/* Handle scrollbar saat dihover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #00690e; /* Warna handle scrollbar saat dihover */
+  background: #00690e;
   cursor: grabbing;
 }

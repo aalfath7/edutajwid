@@ -17,15 +17,6 @@
       v-if="!loading"
       class="px-2 flex flex-col justify-center items-center h-screen lg:h-screen bg-cover bg-orange-300 bg-gradient-to-r from-orange-300 to-green-300"
     >
-      <!-- <div
-        class="bg-gradient-to-r from-orange-300 to-green-300 opacity-80 w-full h-full absolute z-10"
-      ></div>
-      <img
-        src="/src/icon.png"
-        alt=""
-        class="w-96 h-96 opacity-90 fixed -right-32 -bottom-20 -rotate-12 saturate-100"
-      /> -->
-
       <div
         class="glass z-50 flex flex-col justify-center items-center bg-white px-5 rounded-lg shadow-lg w-full sm:max-w-md py-5"
       >
@@ -129,7 +120,7 @@ const failedNotif = ref(false);
 const loading = ref(false);
 
 const login = async () => {
-  const response = await authenticatedUser(user.value);
+  await authenticatedUser(user.value);
 
   if (authenticated.value === true) {
     successNotif.value = true;

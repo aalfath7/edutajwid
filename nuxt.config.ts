@@ -22,7 +22,7 @@ export default defineNuxtConfig({
         {
           property: "og:image",
           content: "https://edutajwid.com/src/logo-edutajwid.png",
-        }, // Ganti dengan URL gambar thumbnail
+        },
         { property: "og:url", content: "https://edutajwid.com" },
       ],
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
@@ -37,13 +37,12 @@ export default defineNuxtConfig({
   ],
   googleFonts: {
     families: {
-      // "Signika+Negative": [400, 700],
+      "Signika+Negative": true,
     },
     display: "swap",
   },
   bootstrapIcons: {
-    renderType: "inline", // or 'inline' (which is the default)
+    renderType: "inline",
   },
   css: ["~/assets/css/main.css"],
-  plugins: ["~/plugins/init-store.ts"],
 });

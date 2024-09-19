@@ -25,10 +25,8 @@
       </div>
     </div>
     <div v-if="data">
-      <!-- confetti -->
       <Confetti :actived="finishedBab" />
 
-      <!-- modal -->
       <div
         :class="finishedBab ? 'zoom' : 'hidden'"
         class="fixed top-0 left-0 overflow-y-auto overflow-x-hidden z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
@@ -104,7 +102,6 @@
         </div>
       </div>
 
-      <!-- nav -->
       <div
         class="bg-white w-full fixed grid grid-cols-3 p-4 md:px-20 border-b-2 border-gray-300 z-50"
       >
@@ -179,30 +176,6 @@
               />
             </button>
           </div>
-        </div>
-      </div>
-
-      <!-- video -->
-      <div
-        v-else-if="lesson.type === 'video'"
-        class="p-5 lg:p-20 h-screen flex pt-56 items-start lg:items-center justify-center"
-      >
-        <video class="w-full lg:w-2/3 rounded-lg" controls>
-          <source src="" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        <div
-          class="fixed w-full bottom-0 py-5 md:px-20 flex items-center justify-end px-4 border-y-2 border-gray-300"
-        >
-          <button
-            @click="next"
-            type="button"
-            class="flex items-center py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
-            Lanjutkan
-            <BootstrapIcon class="ml-4 text-2xl" name="arrow-right-circle" />
-          </button>
         </div>
       </div>
 
@@ -625,11 +598,6 @@ const { data } = await useFetch(
   BASEAPIURL.value + "/api/lessons/" + route.params.subbab
 );
 const lesson = ref(data.value[0]);
-
-// const { data } = await useFetch("/api/lessons/" + route.params.subbab);
-
-// const lesson = ref();
-// lesson.value = data.value.results[0];
 
 const id_user = ref();
 const dataUser = ref();

@@ -12,7 +12,6 @@
           <h5>Leaderboard</h5>
         </div>
         <div class="text-sm lg:text-lg font-medium text-black">
-          <!-- <span class="mr-5 sm:mr-20"> Lesson </span> -->
           <span> XP </span>
         </div>
       </div>
@@ -59,11 +58,6 @@
                   {{ item.name }}
                 </p>
               </div>
-              <!-- <div
-                class="mr-6 sm:mr-16 md:mr-20 inline-flex items-center text-sm lg:text-base text-gray-900 dark:text-white"
-              >
-                {{ item.last_lesson }}
-              </div> -->
               <div
                 class="w-10 text-center inline-flex justify-end items-center text-sm lg:text-base text-gray-900 dark:text-white"
               >
@@ -100,9 +94,7 @@ const isLoading = ref(true);
 const users = ref();
 
 try {
-  const { data, pending } = await useFetch(
-    BASEAPIURL.value + "/api/leaderboard"
-  );
+  const { data } = await useFetch(BASEAPIURL.value + "/api/leaderboard");
   users.value = data.value;
   if (data.value) {
     isLoading.value = false;

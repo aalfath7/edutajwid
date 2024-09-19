@@ -130,7 +130,7 @@ onMounted(() => {
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/index";
-const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
+const { user, BASEAPIURL } = storeToRefs(useAuthStore());
 
 const dataLevel = [
   {
