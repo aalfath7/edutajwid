@@ -60,7 +60,7 @@
                     </p>
                     <img
                       class="w-8 h-8 rounded-full object-cover border border-gray-800"
-                      :src="'/src/users/' + user.image"
+                      :src="BASEAPIURL + '/uploads/' + user.image"
                       alt="user photo"
                     />
                   </button>
@@ -171,7 +171,7 @@ import { useAuthStore } from "~/store";
 const route = useRoute();
 
 const { logUserOut, loadTokenFromLocalStorage } = useAuthStore();
-const { authenticated, user } = storeToRefs(useAuthStore());
+const { authenticated, user, BASEAPIURL } = storeToRefs(useAuthStore());
 const notif = ref(false);
 const accountDropdown = ref(false);
 

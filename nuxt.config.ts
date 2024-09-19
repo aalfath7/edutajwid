@@ -38,6 +38,7 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       "Signika+Negative": true,
+      Amiri: true,
     },
     display: "swap",
   },
