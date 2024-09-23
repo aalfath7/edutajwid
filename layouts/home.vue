@@ -9,7 +9,7 @@
         <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img
             src="/src/logo-edutajwid.png"
-            class="h-10"
+            class="h-10 w-26"
             alt="EduTajwid Logo"
           />
         </a>
