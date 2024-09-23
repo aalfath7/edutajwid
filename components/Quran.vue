@@ -1,10 +1,7 @@
 <template>
   <div class="book-container">
     <div class="book">
-      <img
-        alt=""
-        src="https://rukminim2.flixcart.com/image/850/1000/xif0q/regionalbooks/f/r/4/al-quran-al-karim-saudi-in-arabic-language-indian-good-printed-original-imagmfmvv25x96yh.jpeg?q=90&crop=false"
-      />
+      <img alt="" src="/src/quran.png" />
     </div>
   </div>
 </template>

@@ -16,7 +16,7 @@
             <button class="btn-3d">
               <NuxtLink
                 to="/dashboard"
-                class="inline-flex justify-center items-center py-2.5 px-5 text-sm sm:text-base font-medium text-center text-white rounded-lg bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
+                class="inline-flex justify-center items-center py-2.5 px-5 text-sm sm:text-base font-medium text-center text-white rounded-lg bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
               >
                 Mulai Belajar
                 <svg
