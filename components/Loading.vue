@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed top-0 left-0 right-0 bottom-0 z-50 w-full h-screen bg-white flex justify-center items-center flex-col"
+    class="fixed top-0 left-0 right-0 bottom-0 z-50 w-full h-screen flex justify-center items-center flex-col"
   >
     <div class="loader"></div>
     <img src="/src/logo-edutajwid.png" alt="" class="w-20" />

@@ -122,7 +122,10 @@ const loading = ref(false);
 const login = async () => {
   await authenticatedUser(user.value);
 
+  loading.value = true;
+
   if (authenticated.value === true) {
+    loading.value = false;
     successNotif.value = true;
 
     setTimeout(() => {
@@ -130,6 +133,7 @@ const login = async () => {
       router.push("/");
     }, 1000);
   } else {
+    loading.value = false;
     failedNotif.value = true;
     user.value.name = "";
     user.value.password = "";

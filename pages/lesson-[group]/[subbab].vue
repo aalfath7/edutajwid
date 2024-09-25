@@ -158,6 +158,15 @@
               v-html="lesson.content"
               class="text-sm sm:text-lg leading-relaxed text-justify"
             ></div>
+            <div v-if="lesson.question !== ''" class="flex justify-center mb-5">
+              <button
+                @click="playSound(lesson.question)"
+                type="button"
+                class="mt-5 border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+              >
+                <BootstrapIcon name="volume-up-fill" class="text-3xl" />
+              </button>
+            </div>
           </div>
 
           <div
@@ -194,7 +203,7 @@
             </div>
             <div
               v-else-if="lesson.type === 'sound question'"
-              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
+              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-2 sm:py-5 sm:mt-10 items-center"
             >
               <BootstrapIcon name="clouds" class="text-2xl mr-2" />
               <span class="text-sm">Dengar Bacaan</span>
@@ -339,7 +348,7 @@
               <div class="flex items-center">
                 <img :src="lesson.image" class="w-24 mr-4" alt="" />
                 <div class="p-5 border rounded-lg">
-                  <p class="text-sm sm:text-xl">Bunyi Huruf apa berikut ini?</p>
+                  <p class="text-sm sm:text-xl">Bunyi bacaan apa berikut?</p>
                 </div>
               </div>
               <div class="flex justify-center">
@@ -349,7 +358,7 @@
                   }"
                   @click="playSound(lesson.question)"
                   type="button"
-                  class="border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+                  class="mt-5 border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
                 >
                   <BootstrapIcon name="volume-up-fill" class="text-3xl" />
                 </button>
@@ -568,7 +577,6 @@ useHead({
   title: "EduTajwid - belajar tajwid dengan seru dan mudah",
 });
 definePageMeta({
-  layout: "lesson",
   middleware: "auth",
 });
 
@@ -804,7 +812,7 @@ const submit = async () => {
   }
 };
 const playSound = (sound) => {
-  new Audio("/" + sound).play();
+  new Audio("/sound/" + sound).play();
 };
 
 // letter question
