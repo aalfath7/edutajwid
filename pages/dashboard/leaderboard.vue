@@ -15,7 +15,7 @@
           <span> XP </span>
         </div>
       </div>
-      <div class="flow-root">
+      <div v-if="users.length > 0" class="flow-root">
         <ul
           v-for="(item, i) in users"
           :key="i"
@@ -67,11 +67,16 @@
           </li>
         </ul>
       </div>
+      <div v-else>
+        <p class="text-gray-700 italic text-sm">Belum ada leaderboard</p>
+      </div>
     </div>
     <div v-else>
       <Loading :is-loading="true" />
     </div>
-    <span class="block mt-6 italic text-sm text-gray-500"
+    <span
+      v-if="users.length > 0"
+      class="block mt-6 italic text-sm text-gray-500"
       >The leaderboard will be reset after {{ timeRemaining }}</span
     >
   </div>

@@ -158,7 +158,7 @@
               v-html="lesson.content"
               class="text-sm sm:text-lg leading-relaxed text-justify"
             ></div>
-            <div v-if="lesson.question !== ''" class="flex justify-center mb-5">
+            <div v-if="lesson.question" class="flex justify-center mb-5">
               <button
                 @click="playSound(lesson.question)"
                 type="button"
