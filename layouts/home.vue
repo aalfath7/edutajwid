@@ -8,8 +8,8 @@
       >
         <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img
-            src="/src/logo-edutajwid.webp"
-            class="h-10 w-32"
+            src="/src/logo-edutajwid.png"
+            class="h-10"
             alt="EduTajwid Logo"
           />
         </a>
