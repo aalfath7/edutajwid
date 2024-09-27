@@ -3,9 +3,9 @@
     <section>
       <div class="py-8 px-4 mx-auto max-w-screen-xl">
         <div
-          class="flex flex-col sm:flex-row justify-between slit-in bg-gray-50 bg-opacity-80 dark:bg-gray-800 border border-gray-200 rounded-lg p-8 md:p-12 mb-8"
+          class="flex flex-col sm:flex-row justify-between slit-in bg-gray-50 bg-opacity-80 border border-gray-200 rounded-lg p-8 md:p-12 mb-8"
         >
-          <div class="mb-10 sm:mb-0">
+          <div class="mb-10 sm:py-10 sm:mb-0">
             <h1 class="text-xl sm:text-3xl font-bold text-black mb-6">
               Belajar Ilmu Tajwid Al-Quran
             </h1>
@@ -37,7 +37,6 @@
               </NuxtLink>
             </button>
           </div>
-          <Quran />
         </div>
 
         <div
@@ -60,7 +59,7 @@
         All Rights Reserved.</span
       >
     </div>
-    <div class="area">
+    <div class="area h-screen">
       <ul class="circles">
         <li v-for="i in 10"></li>
       </ul>
@@ -71,6 +70,9 @@
 <script setup lang="ts">
 useHead({
   title: "Aplikasi Belajar Tajwid Al-Quran - EduTajwid",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   layout: "home",
