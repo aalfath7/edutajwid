@@ -50,6 +50,9 @@
 <script setup>
 useHead({
   title: "EduTajwid - Admin",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   layout: "admin",

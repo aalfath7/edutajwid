@@ -109,6 +109,9 @@
 <script setup>
 useHead({
   title: "eduTajwid - Belajar Tajwid Dengan Mudah",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   layout: "dashboard",

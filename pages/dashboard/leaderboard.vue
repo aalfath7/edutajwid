@@ -85,6 +85,9 @@
 <script setup>
 useHead({
   title: "EduTajwid - Belajar Tajwid Dengan Mudah",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   layout: "dashboard",

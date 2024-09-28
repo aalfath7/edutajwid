@@ -575,6 +575,9 @@ import { initFlowbite } from "flowbite";
 
 useHead({
   title: "EduTajwid - belajar tajwid dengan seru dan mudah",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   middleware: "auth",

@@ -137,6 +137,9 @@
 <script setup>
 useHead({
   title: "Register - EduTajwid",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 
 definePageMeta({

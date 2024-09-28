@@ -349,6 +349,9 @@
 import { initFlowbite } from "flowbite";
 useHead({
   title: "Edutajwid - Belajar Tajwid Dengan Mudah",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 definePageMeta({
   layout: "dashboard",

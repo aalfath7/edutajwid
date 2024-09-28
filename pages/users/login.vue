@@ -98,6 +98,9 @@
 <script setup>
 useHead({
   title: "login - EduTajwid",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 
 definePageMeta({

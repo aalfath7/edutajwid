@@ -11,6 +11,9 @@
 <script setup>
 useHead({
   title: "Verification Email - EduTajwid",
+  htmlAttrs: {
+    lang: "id",
+  },
 });
 
 definePageMeta({
