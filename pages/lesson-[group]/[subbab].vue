@@ -1,6 +1,6 @@
 <template>
   <div class="lg:h-screen">
-    <!-- <div
+    <div
       :class="{ 'translate-y-0': hello }"
       class="duration-500 -translate-y-full bg-white w-full h-screen fixed z-50 flex justify-center items-center p-2"
     >
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <div v-if="data">
       <Confetti :actived="finishedBab" />
 
@@ -163,6 +163,7 @@
                 @click="playSound(lesson.question)"
                 type="button"
                 class="mt-5 border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+                aria-label="play sound"
               >
                 <BootstrapIcon name="volume-up-fill" class="text-3xl" />
               </button>
