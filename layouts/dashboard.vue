@@ -178,7 +178,7 @@
         <slot />
 
         <div class="w-full flex justify-center pt-5 sm:pt-10">
-          <span class="tracking-wider text-sm text-gray-400"
+          <span class="tracking-wider text-sm text-gray-700"
             >© 2024
             <a href="https://edutajwid.com/" class="hover:underline"
               >EduTajwid™</a
