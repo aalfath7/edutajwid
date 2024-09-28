@@ -122,7 +122,7 @@
           <div v-if="dataUser" class="text-sm flex items-center">
             <span class="hidden sm:inline">Lesson : {{ lesson.lesson }}</span>
             <span
-              class="ml-5 bg-green-500 text-white shadow rounded-full text-sm mx-1 w-5 h-5 flex justify-center items-center"
+              class="ml-5 bg-green-800 text-white shadow rounded-full text-sm mx-1 w-5 h-5 flex justify-center items-center"
               >xp</span
             >
             :
@@ -141,7 +141,7 @@
         <div
           class="relative flex flex-col justify-center items-center pt-20 pb-40 px-2"
         >
-          <div class="flex w-full sm:w-2/3 mb-2 items-center text-blue-500">
+          <div class="flex w-full sm:w-2/3 mb-2 items-center text-blue-800">
             <BootstrapIcon name="clouds" class="text-2xl mr-2" />
             <span class="text-sm">Pelajari</span>
           </div>
@@ -196,28 +196,28 @@
           >
             <div
               v-if="lesson.type === 'multiple choice question'"
-              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
+              class="flex text-blue-800 w-full w-4/5 lg:w-2/5 py-5 items-center"
             >
               <BootstrapIcon name="clouds" class="text-2xl mr-2" />
               <span class="text-sm">Pilih</span>
             </div>
             <div
               v-else-if="lesson.type === 'sound question'"
-              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-2 sm:py-5 sm:mt-10 items-center"
+              class="flex text-blue-800 w-full w-4/5 lg:w-2/5 py-2 sm:py-5 sm:mt-10 items-center"
             >
               <BootstrapIcon name="clouds" class="text-2xl mr-2" />
               <span class="text-sm">Dengar Bacaan</span>
             </div>
             <div
               v-else-if="lesson.type === 'search question'"
-              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 py-5 items-center"
+              class="flex text-blue-800 w-full w-4/5 lg:w-2/5 py-5 items-center"
             >
               <BootstrapIcon name="clouds" class="text-2xl mr-2" />
               <span class="text-sm">Cari</span>
             </div>
             <div
               v-else
-              class="flex text-blue-500 w-full w-4/5 lg:w-2/5 lg:pt-16 pb-2 items-center"
+              class="flex text-blue-800 w-full w-4/5 lg:w-2/5 lg:pt-16 pb-2 items-center"
             >
               <BootstrapIcon name="puzzle" class="text-2xl mr-2" />
               <span class="text-sm">Pasangkan</span>
