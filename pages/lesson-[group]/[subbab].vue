@@ -1,6 +1,6 @@
 <template>
   <div class="lg:h-screen">
-    <div
+    <!-- <div
       :class="{ 'translate-y-0': hello }"
       class="duration-500 -translate-y-full bg-white w-full h-screen fixed z-50 flex justify-center items-center p-2"
     >
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div v-if="data">
       <Confetti :actived="finishedBab" />
 
