@@ -161,11 +161,17 @@
             <div v-if="lesson.question" class="flex justify-center mb-5">
               <button
                 @click="playSound(lesson.question)"
+                id="sound-button"
                 type="button"
                 class="mt-5 border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
-                aria-label="play sound"
+                aria-label="Play sound"
               >
-                <BootstrapIcon name="volume-up-fill" class="text-3xl" />
+                <BootstrapIcon
+                  name="volume-up-fill"
+                  class="text-3xl"
+                  role="img"
+                  aria-hidden="true"
+                />
               </button>
             </div>
           </div>
@@ -354,14 +360,18 @@
               </div>
               <div class="flex justify-center">
                 <button
-                  :class="{
-                    'pointer-events-none': answerSubmit,
-                  }"
                   @click="playSound(lesson.question)"
+                  id="sound-button"
                   type="button"
                   class="mt-5 border rounded-full w-20 h-20 flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-200"
+                  aria-label="Play sound"
                 >
-                  <BootstrapIcon name="volume-up-fill" class="text-3xl" />
+                  <BootstrapIcon
+                    name="volume-up-fill"
+                    class="text-3xl"
+                    role="img"
+                    aria-hidden="true"
+                  />
                 </button>
               </div>
             </div>
