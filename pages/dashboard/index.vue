@@ -96,11 +96,11 @@
                       name="lock-fill"
                     />
                   </div>
-                  <!-- <img
+                  <img
                     src="/src/icon.png"
                     alt=""
                     class="w-44 h-44 opacity-5 absolute -right-20 -bottom-16 -rotate-12 saturate-100"
-                  /> -->
+                  />
                 </NuxtLink>
               </div>
             </div>
