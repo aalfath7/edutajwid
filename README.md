@@ -1,7 +1,5 @@
 <img align="center" src="./public/src/logo-edutajwid.png" alt="Project logo">
 
-# website preview
-
 An interactive Tajweed learning website. A Tajweed learning website for children, teenagers, and adults with engaging lessons.
 
 ## Setup
