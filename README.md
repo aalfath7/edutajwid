@@ -1,6 +1,8 @@
-# Nuxt 3 Minimal Starter
+<img align="center" src="./public/src/logo-edutajwid.png" alt="Project logo">
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# website preview
+
+An interactive Tajweed learning website. A Tajweed learning website for children, teenagers, and adults with engaging lessons.
 
 ## Setup
 
