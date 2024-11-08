@@ -1,6 +1,30 @@
-<img align="center" src="./public/src/logo-edutajwid.png" alt="Project logo">
+<p align="center"><a href="https://edutajwid.com" target="_blank"><img src="./public/src/logo-edutajwid.png" width="400" alt="Laravel Logo"></a></p>
+
+<p align="center">
+<span style="background-color:#085f1e;padding:1px;color:white;">Tajwid Al-Quran Apps</span> |
+<span style="background-color:#085f1e;padding:1px;color:white;">Learning</span> | 
+<span style="background-color:#085f1e;padding:1px;color:white;">Gamification</span>
+</p>
+
+## About EduTajwid
 
 An interactive Tajweed learning website. A Tajweed learning website for children, teenagers, and adults with engaging lessons.
+
+Features :
+
+- Login and Registration
+- Email Verification
+- Learning Materials
+- Quizzes
+- Leaderboard
+- Create, Join, and Manage Classes
+- Generate Certificates
+- Level Management
+- Promotion Exams with Scores
+
+## Tech Stack
+
+[![My Skills](https://skillicons.dev/icons?i=vue,nuxt,tailwind,express,mysql,pinia)](https://skillicons.dev)
 
 ## Setup
 
@@ -9,15 +33,6 @@ Make sure to install the dependencies:
 ```bash
 # npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
@@ -27,15 +42,6 @@ Start the development server on `http://localhost:3000`:
 ```bash
 # npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
@@ -45,15 +51,6 @@ Build the application for production:
 ```bash
 # npm
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
@@ -61,15 +58,4 @@ Locally preview production build:
 ```bash
 # npm
 npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
