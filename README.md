@@ -1,10 +1,6 @@
 <p align="center"><a href="https://edutajwid.com" target="_blank"><img src="./public/src/logo-edutajwid.png" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<span style="background-color:#085f1e;padding:1px;color:white;">Tajwid Al-Quran Apps</span> |
-<span style="background-color:#085f1e;padding:1px;color:white;">Learning</span> | 
-<span style="background-color:#085f1e;padding:1px;color:white;">Gamification</span>
-</p>
+<p align="center"><b>Tajwid Al-Quran Apps | Learning | Gamification</b></p>
 
 ## About EduTajwid
 
